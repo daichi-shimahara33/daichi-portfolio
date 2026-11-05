@@ -1,0 +1,56 @@
+[
+  {
+    "id": "news-1728400000004",
+    "date": "2026.11.03",
+    "category": "SPECIAL",
+    "badgeClass": "badge-special",
+    "title": "【WNBAファイナル決着】歴史的死闘が閉幕！\n最終戦までの結果＆総括を公開",
+    "desc": "全米が熱狂したWNBAファイナル（ヴァルキリーズ vs ドリーム）が先日ついに決着！\n\n最終戦までもつれ込んだ頂上決戦の結末と、現役目線での見どころを特集セクションにて徹底解説しています。",
+    "image": "images/wnba_action.jpg"
+  },
+  {
+    "id": "news-1728400000001",
+    "date": "2026.10.05",
+    "category": "PRIVATE",
+    "badgeClass": "badge-private",
+    "title": "Off the Court //\n休日スナップ＆街歩きリフレッシュ",
+    "desc": "試合やハードな練習の合間を縫って過ごす大切なオフタイム。\n\nお気に入りのアイウェアで街を散策し、オンとオフを切り替えながら次のシーズンへ英気を養っています。",
+    "image": "images/42CEC728-1355-4EE4-BE7F-14211B1E352D_1791466461.jpg"
+  },
+  {
+    "id": "news-1728400000002",
+    "date": "2026.09.28",
+    "category": "VISIT",
+    "badgeClass": "badge-visit",
+    "title": "愛媛県社会人クラブチームへの\n合同練習・遠征参加レポート",
+    "desc": "定期的に訪れている愛媛県のクラブチーム練習に参加させていただきました。\n\n熱いマッチアップと温かい歓迎に心から感謝です。地域の熱気に刺激を受け、大きな活力となりました！",
+    "image": "images/5Vo3Q0riS66ICKpqVD2ebA.jpg"
+  },
+  {
+    "id": "news-1728400000003",
+    "date": "2026.10.05",
+    "category": "TEAM",
+    "badgeClass": "badge-team",
+    "title": "所属チーム EXCELLENCE //\n攻守を牽引するインサイドの要として",
+    "desc": "東京都社会人クラブ『EXCELLENCE』に所属し、インサイドの要として攻守を牽引。\n\n192cmのサイズを活かしたリバウンドに加え、走力でトランジションをリード。仲間を鼓舞し勝利に貢献します。",
+    "image": "images/4NU0R9pwTzyqtoKNnRF7aw.jpg"
+  },
+  {
+    "id": "news-1728400000005",
+    "date": "2026.09.15",
+    "category": "CREATIVE",
+    "badgeClass": "badge-creative",
+    "title": "木場レッドシャークス //\n卒団記念ムービー制作キックオフ",
+    "desc": "4年連続となるミニバスチームの卒団記念ムービー制作が正式にスタート。\n\n今年度のテーマ設計とこれまでの試合映像の構成作成に着手。選手たちの成長の軌跡を形に残します。",
+    "image": "images/team.jpg"
+  },
+  {
+    "id": "news-1728400000006",
+    "date": "2026.10.20",
+    "category": "GAME",
+    "badgeClass": "badge-game",
+    "title": "東京都バスケットボール秋季交流大会\n堅守速攻で初戦突破！",
+    "desc": "東京都秋季交流大会の初戦に臨み、チーム一丸となった堅守速攻で快勝。\n\nリバウンドの制圧からリズムを掴み、幸先の良いスタートを切りました。次戦も全力で勝利を目指します！",
+    "image": "images/tokyo_autumn_tournament.jpg"
+  }
+]

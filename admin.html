@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEWS ADMIN // 島原大智 #33 お知らせ管理ダッシュボード</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- サイト共通スタイル & 管理画面専用スタイル -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+    <!-- ヘッダー -->
+    <header class="admin-header">
+        <div class="admin-header-left">
+            <span class="admin-badge">ADMIN CONSOLE</span>
+            <h1 class="admin-logo">DAICHI SHIMAHARA <span>#33</span></h1>
+            <span class="server-status" id="server-status" title="サーバー接続ステータス">
+                <span class="status-dot"></span>
+                <span class="status-text">接続確認中...</span>
+            </span>
+        </div>
+        <div class="admin-header-actions">
+            <a href="index.html" target="_blank" class="admin-btn-secondary" title="別タブでトップページを表示">
+                <span>サイトを確認 ↗</span>
+            </a>
+            <button type="button" id="btn-export-json" class="admin-btn-outline" title="現在のデータをJSONファイルとしてダウンロード">
+                <span>JSONダウンロード</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="admin-main">
+        <div class="admin-container">
+
+            <!-- 通知トースト -->
+            <div id="admin-toast" class="admin-toast" role="alert" aria-live="polite"></div>
+
+            <!-- ダッシュボード グリッド -->
+            <div class="admin-grid">
+
+                <!-- 左側：入力・編集フォーム -->
+                <section class="admin-card form-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title" id="form-heading">
+                            <span class="panel-icon">✍️</span>
+                            <span id="form-mode-title">新しいお知らせを投稿</span>
+                        </h2>
+                        <button type="button" id="btn-cancel-edit" class="btn-text" style="display: none;">編集をキャンセル</button>
+                    </div>
+
+                    <form id="news-form" class="news-form" novalidate>
+                        <input type="hidden" id="edit-item-id" value="">
+
+                        <!-- 日付 & カテゴリ -->
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="news-date">日付 <span class="req">*</span></label>
+                                <input type="date" id="news-date" required class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="news-category">カテゴリ <span class="req">*</span></label>
+                                <select id="news-category" required class="form-select">
+                                    <option value="SPECIAL">SPECIAL（特集・注目トピック）</option>
+                                    <option value="PRIVATE">PRIVATE（プライベート・オフショット）</option>
+                                    <option value="TEAM">TEAM（所属チーム・活動）</option>
+                                    <option value="GAME">GAME（試合結果・スタッツ）</option>
+                                    <option value="VISIT">VISIT（遠征・チーム訪問）</option>
+                                    <option value="CREATIVE">CREATIVE（映像・制作実績）</option>
+                                    <option value="INFO">INFO（お知らせ・一般）</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- タイトル -->
+                        <div class="form-group">
+                            <label for="news-title">タイトル <span class="req">*</span></label>
+                            <input type="text" id="news-title" placeholder="例: 秋季クラブ選手権 第3節 EXCELLENCE勝利" required class="form-input">
+                        </div>
+
+                        <!-- 写真選択 & アップロード -->
+                        <div class="form-group">
+                            <label for="news-image">アイキャッチ画像</label>
+                            
+                            <div class="image-input-container">
+                                <!-- 既存画像セレクト -->
+                                <div class="image-select-row">
+                                    <select id="news-image" class="form-select">
+                                        <option value="">（画像一覧を読み込み中...）</option>
+                                    </select>
+                                </div>
+
+                                <div class="image-upload-divider">
+                                    <span>または 手元の新しい写真を追加</span>
+                                </div>
+
+                                <!-- ドラッグ＆ドロップ対応アップローダー -->
+                                <div class="image-dropzone" id="image-dropzone" tabindex="0" role="button" aria-label="写真ファイルを選択またはドロップ">
+                                    <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;">
+                                    <div class="dropzone-content" id="dropzone-prompt">
+                                        <span class="dropzone-icon">📸</span>
+                                        <p class="dropzone-text">
+                                            <strong>クリックして写真を選択</strong><br>またはここに写真をドラッグ＆ドロップ
+                                        </p>
+                                        <span class="dropzone-note">JPG, PNG, WebP（images/ フォルダに自動保存されます）</span>
+                                    </div>
+                                    <div class="dropzone-preview" id="dropzone-preview" style="display: none;">
+                                        <span class="upload-badge">アップロード完了 ✓</span>
+                                        <span class="uploaded-filename" id="uploaded-filename"></span>
+                                    </div>
+                                    <div class="upload-progress" id="upload-progress" style="display: none;">
+                                        <span class="spinner"></span> <span>写真を保存中...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 本文・説明 -->
+                        <div class="form-group">
+                            <label for="news-desc">本文・詳細 <span class="req">*</span></label>
+                            <textarea id="news-desc" rows="4" placeholder="お知らせの詳細や結果、メッセージを入力してください。" required class="form-textarea"></textarea>
+                        </div>
+
+                        <!-- 送信ボタン -->
+                        <div class="form-actions">
+                            <button type="submit" id="btn-submit" class="admin-btn-primary">
+                                <span id="btn-submit-text">お知らせを公開する</span>
+                            </button>
+                            <button type="button" id="btn-reset-form" class="admin-btn-outline">クリア</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- 右側：リアルタイムプレビュー -->
+                <section class="admin-card preview-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">
+                            <span class="panel-icon">👁</span>
+                            <span>ライブプレビュー</span>
+                        </h2>
+                        <span class="preview-badge">トップページの見た目</span>
+                    </div>
+
+                    <div class="preview-container">
+                        <!-- ここにトップページのカードと同じ見た目で描画される -->
+                        <article class="news-card" id="live-preview-card">
+                            <div class="news-card-img-wrap">
+                                <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" id="prev-img" alt="プレビュー画像">
+                                <span class="news-badge badge-game" id="prev-badge">GAME</span>
+                            </div>
+                            <div class="news-card-body">
+                                <time class="news-date" id="prev-date">2026.10.05</time>
+                                <h3 class="news-title" id="prev-title">タイトルがここに表示されます</h3>
+                                <p class="news-desc" id="prev-desc">本文のプレビューがここにリアルタイムで表示されます。</p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- 下側：登録済みお知らせ一覧 -->
+            <section class="admin-card list-panel">
+                <div class="panel-header">
+                    <div class="panel-title-wrap">
+                        <h2 class="panel-title">
+                            <span class="panel-icon">📋</span>
+                            <span>公開中のお知らせ一覧</span>
+                            <span class="items-count-badge" id="items-count">0 件</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="news-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">画像</th>
+                                <th style="width: 120px;">日付</th>
+                                <th style="width: 110px;">カテゴリ</th>
+                                <th>タイトル / 本文</th>
+                                <th style="width: 150px; text-align: center;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="news-table-body">
+                            <!-- JSで動的に一覧が描画される -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- 管理画面ロジック -->
+    <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+# macOS システムファイル
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# 巨大な動画ファイル・元データ（GitHubの容量制限対策）
+*.mov
+*.mp4
+*.HEIC
+*.heic
+
+# ルート階層にある作業用・一時テスト画像（本番画像は images/ フォルダ内にあるため除外）
+/*.jpg
+/*.png
+
+# Python / ローカルサーバー関連の一時ファイル
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+
+# エディタ設定
+.vscode/
+.idea/
+
