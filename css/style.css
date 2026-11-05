@@ -4702,6 +4702,15 @@ button {
   fill: currentColor;
 }
 
+.wnba-legal-note {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  opacity: 0.78;
+  line-height: 1.6;
+}
+
 /* WNBA Responsive Breakpoints */
 @media (max-width: 992px) {
   .wnba-feature-grid {
