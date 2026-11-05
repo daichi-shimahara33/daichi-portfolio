@@ -3235,7 +3235,8 @@ button {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 55%, transparent 75%);
 }
 
-.wnba-team-pill img {
+.wnba-team-pill img,
+.wnba-team-pill .wnba-jersey-svg {
   width: 50px;
   height: 50px;
   object-fit: contain;
@@ -3247,7 +3248,8 @@ button {
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
 }
 
-.wnba-team-pill:hover img {
+.wnba-team-pill:hover img,
+.wnba-team-pill:hover .wnba-jersey-svg {
   transform: scale(1.1);
 }
 
@@ -3329,7 +3331,8 @@ button {
   justify-content: center;
 }
 
-.spotlight-logo-wrap img {
+.spotlight-logo-wrap img,
+.spotlight-logo-wrap .wnba-jersey-svg {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -3825,7 +3828,8 @@ button {
   transition: opacity var(--transition-normal), transform var(--transition-normal);
 }
 
-.team-watermark-logo img {
+.team-watermark-logo img,
+.team-watermark-logo .wnba-jersey-svg {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -3885,7 +3889,10 @@ button {
   background: radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, rgba(20, 24, 33, 0.6) 100%);
 }
 
-.team-logo-img {
+.team-logo-img,
+.team-logo-wrap .wnba-jersey-svg {
+  width: 100%;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;

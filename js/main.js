@@ -268,7 +268,7 @@ function initWnbaTeamSpotlight() {
   const spotlight = document.getElementById('wnbaTeamSpotlight');
   if (!pills.length || !spotlight) return;
 
-  const logoImg = document.getElementById('spotlightLogoImg');
+  const logoWrap = document.getElementById('spotlightLogoWrap');
   const confEl = document.getElementById('spotlightConf');
   const teamEnEl = document.getElementById('spotlightTeamEn');
   const teamJpEl = document.getElementById('spotlightTeamJp');
@@ -475,9 +475,9 @@ function initWnbaTeamSpotlight() {
       p.setAttribute('aria-expanded', String(isMatch));
     });
 
-    if (logoImg) {
-      logoImg.src = data.logo;
-      logoImg.alt = data.teamEn;
+    const pillLogo = pillEl ? pillEl.querySelector('.team-pill-logo-wrap') : null;
+    if (logoWrap && pillLogo) {
+      logoWrap.innerHTML = pillLogo.innerHTML;
     }
     if (confEl) confEl.textContent = data.conf;
     if (teamEnEl) teamEnEl.textContent = data.teamEn;
