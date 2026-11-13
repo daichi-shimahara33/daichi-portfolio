@@ -5677,6 +5677,212 @@ button {
 }
 
 /* ==========================================================================
+   Mobile-Only Horizontal Swipe Carousels, Collapsible Sections & Back-to-Top
+   (Desktop > 768px remains 100% unchanged)
+   ========================================================================== */
+.mobile-swipe-hint,
+.mobile-collapse-btn {
+  display: none;
+}
+
+.back-to-top-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  z-index: 950;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(15, 19, 28, 0.92);
+  border: 1.5px solid rgba(224, 169, 109, 0.55);
+  color: var(--color-accent);
+  font-family: var(--font-family-display);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, background 0.2s ease;
+}
+
+.back-to-top-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+  background: var(--color-accent);
+  color: #0B0E14;
+}
+
+@media (max-width: 768px) {
+  /* 1. Swipe Hint Pill */
+  .mobile-swipe-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    padding: 5px 14px;
+    width: fit-content;
+    border-radius: var(--radius-full);
+    background: rgba(224, 169, 109, 0.1);
+    border: 1px solid rgba(224, 169, 109, 0.3);
+    color: var(--color-accent);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  /* 2. Horizontal Swipe Carousels (STATEMENT, NEWS, STRENGTHS, VISION, GALLERY, WNBA) */
+  .philosophy-story-grid,
+  .news-grid,
+  .strengths-box .cards-grid,
+  .vision-box,
+  .collage-photos-grid,
+  .wnba-teams-logo-list,
+  .wnba-intro-grid,
+  .tracker-games-grid.tracker-7games {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px !important;
+    padding: 4px 6px 18px !important;
+    margin-left: -4px;
+    margin-right: -4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(224, 169, 109, 0.45) rgba(255, 255, 255, 0.05);
+  }
+
+  .philosophy-story-grid::-webkit-scrollbar,
+  .news-grid::-webkit-scrollbar,
+  .strengths-box .cards-grid::-webkit-scrollbar,
+  .vision-box::-webkit-scrollbar,
+  .collage-photos-grid::-webkit-scrollbar,
+  .wnba-teams-logo-list::-webkit-scrollbar,
+  .wnba-intro-grid::-webkit-scrollbar,
+  .tracker-games-grid.tracker-7games::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .philosophy-story-grid::-webkit-scrollbar-track,
+  .news-grid::-webkit-scrollbar-track,
+  .strengths-box .cards-grid::-webkit-scrollbar-track,
+  .vision-box::-webkit-scrollbar-track,
+  .collage-photos-grid::-webkit-scrollbar-track,
+  .wnba-teams-logo-list::-webkit-scrollbar-track,
+  .wnba-intro-grid::-webkit-scrollbar-track,
+  .tracker-games-grid.tracker-7games::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 999px;
+  }
+
+  .philosophy-story-grid::-webkit-scrollbar-thumb,
+  .news-grid::-webkit-scrollbar-thumb,
+  .strengths-box .cards-grid::-webkit-scrollbar-thumb,
+  .vision-box::-webkit-scrollbar-thumb,
+  .collage-photos-grid::-webkit-scrollbar-thumb,
+  .wnba-teams-logo-list::-webkit-scrollbar-thumb,
+  .wnba-intro-grid::-webkit-scrollbar-thumb,
+  .tracker-games-grid.tracker-7games::-webkit-scrollbar-thumb {
+    background: rgba(224, 169, 109, 0.5);
+    border-radius: 999px;
+  }
+
+  .philosophy-story-grid > .story-card,
+  .news-grid > .news-card,
+  .strengths-box .cards-grid > .card,
+  .vision-box > .vision-card,
+  .wnba-intro-grid > .wnba-feature-card {
+    flex: 0 0 84%;
+    max-width: 84%;
+    scroll-snap-align: center;
+  }
+
+  .wnba-teams-logo-list > .wnba-team-pill {
+    flex: 0 0 105px !important;
+    max-width: 105px !important;
+    scroll-snap-align: start;
+  }
+
+  .tracker-games-grid.tracker-7games > .tracker-game-card {
+    flex: 0 0 140px;
+    max-width: 140px;
+    scroll-snap-align: start;
+  }
+
+  .collage-photos-grid > .collage-photo-item {
+    flex: 0 0 70%;
+    max-width: 70%;
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: center;
+  }
+
+  /* 3. Mobile Collapsible Accordion Button & Content */
+  .mobile-collapse-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 18px 0 8px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(224, 169, 109, 0.16) 0%, rgba(224, 169, 109, 0.06) 100%);
+    border: 1px solid rgba(224, 169, 109, 0.45);
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .mobile-collapse-btn.is-open {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--color-text-light);
+    margin-bottom: 18px;
+  }
+
+  .mobile-collapsible-content {
+    display: none !important;
+  }
+
+  .mobile-collapsible-content.is-mobile-expanded {
+    display: block !important;
+    animation: mobileExpandFade 0.28s ease-out;
+  }
+
+  .manifest-right.mobile-collapsible-content.is-mobile-expanded {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  @keyframes mobileExpandFade {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ==========================================================================
    Prefers-reduced-motion for Accessibility
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {

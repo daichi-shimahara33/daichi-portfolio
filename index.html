@@ -203,6 +203,11 @@
                     </div>
                 </div>
 
+                <!-- スマホ専用スワイプヒント -->
+                <div class="mobile-swipe-hint" aria-hidden="true">
+                    <span>&larr; 左右にスワイプして3つの柱を見る &rarr;</span>
+                </div>
+
                 <!-- 3つのシネマティック・ビジュアルカード（写真背景 × 精密SVGアイコン） -->
                 <div class="philosophy-story-grid">
                     <!-- CARD 1: ON THE COURT -->
@@ -348,8 +353,13 @@
                             </div>
                         </div>
 
+                        <!-- スマホ専用：深層ストーリー開閉ボタン -->
+                        <button type="button" class="mobile-collapse-btn" data-mobile-toggle="manifestRightStory" aria-expanded="false">
+                            <span class="collapse-btn-label">＋ 活動理念のストーリー（01〜03）を詳しく読む</span>
+                        </button>
+
                         <!-- 右側：深みのあるエピソードと想い -->
-                        <div class="manifest-right">
+                        <div class="manifest-right mobile-collapsible-content" id="manifestRightStory">
                             <div class="manifest-item">
                                 <h4 class="manifest-section-title">
                                     <span>01</span> なぜ社会人になってもバスケを続けるのか
@@ -404,6 +414,11 @@
                 <div class="section-header-wrap">
                     <h2 class="section-title" id="heading-news">LATEST <span>NEWS & TOPICS</span></h2>
                     <p class="section-subtitle">試合結果・地方遠征レポート・映像制作プロジェクトの最新情報</p>
+                </div>
+
+                <!-- スマホ専用スワイプヒント -->
+                <div class="mobile-swipe-hint" aria-hidden="true">
+                    <span>&larr; 左右にスワイプして最新ニュースを見る &rarr;</span>
                 </div>
 
                 <div class="news-grid">
@@ -560,6 +575,10 @@
                     <span class="career-title-main">PLAY STYLE &amp; STRENGTHS</span>
                     <span class="career-title-sub">/ プレイスタイル・強み</span>
                 </h3>
+                <!-- スマホ専用スワイプヒント -->
+                <div class="mobile-swipe-hint" aria-hidden="true">
+                    <span>&larr; 左右にスワイプして強みを見る &rarr;</span>
+                </div>
                 <div class="cards-grid">
                     <article class="card">
                         <div class="card-tag">01 / ALL-ROUND PLAY</div>
@@ -585,6 +604,12 @@
                 </div>
             </div>
 
+            <!-- スマホ専用：経歴・主な実績 開閉ボタン -->
+            <button type="button" class="mobile-collapse-btn" data-mobile-toggle="profileCareerMore" aria-expanded="false">
+                <span class="collapse-btn-label">＋ 経歴・主な実績（IH 3年連続出場など）を見る</span>
+            </button>
+
+            <div class="mobile-collapsible-content" id="profileCareerMore">
             <div class="career-box">
                 <h3 class="career-title">
                     <span class="career-title-main">CAREER &amp; HISTORY</span>
@@ -668,6 +693,7 @@
                     </div>
                 </div>
             </div>
+            </div>
         </section>
 
         <!-- チーム訪問 & ビジョンセクション -->
@@ -677,6 +703,11 @@
                 <p class="section-subtitle">地域の垣根を越えたチーム交流と、これから描く未来の展望</p>
             </div>
             
+            <!-- スマホ専用スワイプヒント -->
+            <div class="mobile-swipe-hint" aria-hidden="true">
+                <span>&larr; 左右にスワイプしてカードを見る &rarr;</span>
+            </div>
+
             <div class="vision-box">
                 <!-- 遠征・チーム訪問カード -->
                 <article class="vision-card">
@@ -758,6 +789,11 @@
                     </ul>
                 </div>
 
+                <!-- スマホ専用スワイプヒント -->
+                <div class="mobile-swipe-hint" aria-hidden="true">
+                    <span>&larr; 左右にスワイプして写真をめくる（全8枚） &rarr;</span>
+                </div>
+
                 <!-- オフショット写真ギャラリー（8枚均等グリッド配置・文字なし） -->
                 <div class="collage-photos-grid">
                     <div class="collage-photo-item" tabindex="0" role="img" aria-label="オフショット写真 1">
@@ -832,6 +868,14 @@
             <p class="footer-note">&copy; 2026 DAICHI SHIMAHARA. Official Portfolio Page | Built from Scratch</p>
         </div>
     </footer>
+
+    <!-- トップへ戻るフローティングボタン -->
+    <button type="button" class="back-to-top-btn" id="backToTopBtn" aria-label="ページの一番上へ戻る">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+        <span>TOP</span>
+    </button>
 
     <!-- スクリプト -->
     <script src="js/main.js" defer></script>

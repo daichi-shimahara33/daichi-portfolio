@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initActiveNavObserver();
   loadDynamicNews();
+  initMobileCollapsible();
+  initBackToTop();
   initWnbaTabs();
   initWnbaTeamSpotlight();
   initInsightAccordions();
@@ -199,6 +201,53 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+/**
+ * Mobile-only Collapsible Sections ("＋ 続きを読む" / "－ 閉じる")
+ */
+function initMobileCollapsible() {
+  const buttons = document.querySelectorAll('.mobile-collapse-btn[data-mobile-toggle]');
+  if (!buttons.length) return;
+
+  buttons.forEach(btn => {
+    const targetId = btn.getAttribute('data-mobile-toggle');
+    const targetEl = document.getElementById(targetId);
+    const labelEl = btn.querySelector('.collapse-btn-label');
+    if (!targetEl || !labelEl) return;
+
+    const defaultText = labelEl.textContent.trim();
+
+    btn.addEventListener('click', () => {
+      const isExpanded = targetEl.classList.toggle('is-mobile-expanded');
+      btn.classList.toggle('is-open', isExpanded);
+      btn.setAttribute('aria-expanded', String(isExpanded));
+      labelEl.textContent = isExpanded ? '－ 閉じる' : defaultText;
+    });
+  });
+}
+
+/**
+ * Floating Back-to-Top Button
+ */
+function initBackToTop() {
+  const btn = document.getElementById('backToTopBtn');
+  if (!btn) return;
+
+  const onScroll = () => {
+    if (window.scrollY > 360) {
+      btn.classList.add('is-visible');
+    } else {
+      btn.classList.remove('is-visible');
+    }
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
 /**
