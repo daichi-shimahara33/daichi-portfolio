@@ -5739,11 +5739,12 @@ button {
   background: rgba(11, 14, 20, 0.2);
 }
 
+.collapsible-more-box.is-collapsed-box,
 .collapsible-more-box[hidden] {
   display: none !important;
 }
 
-.collapsible-more-box:not([hidden]) {
+.collapsible-more-box:not(.is-collapsed-box):not([hidden]) {
   animation: moreBoxExpand 0.32s ease-out;
 }
 

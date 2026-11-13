@@ -220,15 +220,15 @@ function initMobileCollapsible() {
     const defaultText = textEl.textContent.trim();
 
     btn.addEventListener('click', () => {
-      const isHidden = targetEl.hasAttribute('hidden');
-      if (isHidden) {
-        targetEl.removeAttribute('hidden');
+      const isCollapsed = targetEl.classList.contains('is-collapsed-box');
+      if (isCollapsed) {
+        targetEl.classList.remove('is-collapsed-box');
         btn.classList.add('is-open');
         btn.setAttribute('aria-expanded', 'true');
         if (iconEl) iconEl.textContent = '－';
         textEl.textContent = '閉じる（折りたたむ）';
       } else {
-        targetEl.setAttribute('hidden', '');
+        targetEl.classList.add('is-collapsed-box');
         btn.classList.remove('is-open');
         btn.setAttribute('aria-expanded', 'false');
         if (iconEl) iconEl.textContent = '＋';

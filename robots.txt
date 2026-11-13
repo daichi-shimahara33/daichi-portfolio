@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /server.py
+Disallow: /index_refactored.html
 
 Sitemap: https://daichi-portfolio-lmgl.vercel.app/sitemap.xml
