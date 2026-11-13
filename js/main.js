@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initActiveNavObserver();
   loadDynamicNews();
-  initSectionInlineTabs();
   initWnbaTabs();
   initWnbaTeamSpotlight();
   initInsightAccordions();
@@ -108,7 +107,7 @@ function initActiveNavObserver() {
   function setActiveLink(links, targetId) {
     links.forEach(link => {
       const href = link.getAttribute('href');
-      if (href === `#${targetId}`) {
+      if (href === `#${targetId}` || (targetId === 'wnba' && href === 'wnba.html')) {
         link.classList.add('active');
       } else {
         link.classList.remove('active');
@@ -171,7 +170,7 @@ function renderNewsCards(container, items) {
     const image = escapeHtml(item.image || 'images/IMG_8532.jpg');
     const isoDate = date.replace(/\./g, '-');
 
-    const linkStart = (item.category === 'SPECIAL') ? '<a href="#wnba" style="display:contents;color:inherit;text-decoration:none;">' : '';
+    const linkStart = (item.category === 'SPECIAL') ? '<a href="wnba.html" style="display:contents;color:inherit;text-decoration:none;">' : '';
     const linkEnd = (item.category === 'SPECIAL') ? '</a>' : '';
 
     return `
@@ -200,61 +199,6 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-}
-
-/**
- * Generic In-Section Tabs (STATEMENT, PROFILE, CONTACT)
- */
-function initSectionInlineTabs() {
-  const tabGroups = document.querySelectorAll('.section-inline-tabs[data-tab-group]');
-  if (!tabGroups.length) return;
-
-  tabGroups.forEach(groupEl => {
-    const groupName = groupEl.getAttribute('data-tab-group');
-    const buttons = groupEl.querySelectorAll('.inline-tab-btn[data-target-panel]');
-    const panels = document.querySelectorAll(`.inline-tab-panel[data-group-panel="${groupName}"]`);
-
-    if (!buttons.length || !panels.length) return;
-
-    const activatePanel = (selectedBtn) => {
-      const targetId = selectedBtn.getAttribute('data-target-panel');
-      if (!targetId) return;
-
-      buttons.forEach(btn => {
-        const isCurrent = btn === selectedBtn;
-        btn.classList.toggle('active', isCurrent);
-        btn.setAttribute('aria-selected', String(isCurrent));
-      });
-
-      panels.forEach(panel => {
-        const isMatch = panel.id === targetId;
-        panel.classList.toggle('active', isMatch);
-        if (isMatch) {
-          panel.removeAttribute('hidden');
-        } else {
-          panel.setAttribute('hidden', '');
-        }
-      });
-    };
-
-    buttons.forEach((btn, idx) => {
-      btn.addEventListener('click', () => activatePanel(btn));
-
-      btn.addEventListener('keydown', (e) => {
-        let nextIdx = null;
-        if (e.key === 'ArrowRight') {
-          nextIdx = (idx + 1) % buttons.length;
-        } else if (e.key === 'ArrowLeft') {
-          nextIdx = (idx - 1 + buttons.length) % buttons.length;
-        }
-        if (nextIdx !== null) {
-          e.preventDefault();
-          buttons[nextIdx].focus();
-          activatePanel(buttons[nextIdx]);
-        }
-      });
-    });
-  });
 }
 
 /**
@@ -872,21 +816,17 @@ ${msg}
     });
   }
 
-  // Smooth Scroll to Standalone Contact Form (Switches to STEP 02 Tab first)
+  // Smooth Scroll to Standalone Contact Form
   const scrollToFormBtn = document.getElementById('scrollToFormBtn');
   if (scrollToFormBtn) {
     scrollToFormBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const contactTabFormBtn = document.getElementById('contactTabFormBtn');
-      if (contactTabFormBtn) {
-        contactTabFormBtn.click();
-      }
       const target = document.getElementById('contactFormBox');
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setTimeout(() => {
           if (nameInput) nameInput.focus();
-        }, 500);
+        }, 600);
       }
     });
   }
