@@ -1,0 +1,17 @@
+{
+  "name": "DAICHI SHIMAHARA #33 | Official Portfolio",
+  "short_name": "DAICHI #33",
+  "description": "社会人バスケットボール選手・クリエイター 島原大智（#33）公式プロフィール＆ポートフォリオ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0E14",
+  "theme_color": "#0B0E14",
+  "icons": [
+    {
+      "src": "images/icon-33.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
