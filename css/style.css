@@ -279,11 +279,44 @@ button {
 }
 
 .nav-page-divider {
-  width: 1px;
-  height: 18px;
-  background: rgba(224, 169, 109, 0.35);
+  width: 2px;
+  height: 26px;
+  background: linear-gradient(180deg, rgba(224, 169, 109, 0.1) 0%, rgba(224, 169, 109, 0.85) 50%, rgba(224, 169, 109, 0.1) 100%);
   margin: 0 2px;
   flex-shrink: 0;
+  border-radius: 2px;
+  position: relative;
+}
+
+.nav-subpage-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 11px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.nav-subpage-group:hover,
+.nav-subpage-group.is-current-page {
+  border-color: rgba(224, 169, 109, 0.45);
+  background: rgba(224, 169, 109, 0.07);
+}
+
+.nav-group-dot {
+  color: rgba(224, 169, 109, 0.55);
+  font-weight: 800;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.footer-nav-divider {
+  color: rgba(224, 169, 109, 0.55);
+  font-weight: 700;
+  margin: 0 4px;
+  user-select: none;
 }
 
 .mobile-nav-divider {
