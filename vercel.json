@@ -1,5 +1,5 @@
 {
-  "cleanUrls": true,
+  "cleanUrls": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -21,12 +21,6 @@
           "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!css/|js/|images/|data/|sitemap\\.xml|robots\\.txt|site\\.webmanifest).*)",
-      "destination": "/index.html"
     }
   ]
 }

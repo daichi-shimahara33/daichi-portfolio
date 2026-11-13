@@ -170,7 +170,7 @@ function renderNewsCards(container, items) {
     const image = escapeHtml(item.image || 'images/IMG_8532.jpg');
     const isoDate = date.replace(/\./g, '-');
 
-    const linkStart = (item.category === 'SPECIAL') ? '<a href="#wnba" style="display:contents;color:inherit;text-decoration:none;">' : '';
+    const linkStart = (item.category === 'SPECIAL') ? '<a href="wnba.html" style="display:contents;color:inherit;text-decoration:none;">' : '';
     const linkEnd = (item.category === 'SPECIAL') ? '</a>' : '';
 
     return `
