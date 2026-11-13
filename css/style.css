@@ -5641,7 +5641,16 @@ button {
 .subpage-nav-bar {
   max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: 20px 20px 0;
+  padding: 20px 20px 36px;
+}
+
+main > .subpage-nav-bar:first-child {
+  padding-top: calc(var(--header-height) + 18px);
+  padding-bottom: 12px;
+}
+
+main > .subpage-nav-bar:first-child + .section-padding {
+  padding-top: 36px;
 }
 
 .subpage-nav-inner {
@@ -5911,9 +5920,175 @@ button {
     max-width: 70%;
     aspect-ratio: 4 / 3;
     scroll-snap-align: center;
+    transform: none !important;
   }
 
-  /* 3. Mobile Collapsible Accordion Button & Content */
+  /* 3. Mobile Spacing, Padding & Margin Optimization */
+  .section-padding {
+    padding: 46px 16px;
+  }
+
+  main > .subpage-nav-bar:first-child {
+    padding: calc(var(--header-height) + 12px) 16px 8px;
+  }
+
+  main > .subpage-nav-bar:first-child + .section-padding {
+    padding-top: 24px;
+  }
+
+  .subpage-nav-bar {
+    padding: 12px 16px 28px;
+  }
+
+  .subpage-nav-inner {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: calc(var(--header-height) + 18px) 16px 36px;
+    gap: 22px;
+  }
+
+  .hero-tag {
+    margin: 0 auto 10px;
+    font-size: 1.05rem;
+  }
+
+  .hero-desc {
+    margin: 0 auto 20px;
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .hero-img-container {
+    padding: 4px;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 7.5vw, 2.55rem);
+    margin-bottom: 24px;
+  }
+
+  .section-header-wrap,
+  .philosophy-header-editorial,
+  .contact-header-wrap {
+    margin-bottom: 24px;
+  }
+
+  .philosophy-section,
+  .contact-section {
+    padding-top: 46px;
+    padding-bottom: 46px;
+  }
+
+  .philosophy-container,
+  .contact-container,
+  .wnba-container {
+    padding: 0 16px;
+  }
+
+  .story-card {
+    min-height: 350px;
+  }
+
+  .story-card-content {
+    padding: 20px 18px;
+  }
+
+  .philosophy-manifest-box {
+    margin-top: 16px;
+    padding: 24px 18px;
+  }
+
+  .manifest-left {
+    padding-bottom: 22px;
+  }
+
+  .manifest-grid {
+    gap: 24px;
+  }
+
+  .news-grid {
+    margin-bottom: 10px;
+  }
+
+  .more-toggle-wrap {
+    margin: 14px auto 8px;
+  }
+
+  .section-more-btn {
+    width: 100%;
+    max-width: 420px;
+    padding: 12px 18px;
+    font-size: 0.86rem;
+  }
+
+  .news-footer-action {
+    margin-top: 16px;
+  }
+
+  /* Stats Grid: 2 columns on mobile to eliminate wasted side whitespace */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .stat-card {
+    padding: 14px 10px;
+  }
+
+  .stat-num {
+    font-size: 1.95rem;
+  }
+
+  .stat-num.stat-jp .stat-val {
+    font-size: 1.45rem;
+  }
+
+  .stat-num.stat-team .stat-val {
+    font-size: 1.3rem;
+  }
+
+  .strengths-box,
+  .career-box,
+  .achievements-box {
+    padding: 20px 16px;
+    margin-bottom: 18px;
+  }
+
+  .strengths-box .card {
+    padding: 18px 16px;
+  }
+
+  .collage-container {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  .subpage-bridge-section {
+    padding: 28px 16px 44px;
+  }
+
+  .subpage-bridge-card {
+    padding: 22px 18px;
+  }
+
+  .work-card {
+    padding: 22px 18px;
+  }
+
+  .estimate-form-col,
+  .quotation-sheet,
+  .contact-standalone-box {
+    padding: 22px 16px;
+  }
+
+  .site-footer {
+    padding: 36px 16px 28px;
+  }
   .mobile-collapse-btn {
     display: flex;
     align-items: center;
