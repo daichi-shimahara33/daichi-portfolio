@@ -1,0 +1,7 @@
+# 本番公開（Vercel）には含めないローカル管理用ファイル
+# ※自分のMac（localhost:8000）では今まで通り使えます
+admin.html
+css/admin.css
+js/admin.js
+server.py
+start.command
