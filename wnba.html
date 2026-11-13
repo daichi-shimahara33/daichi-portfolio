@@ -180,8 +180,16 @@
                     </div>
                 </div>
 
+                <!-- タップで開く（もっと見る）：WNBA全15チーム注目選手一覧 -->
+                <div class="more-toggle-wrap" style="margin-bottom: 18px;">
+                    <button type="button" class="section-more-btn" data-more-target="wnbaTeamsBarCollapse" aria-expanded="false">
+                        <span class="more-btn-icon">＋</span>
+                        <span class="more-btn-text">WNBA 全15チームの注目選手一覧をタップして開く</span>
+                    </button>
+                </div>
+
                 <!-- WNBA 全チーム公式ロゴバー（2026年新規参入のトロント・ポートランドを含む全15チーム） -->
-                <div class="wnba-teams-bar" aria-label="WNBA 全15所属チームロゴ一覧">
+                <div class="wnba-teams-bar collapsible-more-box" id="wnbaTeamsBarCollapse" aria-label="WNBA 全15所属チームロゴ一覧" hidden>
                     <div class="wnba-teams-bar-header">
                         <span class="teams-bar-label">WNBA 15 FRANCHISES</span>
                         <span class="teams-bar-divider"></span>

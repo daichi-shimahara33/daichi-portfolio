@@ -308,8 +308,16 @@
                     </article>
                 </div>
 
+                <!-- タップで開く（もっと見る）：活動理念マニフェスト＆深層ストーリー -->
+                <div class="more-toggle-wrap">
+                    <button type="button" class="section-more-btn" data-more-target="statementManifestFull" aria-expanded="false">
+                        <span class="more-btn-icon">＋</span>
+                        <span class="more-btn-text">活動理念・深層ストーリー（01〜03）をもっと見る</span>
+                    </button>
+                </div>
+
                 <!-- マニフェスト・エディトリアル（深層ストーリー 2カラムレイアウト） -->
-                <div class="philosophy-manifest-box">
+                <div class="philosophy-manifest-box collapsible-more-box" id="statementManifestFull" hidden>
                     <div class="manifest-aura" aria-hidden="true"></div>
                     <div class="manifest-grid">
                         <!-- 左側：ステートメント・クオート -->
@@ -353,13 +361,8 @@
                             </div>
                         </div>
 
-                        <!-- スマホ専用：深層ストーリー開閉ボタン -->
-                        <button type="button" class="mobile-collapse-btn" data-mobile-toggle="manifestRightStory" aria-expanded="false">
-                            <span class="collapse-btn-label">＋ 活動理念のストーリー（01〜03）を詳しく読む</span>
-                        </button>
-
                         <!-- 右側：深みのあるエピソードと想い -->
-                        <div class="manifest-right mobile-collapsible-content" id="manifestRightStory">
+                        <div class="manifest-right">
                             <div class="manifest-item">
                                 <h4 class="manifest-section-title">
                                     <span>01</span> なぜ社会人になってもバスケを続けるのか
@@ -470,7 +473,7 @@
                     </article>
 
                     <!-- NEWS 3: 所属チームでの存在・役割 -->
-                    <article class="news-card">
+                    <article class="news-card news-card-extra">
                         <div class="news-card-img-wrap">
                             <img src="images/4NU0R9pwTzyqtoKNnRF7aw.jpg" alt="所属チーム EXCELLENCE メンバー集合写真" loading="lazy" decoding="async">
                             <span class="news-badge badge-team">TEAM</span>
@@ -485,7 +488,7 @@
                     </article>
 
                     <!-- NEWS 4: 映像制作 -->
-                    <article class="news-card">
+                    <article class="news-card news-card-extra">
                         <div class="news-card-img-wrap">
                             <img src="images/team.jpg" alt="木場レッドシャークス 記念ムービー制作" loading="lazy" decoding="async">
                             <span class="news-badge badge-creative">CREATIVE</span>
@@ -500,7 +503,7 @@
                     </article>
 
                     <!-- NEWS 5: 大会結果 -->
-                    <article class="news-card">
+                    <article class="news-card news-card-extra">
                         <div class="news-card-img-wrap">
                             <img src="images/tokyo_autumn_tournament.jpg" alt="東京都バスケットボール秋季交流大会 初戦突破 得点盤とチーム写真" loading="lazy" decoding="async">
                             <span class="news-badge badge-game">GAME</span>
@@ -513,6 +516,14 @@
 リバウンドの制圧からリズムを掴み、幸先の良いスタートを切りました。次戦も全力で勝利を目指します！</p>
                         </div>
                     </article>
+                </div>
+
+                <!-- タップで開く（もっと見る）：過去のニュース3件 -->
+                <div class="more-toggle-wrap">
+                    <button type="button" class="section-more-btn" id="newsMoreToggleBtn" aria-expanded="false">
+                        <span class="more-btn-icon">＋</span>
+                        <span class="more-btn-text">過去のニュースをもっと見る（＋3件）</span>
+                    </button>
                 </div>
 
                 <!-- Instagram連携フッター -->
@@ -604,12 +615,15 @@
                 </div>
             </div>
 
-            <!-- スマホ専用：経歴・主な実績 開閉ボタン -->
-            <button type="button" class="mobile-collapse-btn" data-mobile-toggle="profileCareerMore" aria-expanded="false">
-                <span class="collapse-btn-label">＋ 経歴・主な実績（IH 3年連続出場など）を見る</span>
-            </button>
+            <!-- タップで開く（もっと見る）：経歴・主な実績 -->
+            <div class="more-toggle-wrap">
+                <button type="button" class="section-more-btn" data-more-target="profileCareerMore" aria-expanded="false">
+                    <span class="more-btn-icon">＋</span>
+                    <span class="more-btn-text">経歴・主な実績（インターハイ3年連続出場など）をもっと見る</span>
+                </button>
+            </div>
 
-            <div class="mobile-collapsible-content" id="profileCareerMore">
+            <div class="collapsible-more-box" id="profileCareerMore" hidden>
             <div class="career-box">
                 <h3 class="career-title">
                     <span class="career-title-main">CAREER &amp; HISTORY</span>
@@ -808,18 +822,26 @@
                     <div class="collage-photo-item" tabindex="0" role="img" aria-label="オフショット写真 4">
                         <img src="images/ehime_mikan_juice.jpg" alt="オフショット写真 4" loading="lazy" decoding="async">
                     </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="オフショット写真 5">
+                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="オフショット写真 5">
                         <img src="images/wwCRiC-ORKeJXwpUnWNovw.jpg" alt="オフショット写真 5" loading="lazy" decoding="async">
                     </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="オフショット写真 6">
+                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="オフショット写真 6">
                         <img src="images/zbICtdpkRRSUus1xPqoVEQ.jpg" alt="オフショット写真 6" loading="lazy" decoding="async">
                     </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="オフショット写真 7">
+                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="オフショット写真 7">
                         <img src="images/5hWodn-VTF6pPPU5mBzwjA.jpg" alt="オフショット写真 7" loading="lazy" decoding="async">
                     </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="オフショット写真 8">
+                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="オフショット写真 8">
                         <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" alt="オフショット写真 8" loading="lazy" decoding="async">
                     </div>
+                </div>
+
+                <!-- タップで開く（もっと見る）：オフショット写真残り4枚 -->
+                <div class="more-toggle-wrap">
+                    <button type="button" class="section-more-btn" id="galleryMoreToggleBtn" aria-expanded="false">
+                        <span class="more-btn-icon">＋</span>
+                        <span class="more-btn-text">オフショット写真をもっと見る（＋4枚）</span>
+                    </button>
                 </div>
             </div>
         </section>

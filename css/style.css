@@ -5677,12 +5677,94 @@ button {
 }
 
 /* ==========================================================================
-   Mobile-Only Horizontal Swipe Carousels, Collapsible Sections & Back-to-Top
-   (Desktop > 768px remains 100% unchanged)
+   Collapsible "タップで開く（もっと見る）" & Mobile Horizontal Swipe Carousels
    ========================================================================== */
-.mobile-swipe-hint,
-.mobile-collapse-btn {
+.mobile-swipe-hint {
   display: none;
+}
+
+.more-toggle-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 22px auto 10px;
+  width: 100%;
+}
+
+.section-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(224, 169, 109, 0.16) 0%, rgba(224, 169, 109, 0.05) 100%);
+  border: 1px solid rgba(224, 169, 109, 0.45);
+  color: var(--color-accent);
+  font-family: var(--font-family-base);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+}
+
+.section-more-btn:hover {
+  background: var(--color-accent);
+  color: #0B0E14;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(224, 169, 109, 0.3);
+}
+
+.section-more-btn.is-open {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: var(--color-text-light);
+}
+
+.more-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(224, 169, 109, 0.2);
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.section-more-btn:hover .more-btn-icon {
+  background: rgba(11, 14, 20, 0.2);
+}
+
+.collapsible-more-box[hidden] {
+  display: none !important;
+}
+
+.collapsible-more-box:not([hidden]) {
+  animation: moreBoxExpand 0.32s ease-out;
+}
+
+/* Extra News Cards (4-6) & Extra Gallery Photos (5-8) collapsed by default */
+.news-grid:not(.show-all-news) .news-card-extra {
+  display: none !important;
+}
+
+.collage-photos-grid:not(.show-all-photos) .gallery-photo-extra {
+  display: none !important;
+}
+
+@keyframes moreBoxExpand {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .back-to-top-btn {

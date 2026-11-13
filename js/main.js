@@ -162,7 +162,7 @@ function renderNewsCards(container, items) {
   // Only display up to 6 items on the front page
   const displayItems = items.slice(0, 6);
 
-  container.innerHTML = displayItems.map(item => {
+  container.innerHTML = displayItems.map((item, idx) => {
     const cat = escapeHtml(item.category || 'INFO');
     const badgeClass = escapeHtml(item.badgeClass || 'badge-game');
     const date = escapeHtml(item.date || '');
@@ -171,12 +171,13 @@ function renderNewsCards(container, items) {
     const desc = escapeHtml(item.desc || '');
     const image = escapeHtml(item.image || 'images/IMG_8532.jpg');
     const isoDate = date.replace(/\./g, '-');
+    const extraClass = idx >= 3 ? ' news-card-extra' : '';
 
     const linkStart = (item.category === 'SPECIAL') ? '<a href="wnba.html" style="display:contents;color:inherit;text-decoration:none;">' : '';
     const linkEnd = (item.category === 'SPECIAL') ? '</a>' : '';
 
     return `
-      <article class="news-card">
+      <article class="news-card${extraClass}">
         ${linkStart}
         <div class="news-card-img-wrap">
           <img src="${image}" alt="${escapeHtml(rawTitle.replace(/\n/g, ' '))}" loading="lazy" decoding="async">
@@ -204,27 +205,71 @@ function escapeHtml(str) {
 }
 
 /**
- * Mobile-only Collapsible Sections ("＋ 続きを読む" / "－ 閉じる")
+ * Collapsible "タップで開く（もっと見る）" Sections & Grid Expanders
  */
 function initMobileCollapsible() {
-  const buttons = document.querySelectorAll('.mobile-collapse-btn[data-mobile-toggle]');
-  if (!buttons.length) return;
-
-  buttons.forEach(btn => {
-    const targetId = btn.getAttribute('data-mobile-toggle');
+  // 1. Section-level collapsible boxes (STATEMENT, PROFILE, WNBA 15 Teams)
+  const moreBtns = document.querySelectorAll('.section-more-btn[data-more-target]');
+  moreBtns.forEach(btn => {
+    const targetId = btn.getAttribute('data-more-target');
     const targetEl = document.getElementById(targetId);
-    const labelEl = btn.querySelector('.collapse-btn-label');
-    if (!targetEl || !labelEl) return;
+    const iconEl = btn.querySelector('.more-btn-icon');
+    const textEl = btn.querySelector('.more-btn-text');
+    if (!targetEl || !textEl) return;
 
-    const defaultText = labelEl.textContent.trim();
+    const defaultText = textEl.textContent.trim();
 
     btn.addEventListener('click', () => {
-      const isExpanded = targetEl.classList.toggle('is-mobile-expanded');
-      btn.classList.toggle('is-open', isExpanded);
-      btn.setAttribute('aria-expanded', String(isExpanded));
-      labelEl.textContent = isExpanded ? '－ 閉じる' : defaultText;
+      const isHidden = targetEl.hasAttribute('hidden');
+      if (isHidden) {
+        targetEl.removeAttribute('hidden');
+        btn.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        if (iconEl) iconEl.textContent = '－';
+        textEl.textContent = '閉じる（折りたたむ）';
+      } else {
+        targetEl.setAttribute('hidden', '');
+        btn.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        if (iconEl) iconEl.textContent = '＋';
+        textEl.textContent = defaultText;
+      }
     });
   });
+
+  // 2. NEWS "過去のニュースをもっと見る（＋3件）"
+  const newsMoreBtn = document.getElementById('newsMoreToggleBtn');
+  const newsGrid = document.querySelector('.news-grid');
+  if (newsMoreBtn && newsGrid) {
+    const iconEl = newsMoreBtn.querySelector('.more-btn-icon');
+    const textEl = newsMoreBtn.querySelector('.more-btn-text');
+    const defaultText = textEl ? textEl.textContent.trim() : '過去のニュースをもっと見る（＋3件）';
+
+    newsMoreBtn.addEventListener('click', () => {
+      const isExpanded = newsGrid.classList.toggle('show-all-news');
+      newsMoreBtn.classList.toggle('is-open', isExpanded);
+      newsMoreBtn.setAttribute('aria-expanded', String(isExpanded));
+      if (iconEl) iconEl.textContent = isExpanded ? '－' : '＋';
+      if (textEl) textEl.textContent = isExpanded ? '過去のニュースを折りたたむ' : defaultText;
+    });
+  }
+
+  // 3. GALLERY "オフショット写真をもっと見る（＋4枚）"
+  const galleryMoreBtn = document.getElementById('galleryMoreToggleBtn');
+  const galleryGrid = document.querySelector('.collage-photos-grid');
+  if (galleryMoreBtn && galleryGrid) {
+    const iconEl = galleryMoreBtn.querySelector('.more-btn-icon');
+    const textEl = galleryMoreBtn.querySelector('.more-btn-text');
+    const defaultText = textEl ? textEl.textContent.trim() : 'オフショット写真をもっと見る（＋4枚）';
+
+    galleryMoreBtn.addEventListener('click', () => {
+      const isExpanded = galleryGrid.classList.toggle('show-all-photos');
+      galleryMoreBtn.classList.toggle('is-open', isExpanded);
+      galleryMoreBtn.setAttribute('aria-expanded', String(isExpanded));
+      if (iconEl) iconEl.textContent = isExpanded ? '－' : '＋';
+      if (textEl) textEl.textContent = isExpanded ? 'オフショット写真を折りたたむ' : defaultText;
+    });
+  }
 }
 
 /**
