@@ -838,45 +838,43 @@
                     </ul>
                 </div>
 
-                <!-- スマホ専用スワイプヒント -->
-                <div class="mobile-swipe-hint" aria-hidden="true">
-                    <span>&larr; 左右にスワイプして写真をめくる（全8枚） &rarr;</span>
-                </div>
+                <!-- 右カラム：オフショット写真ギャラリー ＋ 真下の「もっと見る」ボタン -->
+                <div class="collage-photos-col">
+                    <!-- オフショット写真ギャラリー（初期4枚表示・ボタン押下で下に＋4枚展開） -->
+                    <div class="collage-photos-grid">
+                        <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 1（練習・遠征風景）">
+                            <img src="images/eLr9eA4LT82MnBISvnik9A.jpg" alt="島原大智 オフショット写真 1（練習・遠征風景）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 2（チームメイトとの交流）">
+                            <img src="images/h4aNTqaAQzqDKAj3AHMgBw.jpg" alt="島原大智 オフショット写真 2（チームメイトとの交流）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 3（体育館でのワンシーン）">
+                            <img src="images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg" alt="島原大智 オフショット写真 3（体育館でのワンシーン）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 愛媛遠征オフショット（蛇口みかんジュース）">
+                            <img src="images/ehime_mikan_juice.jpg" alt="島原大智 愛媛遠征オフショット（蛇口みかんジュース）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 5（遠征先でのスナップ）">
+                            <img src="images/wwCRiC-ORKeJXwpUnWNovw.jpg" alt="島原大智 オフショット写真 5（遠征先でのスナップ）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 6（バスケ仲間との記念撮影）">
+                            <img src="images/zbICtdpkRRSUus1xPqoVEQ.jpg" alt="島原大智 オフショット写真 6（バスケ仲間との記念撮影）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 7（コートサイド風景）">
+                            <img src="images/5hWodn-VTF6pPPU5mBzwjA.jpg" alt="島原大智 オフショット写真 7（コートサイド風景）" loading="lazy" decoding="async">
+                        </div>
+                        <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 8（試合後のオフショット）">
+                            <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" alt="島原大智 オフショット写真 8（試合後のオフショット）" loading="lazy" decoding="async">
+                        </div>
+                    </div>
 
-                <!-- オフショット写真ギャラリー（8枚均等グリッド配置・文字なし） -->
-                <div class="collage-photos-grid">
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 1（練習・遠征風景）">
-                        <img src="images/eLr9eA4LT82MnBISvnik9A.jpg" alt="島原大智 オフショット写真 1（練習・遠征風景）" loading="lazy" decoding="async">
+                    <!-- 写真の真下に配置：押すとすぐ上に追加4枚が展開 -->
+                    <div class="more-toggle-wrap gallery-more-wrap">
+                        <button type="button" class="section-more-btn" id="galleryMoreToggleBtn" aria-expanded="false">
+                            <span class="more-btn-icon">＋</span>
+                            <span class="more-btn-text">オフショット写真をもっと見る（＋4枚）</span>
+                        </button>
                     </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 2（チームメイトとの交流）">
-                        <img src="images/h4aNTqaAQzqDKAj3AHMgBw.jpg" alt="島原大智 オフショット写真 2（チームメイトとの交流）" loading="lazy" decoding="async">
-                    </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 3（体育館でのワンシーン）">
-                        <img src="images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg" alt="島原大智 オフショット写真 3（体育館でのワンシーン）" loading="lazy" decoding="async">
-                    </div>
-                    <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 愛媛遠征オフショット（蛇口みかんジュース）">
-                        <img src="images/ehime_mikan_juice.jpg" alt="島原大智 愛媛遠征オフショット（蛇口みかんジュース）" loading="lazy" decoding="async">
-                    </div>
-                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 5（遠征先でのスナップ）">
-                        <img src="images/wwCRiC-ORKeJXwpUnWNovw.jpg" alt="島原大智 オフショット写真 5（遠征先でのスナップ）" loading="lazy" decoding="async">
-                    </div>
-                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 6（バスケ仲間との記念撮影）">
-                        <img src="images/zbICtdpkRRSUus1xPqoVEQ.jpg" alt="島原大智 オフショット写真 6（バスケ仲間との記念撮影）" loading="lazy" decoding="async">
-                    </div>
-                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 7（コートサイド風景）">
-                        <img src="images/5hWodn-VTF6pPPU5mBzwjA.jpg" alt="島原大智 オフショット写真 7（コートサイド風景）" loading="lazy" decoding="async">
-                    </div>
-                    <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 8（試合後のオフショット）">
-                        <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" alt="島原大智 オフショット写真 8（試合後のオフショット）" loading="lazy" decoding="async">
-                    </div>
-                </div>
-
-                <!-- タップで開く（もっと見る）：オフショット写真残り4枚 -->
-                <div class="more-toggle-wrap">
-                    <button type="button" class="section-more-btn" id="galleryMoreToggleBtn" aria-expanded="false">
-                        <span class="more-btn-icon">＋</span>
-                        <span class="more-btn-text">オフショット写真をもっと見る（＋4枚）</span>
-                    </button>
                 </div>
             </div>
         </section>

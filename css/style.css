@@ -1771,6 +1771,22 @@ button {
 }
 
 /* 8-Photo Casual Scatter (Subtly overlapping, gently tilted, enlarged size, no text) */
+.collage-photos-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.gallery-more-wrap {
+  margin-top: 14px;
+  margin-bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .collage-photos-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -5836,12 +5852,11 @@ main > .subpage-nav-bar:first-child + .section-padding {
     letter-spacing: 0.04em;
   }
 
-  /* 2. Horizontal Swipe Carousels (STATEMENT, NEWS, STRENGTHS, VISION, GALLERY, WNBA) */
+  /* 2. Horizontal Swipe Carousels (STATEMENT, NEWS, STRENGTHS, VISION, WNBA) */
   .philosophy-story-grid,
   .news-grid,
   .strengths-box .cards-grid,
   .vision-box,
-  .collage-photos-grid,
   .wnba-teams-logo-list,
   .wnba-intro-grid,
   .tracker-games-grid.tracker-7games {
@@ -5862,7 +5877,6 @@ main > .subpage-nav-bar:first-child + .section-padding {
   .news-grid::-webkit-scrollbar,
   .strengths-box .cards-grid::-webkit-scrollbar,
   .vision-box::-webkit-scrollbar,
-  .collage-photos-grid::-webkit-scrollbar,
   .wnba-teams-logo-list::-webkit-scrollbar,
   .wnba-intro-grid::-webkit-scrollbar,
   .tracker-games-grid.tracker-7games::-webkit-scrollbar {
@@ -5873,7 +5887,6 @@ main > .subpage-nav-bar:first-child + .section-padding {
   .news-grid::-webkit-scrollbar-track,
   .strengths-box .cards-grid::-webkit-scrollbar-track,
   .vision-box::-webkit-scrollbar-track,
-  .collage-photos-grid::-webkit-scrollbar-track,
   .wnba-teams-logo-list::-webkit-scrollbar-track,
   .wnba-intro-grid::-webkit-scrollbar-track,
   .tracker-games-grid.tracker-7games::-webkit-scrollbar-track {
@@ -5885,7 +5898,6 @@ main > .subpage-nav-bar:first-child + .section-padding {
   .news-grid::-webkit-scrollbar-thumb,
   .strengths-box .cards-grid::-webkit-scrollbar-thumb,
   .vision-box::-webkit-scrollbar-thumb,
-  .collage-photos-grid::-webkit-scrollbar-thumb,
   .wnba-teams-logo-list::-webkit-scrollbar-thumb,
   .wnba-intro-grid::-webkit-scrollbar-thumb,
   .tracker-games-grid.tracker-7games::-webkit-scrollbar-thumb {
@@ -5915,11 +5927,17 @@ main > .subpage-nav-bar:first-child + .section-padding {
     scroll-snap-align: start;
   }
 
+  .collage-photos-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    padding: 6px 2px !important;
+  }
+
   .collage-photos-grid > .collage-photo-item {
-    flex: 0 0 70%;
-    max-width: 70%;
+    width: 100%;
+    max-width: 100%;
     aspect-ratio: 4 / 3;
-    scroll-snap-align: center;
     transform: none !important;
   }
 
