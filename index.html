@@ -192,7 +192,7 @@
                 <div class="hero-img-aura" aria-hidden="true"></div>
                 <div class="hero-img-backdrop" aria-hidden="true"></div>
                 <div class="hero-img-frame">
-                    <img src="images/IMG_8532.jpg" alt="島原大智 ポートレート写真" class="hero-img" width="540" height="680" fetchpriority="high" decoding="async">
+                    <img src="images/IMG_8532.jpg" alt="島原大智 ポートレート写真" class="hero-img" data-photo-slot="hero" width="540" height="680" fetchpriority="high" decoding="async">
                 </div>
                 <!-- 浮遊プレイヤーステータスカード（左下） -->
                 <div class="hero-floating-badge badge-bottom-left" aria-hidden="true">
@@ -248,7 +248,7 @@
                     <!-- CARD 1: ON THE COURT -->
                     <article class="story-card card-play">
                         <div class="story-card-bg-wrap">
-                            <img src="images/nCodfH6uTi-zfORtPWL2Kw.jpg" alt="EXCELLENCEでの試合・チーム風景" class="story-card-bg" loading="lazy" decoding="async">
+                            <img src="images/nCodfH6uTi-zfORtPWL2Kw.jpg" alt="EXCELLENCEでの試合・チーム風景" class="story-card-bg" data-photo-slot="statement_1" loading="lazy" decoding="async">
                             <div class="story-card-overlay"></div>
                         </div>
                         <div class="story-card-content">
@@ -280,7 +280,7 @@
                     <!-- CARD 2: BEYOND BORDERS -->
                     <article class="story-card card-connect">
                         <div class="story-card-bg-wrap">
-                            <img src="images/ehime_team_salute.jpg" alt="愛媛県クラブチームとの練習・交流風景" class="story-card-bg" loading="lazy" decoding="async">
+                            <img src="images/ehime_team_salute.jpg" alt="愛媛県クラブチームとの練習・交流風景" class="story-card-bg" data-photo-slot="statement_2" loading="lazy" decoding="async">
                             <div class="story-card-overlay"></div>
                         </div>
                         <div class="story-card-content">
@@ -313,7 +313,7 @@
                     <!-- CARD 3: CREATIVE & WEB -->
                     <article class="story-card card-creative">
                         <div class="story-card-bg-wrap">
-                            <img src="images/IwPsWPFURlSngd9m60T98w.jpg" alt="チームの熱量とストーリーを表現する一枚" class="story-card-bg" loading="lazy" decoding="async">
+                            <img src="images/IwPsWPFURlSngd9m60T98w.jpg" alt="チームの熱量とストーリーを表現する一枚" class="story-card-bg" data-photo-slot="statement_3" loading="lazy" decoding="async">
                             <div class="story-card-overlay"></div>
                         </div>
                         <div class="story-card-content">
@@ -761,7 +761,7 @@
                 <!-- 遠征・チーム訪問カード -->
                 <article class="vision-card">
                     <div class="vision-card-img-wrapper">
-                        <img src="images/5wmlkUItSNWx0Gh7hiKayw.jpg" alt="地方遠征 & 海辺での一枚" loading="lazy" decoding="async">
+                        <img src="images/5wmlkUItSNWx0Gh7hiKayw.jpg" alt="地方遠征 & 海辺での一枚" data-photo-slot="vision_1" loading="lazy" decoding="async">
                         <span class="vision-card-tag-badge">TRAVEL &amp; TRIP</span>
                         <div class="vision-card-icon-badge" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
@@ -780,7 +780,7 @@
                 <!-- ビジョン & チーム募集カード -->
                 <article class="vision-card">
                     <div class="vision-card-img-wrapper">
-                        <img src="images/mRke21uCSjeQj7z8Q57I-Q.jpg" alt="黒ユニフォーム チーム集合写真" loading="lazy" decoding="async">
+                        <img src="images/mRke21uCSjeQj7z8Q57I-Q.jpg" alt="黒ユニフォーム チーム集合写真" data-photo-slot="vision_2" loading="lazy" decoding="async">
                         <span class="vision-card-tag-badge">ONE TEAM</span>
                         <div class="vision-card-icon-badge" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -841,7 +841,7 @@
                 <!-- 右カラム：オフショット写真ギャラリー ＋ 真下の「もっと見る」ボタン -->
                 <div class="collage-photos-col">
                     <!-- オフショット写真ギャラリー（初期表示の上段4枚） -->
-                    <div class="collage-photos-grid">
+                    <div class="collage-photos-grid" id="galleryMainGrid">
                         <div class="collage-photo-item" tabindex="0" role="img" aria-label="島原大智 オフショット写真 1（練習・遠征風景）">
                             <img src="images/eLr9eA4LT82MnBISvnik9A.jpg" alt="島原大智 オフショット写真 1（練習・遠征風景）" loading="lazy" decoding="async">
                         </div>
@@ -859,7 +859,7 @@
                     <!-- 下方向へなめらかにスライド展開する追加4枚ドロワー -->
                     <div class="collage-extra-drawer" id="galleryExtraDrawer" aria-hidden="true">
                         <div class="collage-extra-drawer-inner">
-                            <div class="collage-photos-grid collage-photos-extra-grid">
+                            <div class="collage-photos-grid collage-photos-extra-grid" id="galleryExtraGrid">
                                 <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="島原大智 オフショット写真 5（遠征先でのスナップ）">
                                     <img src="images/wwCRiC-ORKeJXwpUnWNovw.jpg" alt="島原大智 オフショット写真 5（遠征先でのスナップ）" loading="lazy" decoding="async">
                                 </div>

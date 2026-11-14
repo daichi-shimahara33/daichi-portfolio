@@ -1,0 +1,82 @@
+{
+  "slots": {
+    "hero": {
+      "label": "ABOUT // メインポートレート写真",
+      "section": "ABOUT（トップ画面）",
+      "src": "images/IMG_8532.jpg",
+      "alt": "島原大智 ポートレート写真"
+    },
+    "statement_1": {
+      "label": "STATEMENT // PILLAR 01（ON THE COURT）背景",
+      "section": "STATEMENT（3つの柱）",
+      "src": "images/nCodfH6uTi-zfORtPWL2Kw.jpg",
+      "alt": "EXCELLENCEでの試合・チーム風景"
+    },
+    "statement_2": {
+      "label": "STATEMENT // PILLAR 02（BEYOND BORDERS）背景",
+      "section": "STATEMENT（3つの柱）",
+      "src": "images/ehime_team_salute.jpg",
+      "alt": "愛媛県クラブチームとの練習・交流風景"
+    },
+    "statement_3": {
+      "label": "STATEMENT // PILLAR 03（CREATIVE & WEB）背景",
+      "section": "STATEMENT（3つの柱）",
+      "src": "images/IwPsWPFURlSngd9m60T98w.jpg",
+      "alt": "チームの熱量とストーリーを表現する一枚"
+    },
+    "vision_1": {
+      "label": "VISION // 01 全国のバスケ仲間との繋がり",
+      "section": "VISION（今後の展望）",
+      "src": "images/5wmlkUItSNWx0Gh7hiKayw.jpg",
+      "alt": "地方遠征 & 海辺での一枚"
+    },
+    "vision_2": {
+      "label": "VISION // 02 競技とクリエイティブの両立",
+      "section": "VISION（今後の展望）",
+      "src": "images/mRke21uCSjeQj7z8Q57I-Q.jpg",
+      "alt": "黒ユニフォーム チーム集合写真"
+    }
+  },
+  "gallery": [
+    {
+      "id": "gal-1",
+      "src": "images/eLr9eA4LT82MnBISvnik9A.jpg",
+      "alt": "島原大智 オフショット写真 1（練習・遠征風景）"
+    },
+    {
+      "id": "gal-2",
+      "src": "images/h4aNTqaAQzqDKAj3AHMgBw.jpg",
+      "alt": "島原大智 オフショット写真 2（チームメイトとの交流）"
+    },
+    {
+      "id": "gal-3",
+      "src": "images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg",
+      "alt": "島原大智 オフショット写真 3（体育館でのワンシーン）"
+    },
+    {
+      "id": "gal-4",
+      "src": "images/ehime_mikan_juice.jpg",
+      "alt": "島原大智 愛媛遠征オフショット（蛇口みかんジュース）"
+    },
+    {
+      "id": "gal-5",
+      "src": "images/wwCRiC-ORKeJXwpUnWNovw.jpg",
+      "alt": "島原大智 オフショット写真 5（遠征先でのスナップ）"
+    },
+    {
+      "id": "gal-6",
+      "src": "images/zbICtdpkRRSUus1xPqoVEQ.jpg",
+      "alt": "島原大智 オフショット写真 6（バスケ仲間との記念撮影）"
+    },
+    {
+      "id": "gal-7",
+      "src": "images/5hWodn-VTF6pPPU5mBzwjA.jpg",
+      "alt": "島原大智 オフショット写真 7（コートサイド風景）"
+    },
+    {
+      "id": "gal-8",
+      "src": "images/SuUS89tdQ3m_J9UOu82GOg.jpg",
+      "alt": "島原大智 オフショット写真 8（試合後のオフショット）"
+    }
+  ]
+}

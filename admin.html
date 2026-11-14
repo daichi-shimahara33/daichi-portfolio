@@ -3,23 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEWS ADMIN // 島原大智 #33 お知らせ管理ダッシュボード</title>
-    
+    <meta name="robots" content="noindex, nofollow">
+    <title>PHOTO &amp; SITE ADMIN // 島原大智 #33 関係者専用管理コンソール</title>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+
     <!-- サイト共通スタイル & 管理画面専用スタイル -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="admin-body">
 
-    <!-- ヘッダー -->
+    <!-- =================================================================
+         作成関係者専用 パスコードロック画面（部外者ブロック用）
+         ================================================================= -->
+    <div class="admin-auth-gate" id="admin-auth-gate">
+        <div class="auth-gate-card">
+            <span class="auth-badge">CREATOR &amp; STAFF ONLY</span>
+            <h1 class="auth-title">DAICHI SHIMAHARA <span>#33</span></h1>
+            <p class="auth-subtitle">写真・サイト更新 関係者専用コンソール</p>
+            <form id="auth-gate-form" class="auth-form">
+                <label for="auth-passcode" class="auth-label">関係者パスコードを入力してください</label>
+                <input type="password" id="auth-passcode" class="auth-input" placeholder="パスコード（初期値: 3333）" autocomplete="current-password" required>
+                <p class="auth-error" id="auth-error" style="display: none;">パスコードが正しくありません</p>
+                <button type="submit" class="admin-btn-primary auth-submit-btn">管理画面へログイン</button>
+            </form>
+            <p class="auth-hint">※背番号にちなんだ初期パスコード「<strong>3333</strong>」で入れます（指示いただければ任意のパスワードに変更可能です）</p>
+        </div>
+    </div>
+
+    <!-- =================================================================
+         ヘッダー
+         ================================================================= -->
     <header class="admin-header">
         <div class="admin-header-left">
-            <span class="admin-badge">ADMIN CONSOLE</span>
+            <span class="admin-badge">PHOTO &amp; SITE ADMIN</span>
             <h1 class="admin-logo">DAICHI SHIMAHARA <span>#33</span></h1>
             <span class="server-status" id="server-status" title="サーバー接続ステータス">
                 <span class="status-dot"></span>
@@ -27,178 +48,335 @@
             </span>
         </div>
         <div class="admin-header-actions">
-            <a href="index.html" target="_blank" class="admin-btn-secondary" title="別タブでトップページを表示">
+            <a href="index.html" target="_blank" class="admin-btn-outline" title="別タブでトップページを表示">
                 <span>サイトを確認 ↗</span>
             </a>
-            <button type="button" id="btn-export-json" class="admin-btn-outline" title="現在のデータをJSONファイルとしてダウンロード">
-                <span>JSONダウンロード</span>
+            <button type="button" id="btn-save-all" class="admin-btn-secondary" title="写真の並びや変更をサイトに保存">
+                <span>💾 サイトへ保存</span>
+            </button>
+            <button type="button" id="btn-publish-live" class="admin-btn-primary" title="GitHub / Vercel本番環境へワンクリック反映">
+                <span>🚀 本番サイトへ公開</span>
+            </button>
+            <button type="button" id="btn-lock-admin" class="admin-btn-outline" title="管理画面をロックする">
+                <span>🔒</span>
             </button>
         </div>
     </header>
 
-    <!-- メインコンテンツ -->
+    <!-- =================================================================
+         メインコンテンツ
+         ================================================================= -->
     <main class="admin-main">
         <div class="admin-container">
 
             <!-- 通知トースト -->
             <div id="admin-toast" class="admin-toast" role="alert" aria-live="polite"></div>
 
-            <!-- ダッシュボード グリッド -->
-            <div class="admin-grid">
+            <!-- 管理機能切り替えタブ -->
+            <nav class="admin-tabs" aria-label="管理メニュー切り替え">
+                <button type="button" class="admin-tab is-active" data-admin-tab="gallery">
+                    <span class="tab-icon">📸</span>
+                    <span class="tab-label">オフショット写真管理（GALLERY）</span>
+                </button>
+                <button type="button" class="admin-tab" data-admin-tab="slots">
+                    <span class="tab-icon">🖼️</span>
+                    <span class="tab-label">各セクションの写真変更</span>
+                </button>
+                <button type="button" class="admin-tab" data-admin-tab="library">
+                    <span class="tab-icon">🗂️</span>
+                    <span class="tab-label">写真ライブラリ（追加・軽量化）</span>
+                </button>
+                <button type="button" class="admin-tab" data-admin-tab="news">
+                    <span class="tab-icon">📰</span>
+                    <span class="tab-label">NEWS記事・写真管理</span>
+                </button>
+            </nav>
 
-                <!-- 左側：入力・編集フォーム -->
-                <section class="admin-card form-panel">
+            <!-- =========================================================
+                 TAB 1: オフショット写真管理（GALLERY）
+                 ========================================================= -->
+            <section class="admin-tab-panel is-active" id="tab-panel-gallery">
+                <div class="admin-card">
                     <div class="panel-header">
-                        <h2 class="panel-title" id="form-heading">
-                            <span class="panel-icon">✍️</span>
-                            <span id="form-mode-title">新しいお知らせを投稿</span>
-                        </h2>
-                        <button type="button" id="btn-cancel-edit" class="btn-text" style="display: none;">編集をキャンセル</button>
+                        <div>
+                            <h2 class="panel-title">
+                                <span class="panel-icon">📸</span>
+                                <span>GALLERY（日々の練習 &amp; オフショット）写真の管理</span>
+                            </h2>
+                            <p class="panel-desc">
+                                コードを触らずに、写真の追加・差し替え・順番入れ替え・削除ができます。<strong>1〜4枚目が「常時表示」</strong>、<strong>5枚目以降が「＋もっと見る（スライド展開）」</strong>に自動で入ります。
+                            </p>
+                        </div>
+                        <div class="panel-header-btns">
+                            <button type="button" class="admin-btn-primary" id="btn-add-gallery-photo">
+                                <span>＋ 新しい写真をギャラリーに追加</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <form id="news-form" class="news-form" novalidate>
-                        <input type="hidden" id="edit-item-id" value="">
+                    <!-- 上段：常時表示の4枚 -->
+                    <div class="gallery-admin-group">
+                        <div class="gallery-group-header">
+                            <span class="group-pill pill-visible">常時表示（上段 1〜4枚目）</span>
+                            <span class="group-note">ページを開いたときに最初から並んでいる4枚です</span>
+                        </div>
+                        <div class="gallery-admin-grid" id="admin-gallery-top-grid">
+                            <!-- JSで描画 -->
+                        </div>
+                    </div>
 
-                        <!-- 日付 & カテゴリ -->
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label for="news-date">日付 <span class="req">*</span></label>
-                                <input type="date" id="news-date" required class="form-input">
-                            </div>
+                    <!-- 下段：「もっと見る」スライド展開枠 -->
+                    <div class="gallery-admin-group" style="margin-top: 32px;">
+                        <div class="gallery-group-header">
+                            <span class="group-pill pill-drawer">「＋もっと見る」スライド展開枠（5枚目以降）</span>
+                            <span class="group-note">ボタンを押したときに下へスーッとスライドして出てくる写真です</span>
+                        </div>
+                        <div class="gallery-admin-grid" id="admin-gallery-extra-grid">
+                            <!-- JSで描画 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                            <div class="form-group">
-                                <label for="news-category">カテゴリ <span class="req">*</span></label>
-                                <select id="news-category" required class="form-select">
-                                    <option value="SPECIAL">SPECIAL（特集・注目トピック）</option>
-                                    <option value="PRIVATE">PRIVATE（プライベート・オフショット）</option>
-                                    <option value="TEAM">TEAM（所属チーム・活動）</option>
-                                    <option value="GAME">GAME（試合結果・スタッツ）</option>
-                                    <option value="VISIT">VISIT（遠征・チーム訪問）</option>
-                                    <option value="CREATIVE">CREATIVE（映像・制作実績）</option>
-                                    <option value="INFO">INFO（お知らせ・一般）</option>
-                                </select>
-                            </div>
+            <!-- =========================================================
+                 TAB 2: 各セクションの写真変更（ABOUT / STATEMENT / VISION）
+                 ========================================================= -->
+            <section class="admin-tab-panel" id="tab-panel-slots">
+                <div class="admin-card">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title">
+                                <span class="panel-icon">🖼️</span>
+                                <span>各セクションのメイン・背景写真の差し替え</span>
+                            </h2>
+                            <p class="panel-desc">
+                                トップ画面のポートレート写真や、STATEMENT（3つの柱）、VISIONの写真をワンクリックで別の写真に差し替えられます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="slots-admin-grid" id="admin-slots-grid">
+                        <!-- JSで6つのスロットカードを描画 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================
+                 TAB 3: 写真ライブラリ（一括アップロード・自動軽量化・一覧）
+                 ========================================================= -->
+            <section class="admin-tab-panel" id="tab-panel-library">
+                <div class="admin-card">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title">
+                                <span class="panel-icon">🗂️</span>
+                                <span>写真ライブラリ &amp; 自動高画質軽量化アップローダー</span>
+                            </h2>
+                            <p class="panel-desc">
+                                スマホやPCから写真をドラッグ＆ドロップすると、<strong>Retina高画質を保ったまま自動で軽量化</strong>して <code>images/</code> フォルダに保存します。
+                            </p>
+                        </div>
+                        <span class="items-count-badge" id="library-count-badge">0 枚</span>
+                    </div>
+
+                    <!-- 一括ドラッグ＆ドロップアップローダー -->
+                    <div class="library-upload-box" id="library-dropzone" tabindex="0" role="button">
+                        <input type="file" id="library-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" multiple style="display: none;">
+                        <span class="dropzone-icon">📤</span>
+                        <p class="dropzone-text">
+                            <strong>ここをクリックして写真を選択</strong> または <strong>複数枚の写真をドラッグ＆ドロップ</strong>
+                        </p>
+                        <span class="dropzone-note">大きな写真（5MBなど）もアップロード時に自動で高画質軽量化（約150〜250KB）されます</span>
+                        <div class="upload-progress" id="library-upload-status" style="display: none; margin-top: 12px;">
+                            <span class="spinner"></span> <span id="library-upload-status-text">写真を軽量化＆保存中...</span>
+                        </div>
+                    </div>
+
+                    <!-- 登録済み全画像グリッド -->
+                    <div class="library-media-grid" id="library-media-grid">
+                        <!-- JSで描画 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================
+                 TAB 4: NEWS（お知らせ投稿・編集）
+                 ========================================================= -->
+            <section class="admin-tab-panel" id="tab-panel-news">
+                <div class="admin-grid">
+                    <!-- 左側：入力・編集フォーム -->
+                    <section class="admin-card form-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title" id="form-heading">
+                                <span class="panel-icon">✍️</span>
+                                <span id="form-mode-title">新しいお知らせを投稿</span>
+                            </h2>
+                            <button type="button" id="btn-cancel-edit" class="btn-text" style="display: none;">編集をキャンセル</button>
                         </div>
 
-                        <!-- タイトル -->
-                        <div class="form-group">
-                            <label for="news-title">タイトル <span class="req">*</span></label>
-                            <input type="text" id="news-title" placeholder="例: 秋季クラブ選手権 第3節 EXCELLENCE勝利" required class="form-input">
-                        </div>
+                        <form id="news-form" class="news-form" novalidate>
+                            <input type="hidden" id="edit-item-id" value="">
 
-                        <!-- 写真選択 & アップロード -->
-                        <div class="form-group">
-                            <label for="news-image">アイキャッチ画像</label>
-                            
-                            <div class="image-input-container">
-                                <!-- 既存画像セレクト -->
-                                <div class="image-select-row">
-                                    <select id="news-image" class="form-select">
-                                        <option value="">（画像一覧を読み込み中...）</option>
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="news-date">日付 <span class="req">*</span></label>
+                                    <input type="date" id="news-date" required class="form-input">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="news-category">カテゴリ <span class="req">*</span></label>
+                                    <select id="news-category" required class="form-select">
+                                        <option value="SPECIAL">SPECIAL（特集・注目トピック）</option>
+                                        <option value="PRIVATE">PRIVATE（プライベート・オフショット）</option>
+                                        <option value="TEAM">TEAM（所属チーム・活動）</option>
+                                        <option value="GAME">GAME（試合結果・スタッツ）</option>
+                                        <option value="VISIT">VISIT（遠征・チーム訪問）</option>
+                                        <option value="CREATIVE">CREATIVE（映像・制作実績）</option>
+                                        <option value="INFO">INFO（お知らせ・一般）</option>
                                     </select>
                                 </div>
+                            </div>
 
-                                <div class="image-upload-divider">
-                                    <span>または 手元の新しい写真を追加</span>
-                                </div>
+                            <div class="form-group">
+                                <label for="news-title">タイトル <span class="req">*</span></label>
+                                <input type="text" id="news-title" placeholder="例: 秋季クラブ選手権 第3節 EXCELLENCE勝利" required class="form-input">
+                            </div>
 
-                                <!-- ドラッグ＆ドロップ対応アップローダー -->
-                                <div class="image-dropzone" id="image-dropzone" tabindex="0" role="button" aria-label="写真ファイルを選択またはドロップ">
-                                    <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;">
-                                    <div class="dropzone-content" id="dropzone-prompt">
-                                        <span class="dropzone-icon">📸</span>
-                                        <p class="dropzone-text">
-                                            <strong>クリックして写真を選択</strong><br>またはここに写真をドラッグ＆ドロップ
-                                        </p>
-                                        <span class="dropzone-note">JPG, PNG, WebP（images/ フォルダに自動保存されます）</span>
+                            <div class="form-group">
+                                <label for="news-image">アイキャッチ画像</label>
+                                <div class="image-input-container">
+                                    <div class="image-select-row" style="display: flex; gap: 10px;">
+                                        <select id="news-image" class="form-select" style="flex: 1;">
+                                            <option value="">（画像一覧を読み込み中...）</option>
+                                        </select>
+                                        <button type="button" class="admin-btn-outline" id="btn-pick-news-photo">一覧から選ぶ</button>
                                     </div>
-                                    <div class="dropzone-preview" id="dropzone-preview" style="display: none;">
-                                        <span class="upload-badge">アップロード完了 ✓</span>
-                                        <span class="uploaded-filename" id="uploaded-filename"></span>
+
+                                    <div class="image-upload-divider">
+                                        <span>または 手元の新しい写真を追加</span>
                                     </div>
-                                    <div class="upload-progress" id="upload-progress" style="display: none;">
-                                        <span class="spinner"></span> <span>写真を保存中...</span>
+
+                                    <div class="image-dropzone" id="image-dropzone" tabindex="0" role="button">
+                                        <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;">
+                                        <div class="dropzone-content" id="dropzone-prompt">
+                                            <span class="dropzone-icon">📸</span>
+                                            <p class="dropzone-text">
+                                                <strong>クリックして写真を選択</strong> またはドラッグ＆ドロップ
+                                            </p>
+                                            <span class="dropzone-note">自動で高画質軽量化されて保存されます</span>
+                                        </div>
+                                        <div class="dropzone-preview" id="dropzone-preview" style="display: none;">
+                                            <span class="upload-badge">アップロード完了 ✓</span>
+                                            <span class="uploaded-filename" id="uploaded-filename"></span>
+                                        </div>
+                                        <div class="upload-progress" id="upload-progress" style="display: none;">
+                                            <span class="spinner"></span> <span>写真を保存中...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label for="news-desc">本文・詳細 <span class="req">*</span></label>
+                                <textarea id="news-desc" rows="4" placeholder="お知らせの詳細や結果、メッセージを入力してください。" required class="form-textarea"></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" id="btn-submit" class="admin-btn-primary">
+                                    <span id="btn-submit-text">お知らせを公開する</span>
+                                </button>
+                                <button type="button" id="btn-reset-form" class="admin-btn-outline">クリア</button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- 右側：リアルタイムプレビュー -->
+                    <section class="admin-card preview-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title">
+                                <span class="panel-icon">👁</span>
+                                <span>ライブプレビュー</span>
+                            </h2>
+                            <span class="preview-badge">トップページの見た目</span>
                         </div>
 
-                        <!-- 本文・説明 -->
-                        <div class="form-group">
-                            <label for="news-desc">本文・詳細 <span class="req">*</span></label>
-                            <textarea id="news-desc" rows="4" placeholder="お知らせの詳細や結果、メッセージを入力してください。" required class="form-textarea"></textarea>
+                        <div class="preview-container">
+                            <article class="news-card" id="live-preview-card">
+                                <div class="news-card-img-wrap">
+                                    <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" id="prev-img" alt="プレビュー画像">
+                                    <span class="news-badge badge-game" id="prev-badge">GAME</span>
+                                </div>
+                                <div class="news-card-body">
+                                    <time class="news-date" id="prev-date">2026.10.05</time>
+                                    <h3 class="news-title" id="prev-title">タイトルがここに表示されます</h3>
+                                    <p class="news-desc" id="prev-desc">本文のプレビューがここにリアルタイムで表示されます。</p>
+                                </div>
+                            </article>
                         </div>
+                    </section>
+                </div>
 
-                        <!-- 送信ボタン -->
-                        <div class="form-actions">
-                            <button type="submit" id="btn-submit" class="admin-btn-primary">
-                                <span id="btn-submit-text">お知らせを公開する</span>
-                            </button>
-                            <button type="button" id="btn-reset-form" class="admin-btn-outline">クリア</button>
-                        </div>
-                    </form>
-                </section>
-
-                <!-- 右側：リアルタイムプレビュー -->
-                <section class="admin-card preview-panel">
+                <!-- 登録済みお知らせ一覧 -->
+                <section class="admin-card list-panel">
                     <div class="panel-header">
-                        <h2 class="panel-title">
-                            <span class="panel-icon">👁</span>
-                            <span>ライブプレビュー</span>
-                        </h2>
-                        <span class="preview-badge">トップページの見た目</span>
+                        <div class="panel-title-wrap">
+                            <h2 class="panel-title">
+                                <span class="panel-icon">📋</span>
+                                <span>公開中のお知らせ一覧</span>
+                                <span class="items-count-badge" id="items-count">0 件</span>
+                            </h2>
+                        </div>
                     </div>
 
-                    <div class="preview-container">
-                        <!-- ここにトップページのカードと同じ見た目で描画される -->
-                        <article class="news-card" id="live-preview-card">
-                            <div class="news-card-img-wrap">
-                                <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" id="prev-img" alt="プレビュー画像">
-                                <span class="news-badge badge-game" id="prev-badge">GAME</span>
-                            </div>
-                            <div class="news-card-body">
-                                <time class="news-date" id="prev-date">2026.10.05</time>
-                                <h3 class="news-title" id="prev-title">タイトルがここに表示されます</h3>
-                                <p class="news-desc" id="prev-desc">本文のプレビューがここにリアルタイムで表示されます。</p>
-                            </div>
-                        </article>
+                    <div class="table-responsive">
+                        <table class="news-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80px;">画像</th>
+                                    <th style="width: 120px;">日付</th>
+                                    <th style="width: 110px;">カテゴリ</th>
+                                    <th>タイトル / 本文</th>
+                                    <th style="width: 150px; text-align: center;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="news-table-body"></tbody>
+                        </table>
                     </div>
                 </section>
-
-            </div>
-
-            <!-- 下側：登録済みお知らせ一覧 -->
-            <section class="admin-card list-panel">
-                <div class="panel-header">
-                    <div class="panel-title-wrap">
-                        <h2 class="panel-title">
-                            <span class="panel-icon">📋</span>
-                            <span>公開中のお知らせ一覧</span>
-                            <span class="items-count-badge" id="items-count">0 件</span>
-                        </h2>
-                    </div>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="news-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 80px;">画像</th>
-                                <th style="width: 120px;">日付</th>
-                                <th style="width: 110px;">カテゴリ</th>
-                                <th>タイトル / 本文</th>
-                                <th style="width: 150px; text-align: center;">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="news-table-body">
-                            <!-- JSで動的に一覧が描画される -->
-                        </tbody>
-                    </table>
-                </div>
             </section>
 
         </div>
     </main>
+
+    <!-- =================================================================
+         写真選択・新規アップロード モーダル（どの枠からでも視覚的に選べる）
+         ================================================================= -->
+    <div class="photo-picker-modal" id="photo-picker-modal" aria-hidden="true">
+        <div class="photo-picker-backdrop" id="photo-picker-backdrop"></div>
+        <div class="photo-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="picker-modal-title">
+            <div class="picker-modal-header">
+                <div>
+                    <h3 class="picker-modal-title" id="picker-modal-title">写真を選択 または 新規アップロード</h3>
+                    <p class="picker-modal-sub" id="picker-modal-sub">使いたい写真をクリックするか、手元の新しい写真をドロップしてください</p>
+                </div>
+                <button type="button" class="picker-close-btn" id="picker-close-btn" aria-label="閉じる">✕</button>
+            </div>
+
+            <!-- モーダル内クイックアップロード -->
+            <div class="picker-upload-strip" id="picker-upload-strip">
+                <input type="file" id="picker-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;">
+                <button type="button" class="admin-btn-primary" id="btn-picker-upload-trigger">
+                    <span>📤 パソコン・スマホから新しい写真をアップロードして使う</span>
+                </button>
+                <span class="picker-upload-hint" id="picker-upload-hint">自動で高画質軽量化されます</span>
+            </div>
+
+            <!-- 画像サムネイル一覧 -->
+            <div class="picker-photos-grid" id="picker-photos-grid">
+                <!-- JSで描画 -->
+            </div>
+        </div>
+    </div>
 
     <!-- 管理画面ロジック -->
     <script src="js/admin.js"></script>

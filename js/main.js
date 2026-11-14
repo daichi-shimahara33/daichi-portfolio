@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeaderScroll();
   initMobileMenu();
   initActiveNavObserver();
+  loadDynamicPhotos();
   loadDynamicNews();
   initMobileCollapsible();
   initBackToTop();
@@ -115,6 +116,102 @@ function initActiveNavObserver() {
         link.classList.remove('active');
       }
     });
+  }
+}
+
+/**
+ * Loads dynamic photos configuration from /api/photos, data/photos.json, or localStorage
+ */
+async function loadDynamicPhotos() {
+  const hasSlotOrGallery = document.querySelector('[data-photo-slot]') || document.getElementById('galleryMainGrid');
+  if (!hasSlotOrGallery) return;
+
+  let photoData = null;
+
+  try {
+    const res = await fetch('/api/photos', { cache: 'no-store' });
+    if (res.ok) {
+      photoData = await res.json();
+    }
+  } catch (e) {
+    try {
+      const jsonRes = await fetch('data/photos.json', { cache: 'no-store' });
+      if (jsonRes.ok) {
+        photoData = await jsonRes.json();
+      }
+    } catch (err) {}
+  }
+
+  if (!photoData) {
+    const saved = localStorage.getItem('ds_portfolio_photos_data');
+    if (saved) {
+      try {
+        photoData = JSON.parse(saved);
+      } catch (e) {}
+    }
+  }
+
+  if (!photoData) return;
+
+  // 1. Update Fixed Section Photo Slots (ABOUT, STATEMENT, VISION)
+  if (photoData.slots && typeof photoData.slots === 'object') {
+    Object.entries(photoData.slots).forEach(([slotKey, slotInfo]) => {
+      if (!slotInfo || !slotInfo.src) return;
+      const imgEl = document.querySelector(`img[data-photo-slot="${slotKey}"]`);
+      if (imgEl) {
+        imgEl.src = slotInfo.src;
+        if (slotInfo.alt) imgEl.alt = slotInfo.alt;
+      }
+    });
+  }
+
+  // 2. Update Off-Shot Gallery Photos (Top 4 + Slide-down Extra Drawer)
+  if (Array.isArray(photoData.gallery) && photoData.gallery.length > 0) {
+    const mainGrid = document.getElementById('galleryMainGrid');
+    const extraGrid = document.getElementById('galleryExtraGrid');
+    const moreWrap = document.querySelector('.gallery-more-wrap');
+    const moreBtn = document.getElementById('galleryMoreToggleBtn');
+
+    if (mainGrid) {
+      const topPhotos = photoData.gallery.slice(0, 4);
+      const extraPhotos = photoData.gallery.slice(4);
+
+      mainGrid.innerHTML = topPhotos.map((p) => {
+        const src = escapeHtml(p.src || '');
+        const alt = escapeHtml(p.alt || '島原大智 オフショット写真');
+        return `
+          <div class="collage-photo-item" tabindex="0" role="img" aria-label="${alt}">
+            <img src="${src}" alt="${alt}" loading="lazy" decoding="async">
+          </div>
+        `;
+      }).join('');
+
+      if (extraGrid) {
+        extraGrid.innerHTML = extraPhotos.map((p) => {
+          const src = escapeHtml(p.src || '');
+          const alt = escapeHtml(p.alt || '島原大智 オフショット写真');
+          return `
+            <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="${alt}">
+              <img src="${src}" alt="${alt}" loading="lazy" decoding="async">
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (moreWrap && moreBtn) {
+        if (extraPhotos.length > 0) {
+          moreWrap.style.display = 'flex';
+          const textEl = moreBtn.querySelector('.more-btn-text');
+          const defaultLabel = `オフショット写真をもっと見る（＋${extraPhotos.length}枚）`;
+          moreBtn.setAttribute('data-default-label', defaultLabel);
+          if (!moreBtn.classList.contains('is-open') && textEl) {
+            textEl.textContent = defaultLabel;
+          }
+        } else {
+          moreWrap.style.display = 'none';
+        }
+      }
+    }
   }
 }
 
@@ -267,8 +364,9 @@ function initMobileCollapsible() {
       galleryDrawer.setAttribute('aria-hidden', String(!isExpanded));
       galleryMoreBtn.classList.toggle('is-open', isExpanded);
       galleryMoreBtn.setAttribute('aria-expanded', String(isExpanded));
+      const dynamicDefault = galleryMoreBtn.getAttribute('data-default-label') || defaultText;
       if (iconEl) iconEl.textContent = isExpanded ? '－' : '＋';
-      if (textEl) textEl.textContent = isExpanded ? 'オフショット写真を折りたたむ' : defaultText;
+      if (textEl) textEl.textContent = isExpanded ? 'オフショット写真を折りたたむ' : dynamicDefault;
     });
   }
 }
