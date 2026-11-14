@@ -1,14 +1,12 @@
 /**
- * DAICHI SHIMAHARA #33 - PHOTO & SITE ADMIN CONSOLE LOGIC
+ * DAICHI SHIMAHARA #33 - VISUAL SITE-MAP PHOTO & CONTENT ADMIN LOGIC
  */
 
 (function () {
   'use strict';
 
-  // APIエンドポイント & 定数
   const API_NEWS_URL = '/api/news';
   const API_PHOTOS_URL = '/api/photos';
-  const API_IMAGES_URL = '/api/images';
   const API_IMAGES_META_URL = '/api/images/meta';
   const API_UPLOAD_URL = '/api/upload';
   const API_DELETE_IMAGE_URL = '/api/delete-image';
@@ -19,7 +17,6 @@
   const SESSION_AUTH_KEY = 'ds_admin_unlocked_v1';
   const ADMIN_PASSCODE = '3333';
 
-  // フォールバック初期画像一覧
   const FALLBACK_IMAGES = [
     'images/IMG_8532.jpg',
     'images/eLr9eA4LT82MnBISvnik9A.jpg',
@@ -43,42 +40,41 @@
     'images/tokyo_autumn_tournament.jpg'
   ];
 
-  // デフォルト写真設定データ
   const DEFAULT_PHOTOS_DATA = {
     slots: {
       hero: {
-        label: 'ABOUT // メインポートレート写真',
-        section: 'ABOUT（トップ画面）',
+        label: '① トップ画面（ABOUT）右側のメイン写真',
+        section: '① ABOUT（トップ画面）',
         src: 'images/IMG_8532.jpg',
         alt: '島原大智 ポートレート写真'
       },
       statement_1: {
-        label: 'STATEMENT // PILLAR 01（ON THE COURT）背景',
-        section: 'STATEMENT（3つの柱）',
+        label: '② STATEMENT【左カード】背景写真',
+        section: '② STATEMENT（3つの柱）',
         src: 'images/nCodfH6uTi-zfORtPWL2Kw.jpg',
         alt: 'EXCELLENCEでの試合・チーム風景'
       },
       statement_2: {
-        label: 'STATEMENT // PILLAR 02（BEYOND BORDERS）背景',
-        section: 'STATEMENT（3つの柱）',
+        label: '② STATEMENT【真ん中カード】背景写真',
+        section: '② STATEMENT（3つの柱）',
         src: 'images/ehime_team_salute.jpg',
         alt: '愛媛県クラブチームとの練習・交流風景'
       },
       statement_3: {
-        label: 'STATEMENT // PILLAR 03（CREATIVE & WEB）背景',
-        section: 'STATEMENT（3つの柱）',
+        label: '② STATEMENT【右カード】背景写真',
+        section: '② STATEMENT（3つの柱）',
         src: 'images/IwPsWPFURlSngd9m60T98w.jpg',
         alt: 'チームの熱量とストーリーを表現する一枚'
       },
       vision_1: {
-        label: 'VISION // 01 全国のバスケ仲間との繋がり',
-        section: 'VISION（今後の展望）',
+        label: '④ VISION【左：地方遠征カード】写真',
+        section: '④ VISION（今後の展望）',
         src: 'images/5wmlkUItSNWx0Gh7hiKayw.jpg',
         alt: '地方遠征 & 海辺での一枚'
       },
       vision_2: {
-        label: 'VISION // 02 競技とクリエイティブの両立',
-        section: 'VISION（今後の展望）',
+        label: '④ VISION【右：チーム募集カード】写真',
+        section: '④ VISION（今後の展望）',
         src: 'images/mRke21uCSjeQj7z8Q57I-Q.jpg',
         alt: '黒ユニフォーム チーム集合写真'
       }
@@ -105,7 +101,6 @@
     INFO: { label: 'INFO', badgeClass: 'badge-game' }
   };
 
-  // アプリケーション状態
   let photosData = JSON.parse(JSON.stringify(DEFAULT_PHOTOS_DATA));
   let newsList = [];
   let availableImages = [];
@@ -125,11 +120,14 @@
   const serverStatus = document.getElementById('server-status');
   const toast = document.getElementById('admin-toast');
 
-  // GALLERY & SLOTS & LIBRARY DOM
   const galleryTopGrid = document.getElementById('admin-gallery-top-grid');
   const galleryExtraGrid = document.getElementById('admin-gallery-extra-grid');
   const btnAddGalleryPhoto = document.getElementById('btn-add-gallery-photo');
-  const slotsGrid = document.getElementById('admin-slots-grid');
+
+  const vmapNewsCardsGrid = document.getElementById('vmap-news-cards-grid');
+  const vmapNewsEditorBox = document.getElementById('vmap-news-editor-box');
+  const btnToggleNewsForm = document.getElementById('btn-toggle-news-form');
+
   const libraryDropzone = document.getElementById('library-dropzone');
   const libraryFileInput = document.getElementById('library-file-input');
   const libraryUploadStatus = document.getElementById('library-upload-status');
@@ -147,7 +145,7 @@
   const btnPickerUploadTrigger = document.getElementById('btn-picker-upload-trigger');
   const pickerUploadHint = document.getElementById('picker-upload-hint');
 
-  // NEWS DOM
+  // NEWS Form DOM
   const form = document.getElementById('news-form');
   const editIdInput = document.getElementById('edit-item-id');
   const dateInput = document.getElementById('news-date');
@@ -160,15 +158,6 @@
   const btnSubmitText = document.getElementById('btn-submit-text');
   const btnCancelEdit = document.getElementById('btn-cancel-edit');
   const btnResetForm = document.getElementById('btn-reset-form');
-  const tableBody = document.getElementById('news-table-body');
-  const itemsCountBadge = document.getElementById('items-count');
-
-  const imageDropzone = document.getElementById('image-dropzone');
-  const imageFileInput = document.getElementById('image-file-input');
-  const dropzonePrompt = document.getElementById('dropzone-prompt');
-  const dropzonePreview = document.getElementById('dropzone-preview');
-  const uploadedFilename = document.getElementById('uploaded-filename');
-  const uploadProgress = document.getElementById('upload-progress');
 
   const prevImg = document.getElementById('prev-img');
   const prevBadge = document.getElementById('prev-badge');
@@ -176,22 +165,16 @@
   const prevTitle = document.getElementById('prev-title');
   const prevDesc = document.getElementById('prev-desc');
 
-  // 初期化
   document.addEventListener('DOMContentLoaded', async () => {
     initAuthGate();
-    initTabs();
     initDefaultDate();
     initEventListeners();
     await checkServerAndLoadData();
     updateLivePreview();
   });
 
-  /**
-   * 関係者専用パスコードロック画面
-   */
   function initAuthGate() {
     if (!authGate) return;
-
     if (sessionStorage.getItem(SESSION_AUTH_KEY) === 'true') {
       authGate.classList.add('is-unlocked');
     }
@@ -205,7 +188,7 @@
           authGate.classList.add('is-unlocked');
           authError.style.display = 'none';
           authInput.value = '';
-          showToast('関係者認証に成功しました！', 'success');
+          showToast('ロックを解除しました！', 'success');
         } else {
           authError.style.display = 'block';
           authInput.select();
@@ -222,22 +205,6 @@
     }
   }
 
-  /**
-   * タブ切り替え
-   */
-  function initTabs() {
-    const tabBtns = document.querySelectorAll('.admin-tab[data-admin-tab]');
-    const panels = document.querySelectorAll('.admin-tab-panel');
-
-    tabBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-admin-tab');
-        tabBtns.forEach((b) => b.classList.toggle('is-active', b === btn));
-        panels.forEach((p) => p.classList.toggle('is-active', p.id === `tab-panel-${target}`));
-      });
-    });
-  }
-
   function initDefaultDate() {
     if (!dateInput) return;
     const today = new Date();
@@ -248,12 +215,11 @@
   }
 
   function initEventListeners() {
-    // 全体保存ボタン & 本番公開ボタン
     if (btnSaveAll) {
       btnSaveAll.addEventListener('click', async () => {
         await savePhotosData();
         await saveNewsData();
-        showToast('すべての写真・記事設定をサイトに保存しました！', 'success');
+        showToast('すべての変更をサイトに保存しました！', 'success');
       });
     }
 
@@ -261,10 +227,27 @@
       btnPublishLive.addEventListener('click', publishToGitHub);
     }
 
-    // GALLERY 写真追加ボタン
+    // ① ABOUT / ② STATEMENT / ④ VISION の「📸 ここの写真を変更する」ボタン
+    document.querySelectorAll('[data-slot-trigger]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const slotKey = btn.getAttribute('data-slot-trigger');
+        const slotObj = photosData.slots && photosData.slots[slotKey];
+        if (!slotObj) return;
+
+        openPhotoPicker(`${slotObj.label} を選ぶ`, slotObj.src, async (newUrl) => {
+          slotObj.src = newUrl;
+          await savePhotosData();
+          renderVisualSlots();
+          renderLibraryAdmin();
+          showToast(`「${slotObj.label}」を変更しました！`, 'success');
+        });
+      });
+    });
+
+    // ⑤ GALLERY 写真追加ボタン
     if (btnAddGalleryPhoto) {
       btnAddGalleryPhoto.addEventListener('click', () => {
-        openPhotoPicker('GALLERYに新しい写真を追加', '', async (selectedUrl) => {
+        openPhotoPicker('⑤ オフショット（GALLERY）に新しい写真を追加', '', async (selectedUrl) => {
           photosData.gallery.push({
             id: 'gal-' + Date.now(),
             src: selectedUrl,
@@ -273,18 +256,28 @@
           await savePhotosData();
           renderGalleryAdmin();
           renderLibraryAdmin();
-          showToast('ギャラリーに写真を追加しました！', 'success');
+          showToast('オフショット写真を追加しました！', 'success');
         });
       });
     }
 
-    // ライブラリアップローダー
-    initLibraryUploader();
+    // ③ NEWS 新規投稿フォーム開閉
+    if (btnToggleNewsForm && vmapNewsEditorBox) {
+      btnToggleNewsForm.addEventListener('click', () => {
+        const isHidden = vmapNewsEditorBox.style.display === 'none';
+        if (isHidden) {
+          cancelEdit();
+          vmapNewsEditorBox.style.display = 'block';
+          vmapNewsEditorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          vmapNewsEditorBox.style.display = 'none';
+        }
+      });
+    }
 
-    // ピッカーモーダル操作
+    initLibraryUploader();
     initPickerModal();
 
-    // NEWSイベント
     if (form) {
       dateInput.addEventListener('input', updateLivePreview);
       categorySelect.addEventListener('change', updateLivePreview);
@@ -296,14 +289,20 @@
 
     if (btnPickNewsPhoto) {
       btnPickNewsPhoto.addEventListener('click', () => {
-        openPhotoPicker('お知らせのアイキャッチ画像を選択', imageSelect.value, (selectedUrl) => {
+        openPhotoPicker('③ お知らせのアイキャッチ写真を選択', imageSelect.value, (selectedUrl) => {
           addImageOption(selectedUrl, true);
           updateLivePreview();
         });
       });
     }
 
-    if (btnCancelEdit) btnCancelEdit.addEventListener('click', cancelEdit);
+    if (btnCancelEdit) {
+      btnCancelEdit.addEventListener('click', () => {
+        cancelEdit();
+        if (vmapNewsEditorBox) vmapNewsEditorBox.style.display = 'none';
+      });
+    }
+
     if (btnResetForm) {
       btnResetForm.addEventListener('click', () => {
         cancelEdit();
@@ -312,13 +311,8 @@
         updateLivePreview();
       });
     }
-
-    initImageUploadEvents();
   }
 
-  /**
-   * サーバー接続確認 & 全データ読み込み
-   */
   async function checkServerAndLoadData() {
     try {
       const res = await fetch(API_PHOTOS_URL, { cache: 'no-store' });
@@ -328,18 +322,16 @@
           photosData = loadedPhotos;
         }
         isServerOnline = true;
-        setServerStatus(true, 'サーバー接続中（自動軽量化・即時反映）');
+        setServerStatus(true, 'サーバー接続中（変更すると即サイトに反映されます）');
       } else {
         throw new Error('API offline');
       }
     } catch (e) {
       isServerOnline = false;
-      setServerStatus(false, 'ブラウザ保存モード');
+      setServerStatus(false, 'プレビュー保存モード');
       const savedPhotos = localStorage.getItem(LS_PHOTOS_KEY);
       if (savedPhotos) {
-        try {
-          photosData = JSON.parse(savedPhotos);
-        } catch (err) {}
+        try { photosData = JSON.parse(savedPhotos); } catch (err) {}
       } else {
         try {
           const jsonRes = await fetch('data/photos.json', { cache: 'no-store' });
@@ -348,7 +340,6 @@
       }
     }
 
-    // Newsの読み込み
     try {
       const nRes = await fetch(isServerOnline ? API_NEWS_URL : 'data/news.json', { cache: 'no-store' });
       if (nRes.ok) {
@@ -362,15 +353,12 @@
     }
 
     await loadImagesList();
+    renderVisualSlots();
+    renderVisualNewsCards();
     renderGalleryAdmin();
-    renderSlotsAdmin();
     renderLibraryAdmin();
-    renderTable();
   }
 
-  /**
-   * 画像一覧およびメタ情報の取得
-   */
   async function loadImagesList() {
     availableImages = [...FALLBACK_IMAGES];
     imagesMetaList = [];
@@ -413,7 +401,81 @@
   }
 
   /**
-   * TAB 1: GALLERY（オフショット写真管理）の描画
+   * ① ABOUT / ② STATEMENT / ④ VISION のサイト見た目プレビュー画像を最新状態に更新
+   */
+  function renderVisualSlots() {
+    if (!photosData.slots) return;
+    Object.entries(photosData.slots).forEach(([slotKey, slotInfo]) => {
+      const imgEl = document.getElementById(`vmap-img-${slotKey}`);
+      if (imgEl && slotInfo && slotInfo.src) {
+        imgEl.src = slotInfo.src;
+      }
+    });
+  }
+
+  /**
+   * ③ NEWS セクションを実際のカード見た目そのままに描画
+   */
+  function renderVisualNewsCards() {
+    if (!vmapNewsCardsGrid) return;
+    vmapNewsCardsGrid.innerHTML = '';
+
+    newsList.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'vmap-news-card-item';
+
+      const catMeta = CATEGORY_MAP[item.category] || { label: item.category, badgeClass: 'badge-game' };
+      const posLabel = idx < 3
+        ? `🟢 NEWS ${idx + 1}枚目（最初から表示）`
+        : `🟠 NEWS ${idx + 1}枚目（「＋もっと見る」枠）`;
+
+      card.innerHTML = `
+        <div class="vmap-news-pos-bar">
+          <span>${posLabel}</span>
+          <span>${escapeHtml(item.date)}</span>
+        </div>
+        <div class="news-card-img-wrap" style="height: 185px;">
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" style="width:100%;height:100%;object-fit:cover;">
+          <span class="news-badge ${catMeta.badgeClass}">${escapeHtml(catMeta.label)}</span>
+        </div>
+        <div class="news-card-body" style="padding: 16px;">
+          <h4 class="news-title" style="font-size: 1rem; margin-bottom: 8px;">${escapeHtml(item.title).replace(/\n/g, '<br>')}</h4>
+          <p class="news-desc" style="font-size: 0.82rem; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(item.desc)}</p>
+        </div>
+        <div class="vmap-news-actions-bar">
+          <button type="button" class="btn-swap-photo btn-news-photo-only" style="flex: 1.3;">📸 写真だけ変更</button>
+          <button type="button" class="btn-action-edit btn-news-edit">✏️ 文章編集</button>
+          <button type="button" class="btn-action-delete btn-news-del">削除</button>
+        </div>
+      `;
+
+      // 写真だけワンクリック変更
+      card.querySelector('.btn-news-photo-only').addEventListener('click', () => {
+        openPhotoPicker(`③ NEWS ${idx + 1}枚目「${item.title}」の写真を変更`, item.image, async (newUrl) => {
+          item.image = newUrl;
+          await saveNewsData();
+          renderVisualNewsCards();
+          renderLibraryAdmin();
+          showToast(`NEWS ${idx + 1}枚目の写真を変更しました！`, 'success');
+        });
+      });
+
+      // 文章・日付を編集
+      card.querySelector('.btn-news-edit').addEventListener('click', () => {
+        startEdit(item.id);
+      });
+
+      // 削除
+      card.querySelector('.btn-news-del').addEventListener('click', () => {
+        deleteItem(item.id);
+      });
+
+      vmapNewsCardsGrid.appendChild(card);
+    });
+  }
+
+  /**
+   * ⑤ GALLERY（オフショット写真管理）の描画
    */
   function renderGalleryAdmin() {
     if (!galleryTopGrid || !galleryExtraGrid) return;
@@ -427,28 +489,26 @@
       card.className = 'gallery-admin-card';
 
       const posLabel = index < 4
-        ? `${index + 1}枚目（上段・常時表示）`
-        : `${index + 1}枚目（下段・もっと見る枠）`;
+        ? `🟢 上段・左から${index + 1}枚目`
+        : `🟠 下段（もっと見る）・${index - 3}枚目`;
 
       card.innerHTML = `
         <div class="gallery-card-top">
           <span>${posLabel}</span>
           <div class="gallery-order-btns">
-            <button type="button" class="btn-order-move btn-move-prev" ${index === 0 ? 'disabled' : ''} title="1つ前へ移動">←</button>
-            <button type="button" class="btn-order-move btn-move-next" ${index === list.length - 1 ? 'disabled' : ''} title="1つ後ろへ移動">→</button>
+            <button type="button" class="btn-order-move btn-move-prev" ${index === 0 ? 'disabled' : ''} title="1つ左（前）へ移動">←</button>
+            <button type="button" class="btn-order-move btn-move-next" ${index === list.length - 1 ? 'disabled' : ''} title="1つ右（次）へ移動">→</button>
           </div>
         </div>
         <div class="gallery-thumb-wrap">
           <img src="${escapeHtml(item.src)}" alt="${escapeHtml(item.alt)}" loading="lazy">
         </div>
-        <input type="text" class="gallery-caption-input" value="${escapeHtml(item.alt || '')}" placeholder="写真の説明（alt）を入力">
         <div class="gallery-card-actions">
-          <button type="button" class="btn-swap-photo">🔄 写真を差し替え</button>
-          <button type="button" class="btn-action-delete" title="この写真をギャラリーから外す">削除</button>
+          <button type="button" class="btn-swap-photo">📸 ここの写真を変更</button>
+          <button type="button" class="btn-action-delete" title="取り外す">🗑</button>
         </div>
       `;
 
-      // 順番入れ替え（前へ）
       card.querySelector('.btn-move-prev').addEventListener('click', async () => {
         if (index <= 0) return;
         const tmp = list[index - 1];
@@ -456,10 +516,10 @@
         list[index] = tmp;
         await savePhotosData();
         renderGalleryAdmin();
-        showToast('写真の順番を入れ替えました', 'success');
+        renderLibraryAdmin();
+        showToast('オフショット写真の順番を入れ替えました', 'success');
       });
 
-      // 順番入れ替え（次へ）
       card.querySelector('.btn-move-next').addEventListener('click', async () => {
         if (index >= list.length - 1) return;
         const tmp = list[index + 1];
@@ -467,31 +527,22 @@
         list[index] = tmp;
         await savePhotosData();
         renderGalleryAdmin();
-        showToast('写真の順番を入れ替えました', 'success');
+        renderLibraryAdmin();
+        showToast('オフショット写真の順番を入れ替えました', 'success');
       });
 
-      // 説明文（alt）変更
-      const captionInput = card.querySelector('.gallery-caption-input');
-      captionInput.addEventListener('change', async () => {
-        item.alt = captionInput.value.trim();
-        await savePhotosData();
-        showToast('写真の説明文を保存しました', 'success');
-      });
-
-      // 写真差し替え
       card.querySelector('.btn-swap-photo').addEventListener('click', () => {
-        openPhotoPicker(`ギャラリー ${index + 1}枚目の写真を差し替え`, item.src, async (newUrl) => {
+        openPhotoPicker(`⑤ オフショット（${posLabel}）の写真を変更`, item.src, async (newUrl) => {
           item.src = newUrl;
           await savePhotosData();
           renderGalleryAdmin();
           renderLibraryAdmin();
-          showToast(`${index + 1}枚目の写真を差し替えました！`, 'success');
+          showToast(`オフショット写真を差し替えました！`, 'success');
         });
       });
 
-      // 削除
       card.querySelector('.btn-action-delete').addEventListener('click', async () => {
-        if (!window.confirm(`ギャラリー ${index + 1}枚目の写真を取り外しますか？（画像ファイル自体は消えません）`)) return;
+        if (!window.confirm(`「${posLabel}」の写真をギャラリーから取り外しますか？`)) return;
         photosData.gallery.splice(index, 1);
         await savePhotosData();
         renderGalleryAdmin();
@@ -508,58 +559,42 @@
   }
 
   /**
-   * TAB 2: 各セクションの写真スロット描画
-   */
-  function renderSlotsAdmin() {
-    if (!slotsGrid) return;
-    slotsGrid.innerHTML = '';
-
-    const slots = photosData.slots || {};
-    Object.entries(slots).forEach(([slotKey, slotInfo]) => {
-      const card = document.createElement('div');
-      card.className = 'slot-admin-card';
-
-      card.innerHTML = `
-        <span class="slot-section-badge">${escapeHtml(slotInfo.section || 'SECTION')}</span>
-        <h3 class="slot-title">${escapeHtml(slotInfo.label || slotKey)}</h3>
-        <div class="slot-thumb-wrap">
-          <img src="${escapeHtml(slotInfo.src)}" alt="${escapeHtml(slotInfo.alt || '')}" loading="lazy">
-        </div>
-        <span class="slot-file-label">現在: ${escapeHtml(slotInfo.src.replace(/^images\//, ''))}</span>
-        <button type="button" class="btn-swap-photo">🔄 この枠の写真を変更する</button>
-      `;
-
-      card.querySelector('.btn-swap-photo').addEventListener('click', () => {
-        openPhotoPicker(`${slotInfo.label} を変更`, slotInfo.src, async (newUrl) => {
-          slotInfo.src = newUrl;
-          await savePhotosData();
-          renderSlotsAdmin();
-          renderLibraryAdmin();
-          showToast(`「${slotInfo.label}」の写真を更新しました！`, 'success');
-        });
-      });
-
-      slotsGrid.appendChild(card);
-    });
-  }
-
-  /**
-   * TAB 3: 写真ライブラリの描画
+   * 🗂 全写真フォルダ描画（どの写真がサイトのどこで使われているか日本語で明記！）
    */
   function renderLibraryAdmin() {
     if (!libraryMediaGrid) return;
     libraryMediaGrid.innerHTML = '';
 
-    // 現在サイト上で使用中の画像URLセットを作成
-    const usedUrls = new Set();
+    // 画像URLごとに「サイトのどの場所で使われているか」をマッピング
+    const usageMap = {};
+    const addUsage = (url, placeName) => {
+      if (!url) return;
+      if (!usageMap[url]) usageMap[url] = [];
+      usageMap[url].push(placeName);
+    };
+
     if (photosData.slots) {
-      Object.values(photosData.slots).forEach((s) => { if (s && s.src) usedUrls.add(s.src); });
+      if (photosData.slots.hero) addUsage(photosData.slots.hero.src, '📍 ① トップ画面メイン写真');
+      if (photosData.slots.statement_1) addUsage(photosData.slots.statement_1.src, '📍 ② STATEMENT 左カード');
+      if (photosData.slots.statement_2) addUsage(photosData.slots.statement_2.src, '📍 ② STATEMENT 真ん中カード');
+      if (photosData.slots.statement_3) addUsage(photosData.slots.statement_3.src, '📍 ② STATEMENT 右カード');
+      if (photosData.slots.vision_1) addUsage(photosData.slots.vision_1.src, '📍 ④ VISION 左（地方遠征）');
+      if (photosData.slots.vision_2) addUsage(photosData.slots.vision_2.src, '📍 ④ VISION 右（チーム募集）');
     }
+
     if (Array.isArray(photosData.gallery)) {
-      photosData.gallery.forEach((g) => { if (g && g.src) usedUrls.add(g.src); });
+      photosData.gallery.forEach((g, idx) => {
+        const label = idx < 4
+          ? `📍 ⑤ オフショット 上段${idx + 1}枚目`
+          : `📍 ⑤ オフショット 下段${idx - 3}枚目`;
+        addUsage(g.src, label);
+      });
     }
+
     if (Array.isArray(newsList)) {
-      newsList.forEach((n) => { if (n && n.image) usedUrls.add(n.image); });
+      newsList.forEach((n, idx) => {
+        addUsage(n.image, `📍 ③ NEWS ${idx + 1}枚目`);
+      });
     }
 
     if (libraryCountBadge) {
@@ -567,43 +602,31 @@
     }
 
     imagesMetaList.forEach((meta) => {
-      const isUsed = usedUrls.has(meta.url);
+      const places = usageMap[meta.url] || [];
+      const isUsed = places.length > 0;
       const card = document.createElement('div');
       card.className = 'library-media-card';
 
-      const sizeText = meta.size_kb != null ? `${meta.size_kb} KB` : '最適化済';
+      const sizeText = meta.size_kb != null ? `${meta.size_kb} KB` : '軽量化済';
+      const usageTagsHtml = isUsed
+        ? places.map((p) => `<span class="media-usage-tag">${escapeHtml(p)}</span>`).join('')
+        : '<span class="media-unused-tag">現在サイト未使用（いつでも使えます）</span>';
 
       card.innerHTML = `
         <div class="library-media-thumb">
           <img src="${escapeHtml(meta.url)}" alt="${escapeHtml(meta.filename)}" loading="lazy">
-          ${isUsed ? '<span class="media-used-badge">サイト使用中</span>' : ''}
         </div>
-        <div class="library-media-name" title="${escapeHtml(meta.filename)}">${escapeHtml(meta.filename)}</div>
-        <div class="library-media-meta">
+        <div class="media-usage-tags">${usageTagsHtml}</div>
+        <div class="library-media-meta" style="margin-top: auto; padding-top: 6px;">
           <span>容量: <strong>${sizeText}</strong></span>
           ${!isUsed && isServerOnline ? '<button type="button" class="btn-action-delete btn-del-lib" style="padding: 2px 8px; font-size: 0.72rem;">削除</button>' : ''}
         </div>
-        <button type="button" class="btn-swap-photo btn-add-to-gal" style="padding: 5px 8px; font-size: 0.75rem;">＋ ギャラリーに追加</button>
       `;
 
-      // ギャラリーへワンクリック追加
-      card.querySelector('.btn-add-to-gal').addEventListener('click', async () => {
-        photosData.gallery.push({
-          id: 'gal-' + Date.now(),
-          src: meta.url,
-          alt: `島原大智 オフショット写真 ${photosData.gallery.length + 1}`
-        });
-        await savePhotosData();
-        renderGalleryAdmin();
-        renderLibraryAdmin();
-        showToast(`「${meta.filename}」をギャラリーに追加しました！`, 'success');
-      });
-
-      // 未使用画像の削除
       const delBtn = card.querySelector('.btn-del-lib');
       if (delBtn) {
         delBtn.addEventListener('click', async () => {
-          if (!window.confirm(`未使用の画像ファイル「${meta.filename}」を完全に削除しますか？`)) return;
+          if (!window.confirm(`未使用の画像ファイル「${meta.filename}」を削除しますか？`)) return;
           try {
             const res = await fetch(API_DELETE_IMAGE_URL, {
               method: 'POST',
@@ -625,9 +648,6 @@
     });
   }
 
-  /**
-   * ライブラリ一括アップローダー初期化
-   */
   function initLibraryUploader() {
     if (!libraryDropzone || !libraryFileInput) return;
 
@@ -635,9 +655,7 @@
 
     libraryFileInput.addEventListener('change', async (e) => {
       const files = Array.from(e.target.files || []);
-      if (files.length > 0) {
-        await uploadMultipleFiles(files);
-      }
+      if (files.length > 0) await uploadMultipleFiles(files);
       libraryFileInput.value = '';
     });
 
@@ -659,9 +677,7 @@
 
     libraryDropzone.addEventListener('drop', async (e) => {
       const files = Array.from((e.dataTransfer && e.dataTransfer.files) || []);
-      if (files.length > 0) {
-        await uploadMultipleFiles(files);
-      }
+      if (files.length > 0) await uploadMultipleFiles(files);
     });
   }
 
@@ -710,9 +726,6 @@
     }
   }
 
-  /**
-   * 写真選択モーダル（Visual Photo Picker）
-   */
   function initPickerModal() {
     if (!pickerModal) return;
 
@@ -730,16 +743,11 @@
       pickerFileInput.addEventListener('change', async (e) => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
-        if (pickerUploadHint) pickerUploadHint.textContent = '軽量化＆アップロード中...';
+        if (pickerUploadHint) pickerUploadHint.textContent = '高画質軽量化＆アップロード中...';
         try {
           const uploaded = await uploadSingleFileToServer(file);
           await loadImagesList();
           if (uploaded && uploaded.url) {
-            if (pickerUploadHint) {
-              pickerUploadHint.textContent = uploaded.optimized_kb
-                ? `完了: ${uploaded.original_kb}KB ➔ ${uploaded.optimized_kb}KB`
-                : 'アップロード完了！';
-            }
             if (activePickerCallback) {
               const cb = activePickerCallback;
               closePicker();
@@ -785,9 +793,6 @@
     pickerModal.setAttribute('aria-hidden', 'false');
   }
 
-  /**
-   * 写真設定データ（photos.json）の保存
-   */
   async function savePhotosData() {
     localStorage.setItem(LS_PHOTOS_KEY, JSON.stringify(photosData));
     if (isServerOnline) {
@@ -797,21 +802,16 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(photosData)
         });
-      } catch (e) {
-        console.error('Failed to save photos to server:', e);
-      }
+      } catch (e) {}
     }
   }
 
-  /**
-   * 本番サイト（GitHub / Vercel）へワンクリック公開
-   */
   async function publishToGitHub() {
     await savePhotosData();
     await saveNewsData();
 
     if (!isServerOnline) {
-      showToast('ローカル保存しました（本番公開はサーバー起動時に利用できます）', 'info');
+      showToast('保存しました！', 'info');
       return;
     }
 
@@ -824,71 +824,10 @@
       const data = await res.json();
       showToast(data.message || '本番環境へ反映しました！', 'success');
     } catch (e) {
-      showToast('ローカル保存完了（GitHub反映はターミナルから行えます）', 'info');
+      showToast('保存完了しました！', 'info');
     } finally {
       btnPublishLive.disabled = false;
       btnPublishLive.innerHTML = origText;
-    }
-  }
-
-  /**
-   * NEWS 用画像アップロードイベント
-   */
-  function initImageUploadEvents() {
-    if (!imageDropzone || !imageFileInput) return;
-
-    imageDropzone.addEventListener('click', () => imageFileInput.click());
-
-    imageFileInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (file) uploadImageFile(file);
-    });
-
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      imageDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        imageDropzone.classList.add('drag-over');
-      });
-    });
-
-    ['dragleave', 'dragend', 'drop'].forEach((eventName) => {
-      imageDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        imageDropzone.classList.remove('drag-over');
-      });
-    });
-
-    imageDropzone.addEventListener('drop', (e) => {
-      const files = e.dataTransfer && e.dataTransfer.files;
-      if (files && files.length > 0) uploadImageFile(files[0]);
-    });
-  }
-
-  async function uploadImageFile(file) {
-    dropzonePrompt.style.display = 'none';
-    dropzonePreview.style.display = 'none';
-    uploadProgress.style.display = 'flex';
-
-    try {
-      const result = await uploadSingleFileToServer(file);
-      await loadImagesList();
-      renderLibraryAdmin();
-      if (result && result.url) {
-        addImageOption(result.url, true);
-        uploadedFilename.textContent = result.filename;
-        showToast(`写真を軽量化＆保存しました: ${result.filename}`, 'success');
-      }
-      uploadProgress.style.display = 'none';
-      dropzonePreview.style.display = 'flex';
-      updateLivePreview();
-    } catch (err) {
-      showToast('写真のアップロードに失敗しました', 'error');
-      uploadProgress.style.display = 'none';
-      dropzonePrompt.style.display = 'block';
-    } finally {
-      imageFileInput.value = '';
     }
   }
 
@@ -902,9 +841,7 @@
   }
 
   function addImageOption(url, selectNow = false, label = '') {
-    if (!availableImages.includes(url)) {
-      availableImages.unshift(url);
-    }
+    if (!availableImages.includes(url)) availableImages.unshift(url);
     if (!imageSelect) return;
     let existingOpt = Array.from(imageSelect.options).find((opt) => opt.value === url);
     if (!existingOpt) {
@@ -953,7 +890,7 @@
     const img = imageSelect.value;
 
     if (!title || !desc || !rawDate) {
-      showToast('必須項目（日付、タイトル、本文）を入力してください', 'error');
+      showToast('日付、タイトル、本文を入力してください', 'error');
       return;
     }
 
@@ -991,9 +928,10 @@
     await saveNewsData();
     form.reset();
     initDefaultDate();
-    resetDropzoneUI();
     updateLivePreview();
-    renderTable();
+    renderVisualNewsCards();
+    renderLibraryAdmin();
+    if (vmapNewsEditorBox) vmapNewsEditorBox.style.display = 'none';
   }
 
   async function saveNewsData() {
@@ -1009,41 +947,6 @@
     }
   }
 
-  function renderTable() {
-    if (!tableBody || !itemsCountBadge) return;
-    itemsCountBadge.textContent = `${newsList.length} 件`;
-    tableBody.innerHTML = '';
-
-    newsList.forEach((item) => {
-      const tr = document.createElement('tr');
-      const catMeta = CATEGORY_MAP[item.category] || { label: item.category, badgeClass: 'badge-game' };
-
-      tr.innerHTML = `
-        <td><img src="${escapeHtml(item.image)}" alt="" class="table-thumb" loading="lazy"></td>
-        <td><span class="table-date">${escapeHtml(item.date)}</span></td>
-        <td>
-          <span class="news-badge ${catMeta.badgeClass}" style="position: static; padding: 2px 8px; font-size: 0.8rem;">
-            ${escapeHtml(item.category)}
-          </span>
-        </td>
-        <td>
-          <div class="table-title">${escapeHtml(item.title)}</div>
-          <div class="table-desc-preview">${escapeHtml(item.desc)}</div>
-        </td>
-        <td>
-          <div class="table-actions">
-            <button type="button" class="btn-action-edit">編集</button>
-            <button type="button" class="btn-action-delete">削除</button>
-          </div>
-        </td>
-      `;
-
-      tr.querySelector('.btn-action-edit').addEventListener('click', () => startEdit(item.id));
-      tr.querySelector('.btn-action-delete').addEventListener('click', () => deleteItem(item.id));
-      tableBody.appendChild(tr);
-    });
-  }
-
   function startEdit(id) {
     const item = newsList.find((x) => x.id === id);
     if (!item) return;
@@ -1057,29 +960,19 @@
     if (item.image) imageSelect.value = item.image;
 
     formModeTitle.textContent = 'お知らせを編集';
-    btnSubmitText.textContent = '変更を更新する';
-    btnCancelEdit.style.display = 'inline-block';
-
+    btnSubmitText.textContent = '変更を保存する';
+    if (vmapNewsEditorBox) {
+      vmapNewsEditorBox.style.display = 'block';
+      vmapNewsEditorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     updateLivePreview();
-    form.scrollIntoView({ behavior: 'smooth' });
   }
 
   function cancelEdit() {
     editingItemId = null;
     if (editIdInput) editIdInput.value = '';
     if (formModeTitle) formModeTitle.textContent = '新しいお知らせを投稿';
-    if (btnSubmitText) btnSubmitText.textContent = 'お知らせを公開する';
-    if (btnCancelEdit) btnCancelEdit.style.display = 'none';
-    resetDropzoneUI();
-  }
-
-  function resetDropzoneUI() {
-    if (dropzonePrompt && dropzonePreview && uploadProgress) {
-      dropzonePrompt.style.display = 'block';
-      dropzonePreview.style.display = 'none';
-      uploadProgress.style.display = 'none';
-      if (imageFileInput) imageFileInput.value = '';
-    }
+    if (btnSubmitText) btnSubmitText.textContent = 'この内容で保存する';
   }
 
   async function deleteItem(id) {
@@ -1089,7 +982,8 @@
 
     newsList = newsList.filter((x) => x.id !== id);
     await saveNewsData();
-    renderTable();
+    renderVisualNewsCards();
+    renderLibraryAdmin();
     updateLivePreview();
     showToast('お知らせを削除しました', 'success');
   }

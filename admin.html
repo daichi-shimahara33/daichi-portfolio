@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>PHOTO &amp; SITE ADMIN // 島原大智 #33 関係者専用管理コンソール</title>
+    <title>見た目そのまま写真管理 // 島原大智 #33 関係者専用コンソール</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,47 +24,67 @@
         <div class="auth-gate-card">
             <span class="auth-badge">CREATOR &amp; STAFF ONLY</span>
             <h1 class="auth-title">DAICHI SHIMAHARA <span>#33</span></h1>
-            <p class="auth-subtitle">写真・サイト更新 関係者専用コンソール</p>
+            <p class="auth-subtitle">見た目そのまま写真・記事かんたん管理ページ</p>
             <form id="auth-gate-form" class="auth-form">
                 <label for="auth-passcode" class="auth-label">関係者パスコードを入力してください</label>
                 <input type="password" id="auth-passcode" class="auth-input" placeholder="パスコード（初期値: 3333）" autocomplete="current-password" required>
                 <p class="auth-error" id="auth-error" style="display: none;">パスコードが正しくありません</p>
-                <button type="submit" class="admin-btn-primary auth-submit-btn">管理画面へログイン</button>
+                <button type="submit" class="admin-btn-primary auth-submit-btn">管理画面を開く</button>
             </form>
-            <p class="auth-hint">※背番号にちなんだ初期パスコード「<strong>3333</strong>」で入れます（指示いただければ任意のパスワードに変更可能です）</p>
+            <p class="auth-hint">※初期パスコードは背番号にちなんだ「<strong>3333</strong>」です</p>
         </div>
     </div>
 
     <!-- =================================================================
-         ヘッダー
+         固定ヘッダー（どこにいてもすぐ保存・公開・確認ができる）
          ================================================================= -->
     <header class="admin-header">
         <div class="admin-header-left">
-            <span class="admin-badge">PHOTO &amp; SITE ADMIN</span>
-            <h1 class="admin-logo">DAICHI SHIMAHARA <span>#33</span></h1>
+            <span class="admin-badge">VISUAL ADMIN</span>
+            <h1 class="admin-logo">サイト見た目そのまま管理 <span>#33</span></h1>
             <span class="server-status" id="server-status" title="サーバー接続ステータス">
                 <span class="status-dot"></span>
                 <span class="status-text">接続確認中...</span>
             </span>
         </div>
         <div class="admin-header-actions">
-            <a href="index.html" target="_blank" class="admin-btn-outline" title="別タブでトップページを表示">
-                <span>サイトを確認 ↗</span>
+            <a href="index.html" target="_blank" class="admin-btn-outline" title="実際のサイトを別タブで開く">
+                <span>実際のサイトを見る ↗</span>
             </a>
-            <button type="button" id="btn-save-all" class="admin-btn-secondary" title="写真の並びや変更をサイトに保存">
-                <span>💾 サイトへ保存</span>
+            <button type="button" id="btn-save-all" class="admin-btn-secondary" title="変更を保存">
+                <span>💾 保存する</span>
             </button>
-            <button type="button" id="btn-publish-live" class="admin-btn-primary" title="GitHub / Vercel本番環境へワンクリック反映">
-                <span>🚀 本番サイトへ公開</span>
+            <button type="button" id="btn-publish-live" class="admin-btn-primary" title="本番サイト（Vercel）へ反映">
+                <span>🚀 本番サイトへ公開反映</span>
             </button>
-            <button type="button" id="btn-lock-admin" class="admin-btn-outline" title="管理画面をロックする">
+            <button type="button" id="btn-lock-admin" class="admin-btn-outline" title="ロックする">
                 <span>🔒</span>
             </button>
         </div>
     </header>
 
     <!-- =================================================================
-         メインコンテンツ
+         上から順のサイトマップ・クイック移動バー
+         ================================================================= -->
+    <nav class="visual-jump-bar" aria-label="サイトの場所へ移動">
+        <div class="visual-jump-inner">
+            <span class="jump-bar-label">📍 サイトの場所（上から順）：</span>
+            <a href="#vsec-hero" class="jump-pill">① トップ画面（ABOUT）</a>
+            <span class="jump-arrow">➔</span>
+            <a href="#vsec-statement" class="jump-pill">② 3つの柱（STATEMENT）</a>
+            <span class="jump-arrow">➔</span>
+            <a href="#vsec-news" class="jump-pill">③ お知らせ（NEWS）</a>
+            <span class="jump-arrow">➔</span>
+            <a href="#vsec-vision" class="jump-pill">④ 今後の展望（VISION）</a>
+            <span class="jump-arrow">➔</span>
+            <a href="#vsec-gallery" class="jump-pill">⑤ オフショット（GALLERY）</a>
+            <span class="jump-sep">｜</span>
+            <a href="#vsec-library" class="jump-pill jump-pill-lib">🗂 全写真フォルダ</a>
+        </div>
+    </nav>
+
+    <!-- =================================================================
+         メイン：実際のサイトと全く同じ順番・見た目で並んだ管理画面
          ================================================================= -->
     <main class="admin-main">
         <div class="admin-container">
@@ -72,284 +92,356 @@
             <!-- 通知トースト -->
             <div id="admin-toast" class="admin-toast" role="alert" aria-live="polite"></div>
 
-            <!-- 管理機能切り替えタブ -->
-            <nav class="admin-tabs" aria-label="管理メニュー切り替え">
-                <button type="button" class="admin-tab is-active" data-admin-tab="gallery">
-                    <span class="tab-icon">📸</span>
-                    <span class="tab-label">オフショット写真管理（GALLERY）</span>
-                </button>
-                <button type="button" class="admin-tab" data-admin-tab="slots">
-                    <span class="tab-icon">🖼️</span>
-                    <span class="tab-label">各セクションの写真変更</span>
-                </button>
-                <button type="button" class="admin-tab" data-admin-tab="library">
-                    <span class="tab-icon">🗂️</span>
-                    <span class="tab-label">写真ライブラリ（追加・軽量化）</span>
-                </button>
-                <button type="button" class="admin-tab" data-admin-tab="news">
-                    <span class="tab-icon">📰</span>
-                    <span class="tab-label">NEWS記事・写真管理</span>
-                </button>
-            </nav>
+            <!-- 使い方ガイドバナー -->
+            <div class="visual-guide-banner">
+                <div class="guide-banner-icon">💡</div>
+                <div class="guide-banner-text">
+                    <strong>どの写真がどこに出るか迷わない「サイトそのまま表示」です！</strong><br>
+                    実際のホームページの<strong>上から順番（①トップ ➔ ②STATEMENT ➔ ③NEWS ➔ ④VISION ➔ ⑤GALLERY）</strong>に並んでいます。変えたい写真の<strong>「📸 ここの写真を変更する」</strong>ボタンを押すだけで、すぐに差し替わります！
+                </div>
+            </div>
 
             <!-- =========================================================
-                 TAB 1: オフショット写真管理（GALLERY）
+                 ① 一番上：ABOUT（トップ画面のメイン写真）
                  ========================================================= -->
-            <section class="admin-tab-panel is-active" id="tab-panel-gallery">
-                <div class="admin-card">
-                    <div class="panel-header">
-                        <div>
-                            <h2 class="panel-title">
-                                <span class="panel-icon">📸</span>
-                                <span>GALLERY（日々の練習 &amp; オフショット）写真の管理</span>
-                            </h2>
-                            <p class="panel-desc">
-                                コードを触らずに、写真の追加・差し替え・順番入れ替え・削除ができます。<strong>1〜4枚目が「常時表示」</strong>、<strong>5枚目以降が「＋もっと見る（スライド展開）」</strong>に自動で入ります。
-                            </p>
+            <section class="vmap-section" id="vsec-hero">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">場所 ①：サイトの一番上（ABOUT）</span>
+                    <h2 class="vmap-section-title">トップ画面のメインポートレート写真</h2>
+                    <a href="index.html#about" target="_blank" class="vmap-real-link">実際のページのこの場所を見る ↗</a>
+                </div>
+
+                <!-- 実際のトップ画面と同じ左右レイアウト -->
+                <div class="vmap-hero-replica">
+                    <div class="vmap-hero-left">
+                        <span class="vmap-mock-eyebrow">TOKYO / EXCELLENCE #33</span>
+                        <h3 class="vmap-mock-h1">コートの上でも、人生でも、<br><span>熱狂の中心に。</span></h3>
+                        <p class="vmap-mock-Name">DAICHI SHIMAHARA <span>#33</span></p>
+                        <p class="vmap-mock-desc">
+                            ← サイトを開いた瞬間に<strong>一番最初に目に入る右側のメイン写真</strong>です。
+                        </p>
+                    </div>
+                    <div class="vmap-hero-right">
+                        <div class="vmap-photo-frame hero-frame-preview">
+                            <img src="images/IMG_8532.jpg" id="vmap-img-hero" alt="トップ画面メイン写真">
+                            <div class="vmap-location-tag">📍 トップ画面・右側のメイン写真</div>
                         </div>
-                        <div class="panel-header-btns">
-                            <button type="button" class="admin-btn-primary" id="btn-add-gallery-photo">
-                                <span>＋ 新しい写真をギャラリーに追加</span>
+                        <button type="button" class="btn-change-here" data-slot-trigger="hero">
+                            📸 ここの写真を変更する
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================
+                 ② 2番目：STATEMENT（BEYOND THE COURT // 3つの柱の背景写真）
+                 ========================================================= -->
+            <section class="vmap-section" id="vsec-statement">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">場所 ②：上から2番目（STATEMENT）</span>
+                    <h2 class="vmap-section-title">「BEYOND THE COURT」3つの柱カードの背景写真</h2>
+                    <a href="index.html#statement" target="_blank" class="vmap-real-link">実際のページのこの場所を見る ↗</a>
+                </div>
+                <p class="vmap-section-sub">
+                    サイトの「STATEMENT」セクションに横並びで表示される<strong>3枚のカードの背景にうっすら敷かれている写真</strong>です。実際のカードと同じ文字を重ねて表示しています。
+                </p>
+
+                <div class="vmap-statement-grid">
+                    <!-- 左カード: PILLAR 01 -->
+                    <div class="vmap-story-card">
+                        <div class="vmap-story-preview">
+                            <img src="images/nCodfH6uTi-zfORtPWL2Kw.jpg" id="vmap-img-statement_1" alt="">
+                            <div class="vmap-story-overlay">
+                                <span class="vmap-story-num">左のカード // PILLAR 01 (ON THE COURT)</span>
+                                <h4 class="vmap-story-h">192cmの肉体を張り、<br>大人になっても本気で勝利に飢える。</h4>
+                                <p class="vmap-story-p">久我山高校でIH3年連続出場、大学、そして社会人クラブ『EXCELLENCE』へ…</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-change-here" data-slot-trigger="statement_1">
+                            📸 【左カード】の背景写真を変更する
+                        </button>
+                    </div>
+
+                    <!-- 中央カード: PILLAR 02 -->
+                    <div class="vmap-story-card">
+                        <div class="vmap-story-preview">
+                            <img src="images/ehime_team_salute.jpg" id="vmap-img-statement_2" alt="">
+                            <div class="vmap-story-overlay">
+                                <span class="vmap-story-num">真ん中のカード // PILLAR 02 (BEYOND BORDERS)</span>
+                                <h4 class="vmap-story-h">東京から愛媛、全国へ。<br>1つのボールが世代の壁を溶かす。</h4>
+                                <p class="vmap-story-p">所属や肩書き、地域の枠なんて関係ない。愛媛をはじめ全国各地の体育館へ赴き…</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-change-here" data-slot-trigger="statement_2">
+                            📸 【真ん中カード】の背景写真を変更する
+                        </button>
+                    </div>
+
+                    <!-- 右カード: PILLAR 03 -->
+                    <div class="vmap-story-card">
+                        <div class="vmap-story-preview">
+                            <img src="images/IwPsWPFURlSngd9m60T98w.jpg" id="vmap-img-statement_3" alt="">
+                            <div class="vmap-story-overlay">
+                                <span class="vmap-story-num">右のカード // PILLAR 03 (CREATIVE &amp; WEB)</span>
+                                <h4 class="vmap-story-h">コードと映像で、<br>仲間の輝きを一生モノの財産にする。</h4>
+                                <p class="vmap-story-p">木場レッドシャークスの卒団ムービー制作やWebサイト構築…</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-change-here" data-slot-trigger="statement_3">
+                            📸 【右カード】の背景写真を変更する
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================
+                 ③ 3番目：NEWS（最新のお知らせ＆活動報告）
+                 ========================================================= -->
+            <section class="vmap-section" id="vsec-news">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">場所 ③：上から3番目（NEWS）</span>
+                    <h2 class="vmap-section-title">「NEWS」最新のお知らせカード（写真・タイトル・本文）</h2>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" class="admin-btn-primary" id="btn-toggle-news-form">
+                            <span>＋ 新しいニュース記事を追加・編集する</span>
+                        </button>
+                        <a href="index.html#news" target="_blank" class="vmap-real-link">実際の場所を見る ↗</a>
+                    </div>
+                </div>
+                <p class="vmap-section-sub">
+                    サイトの「NEWS」に並んでいるカードです。各カードの<strong>「📸 写真だけ変更」</strong>で写真だけすぐ変えられるほか、<strong>「✏️ 文章を編集」</strong>でタイトルや本文も直せます。
+                </p>
+
+                <!-- ニュース新規投稿・編集パネル（ボタンを押すと開く） -->
+                <div class="vmap-news-editor-collapse" id="vmap-news-editor-box" style="display: none;">
+                    <div class="admin-grid" style="margin-bottom: 24px;">
+                        <section class="admin-card form-panel">
+                            <div class="panel-header">
+                                <h3 class="panel-title" id="form-heading">
+                                    <span class="panel-icon">✍️</span>
+                                    <span id="form-mode-title">新しいお知らせを投稿</span>
+                                </h3>
+                                <button type="button" id="btn-cancel-edit" class="btn-text">閉じる</button>
+                            </div>
+
+                            <form id="news-form" class="news-form" novalidate>
+                                <input type="hidden" id="edit-item-id" value="">
+
+                                <div class="form-row-2">
+                                    <div class="form-group">
+                                        <label for="news-date">日付 <span class="req">*</span></label>
+                                        <input type="date" id="news-date" required class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="news-category">カテゴリ <span class="req">*</span></label>
+                                        <select id="news-category" required class="form-select">
+                                            <option value="SPECIAL">SPECIAL（特集・注目トピック）</option>
+                                            <option value="PRIVATE">PRIVATE（プライベート・オフショット）</option>
+                                            <option value="TEAM">TEAM（所属チーム・活動）</option>
+                                            <option value="GAME">GAME（試合結果・スタッツ）</option>
+                                            <option value="VISIT">VISIT（遠征・チーム訪問）</option>
+                                            <option value="CREATIVE">CREATIVE（映像・制作実績）</option>
+                                            <option value="INFO">INFO（お知らせ・一般）</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="news-title">タイトル <span class="req">*</span></label>
+                                    <input type="text" id="news-title" placeholder="例: 秋季クラブ選手権 第3節 EXCELLENCE勝利" required class="form-input">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="news-image">アイキャッチ写真</label>
+                                    <div style="display: flex; gap: 10px;">
+                                        <select id="news-image" class="form-select" style="flex: 1;"></select>
+                                        <button type="button" class="admin-btn-secondary" id="btn-pick-news-photo">📸 写真一覧・新規追加から選ぶ</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="news-desc">本文・詳細 <span class="req">*</span></label>
+                                    <textarea id="news-desc" rows="3" required class="form-textarea"></textarea>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" id="btn-submit" class="admin-btn-primary">
+                                        <span id="btn-submit-text">この内容で保存する</span>
+                                    </button>
+                                    <button type="button" id="btn-reset-form" class="admin-btn-outline">クリア</button>
+                                </div>
+                            </form>
+                        </section>
+
+                        <section class="admin-card preview-panel">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><span class="panel-icon">👁</span> <span>カードの見た目プレビュー</span></h3>
+                            </div>
+                            <div class="preview-container">
+                                <article class="news-card" id="live-preview-card">
+                                    <div class="news-card-img-wrap">
+                                        <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" id="prev-img" alt="プレビュー画像">
+                                        <span class="news-badge badge-game" id="prev-badge">GAME</span>
+                                    </div>
+                                    <div class="news-card-body">
+                                        <time class="news-date" id="prev-date">2026.10.05</time>
+                                        <h3 class="news-title" id="prev-title">タイトル</h3>
+                                        <p class="news-desc" id="prev-desc">本文プレビュー</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- 実際のNEWSセクションと同じ3列カード表示 -->
+                <div class="vmap-news-cards-grid" id="vmap-news-cards-grid">
+                    <!-- JSで現在のNEWSカードを実際の見た目で描画 -->
+                </div>
+            </section>
+
+            <!-- =========================================================
+                 ④ 4番目：VISION（今後の展望・2枚の大きな写真付きカード）
+                 ========================================================= -->
+            <section class="vmap-section" id="vsec-vision">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">場所 ④：上から5番目（VISION // PROFILEの下）</span>
+                    <h2 class="vmap-section-title">「VISION」左右2枚のカード写真</h2>
+                    <a href="index.html#vision" target="_blank" class="vmap-real-link">実際のページのこの場所を見る ↗</a>
+                </div>
+                <p class="vmap-section-sub">
+                    PROFILEの下にある「VISION（今後の展望）」セクションの左右2枚の写真です。
+                </p>
+
+                <div class="vmap-vision-grid">
+                    <!-- 左カード: 地方遠征 & チーム訪問活動 -->
+                    <div class="vmap-vision-card">
+                        <div class="vmap-vision-img-wrap">
+                            <img src="images/5wmlkUItSNWx0Gh7hiKayw.jpg" id="vmap-img-vision_1" alt="">
+                            <span class="vmap-vision-badge">左側のカード // TRAVEL &amp; TRIP</span>
+                        </div>
+                        <div class="vmap-vision-body">
+                            <div class="vmap-vision-sub">全国のコートを巡る熱意</div>
+                            <h4 class="vmap-vision-h">地方遠征 &amp; チーム訪問活動</h4>
+                            <p class="vmap-vision-p">現在は東京のチーム（EXCELLENCE）に所属しながら、愛媛県など地方のチームや練習現場にも積極的に足を運んでいます…</p>
+                            <button type="button" class="btn-change-here" data-slot-trigger="vision_1">
+                                📸 【左：地方遠征カード】の写真を変更する
                             </button>
                         </div>
                     </div>
 
-                    <!-- 上段：常時表示の4枚 -->
-                    <div class="gallery-admin-group">
-                        <div class="gallery-group-header">
-                            <span class="group-pill pill-visible">常時表示（上段 1〜4枚目）</span>
-                            <span class="group-note">ページを開いたときに最初から並んでいる4枚です</span>
+                    <!-- 右カード: チーム関係者の皆様へ & 今後の夢 -->
+                    <div class="vmap-vision-card">
+                        <div class="vmap-vision-img-wrap">
+                            <img src="images/mRke21uCSjeQj7z8Q57I-Q.jpg" id="vmap-img-vision_2" alt="">
+                            <span class="vmap-vision-badge">右側のカード // ONE TEAM</span>
                         </div>
-                        <div class="gallery-admin-grid" id="admin-gallery-top-grid">
-                            <!-- JSで描画 -->
-                        </div>
-                    </div>
-
-                    <!-- 下段：「もっと見る」スライド展開枠 -->
-                    <div class="gallery-admin-group" style="margin-top: 32px;">
-                        <div class="gallery-group-header">
-                            <span class="group-pill pill-drawer">「＋もっと見る」スライド展開枠（5枚目以降）</span>
-                            <span class="group-note">ボタンを押したときに下へスーッとスライドして出てくる写真です</span>
-                        </div>
-                        <div class="gallery-admin-grid" id="admin-gallery-extra-grid">
-                            <!-- JSで描画 -->
+                        <div class="vmap-vision-body">
+                            <div class="vmap-vision-sub">つながりで広がるバスケの輪</div>
+                            <h4 class="vmap-vision-h">チーム関係者の皆様へ &amp; 今後の夢</h4>
+                            <p class="vmap-vision-p">【練習参加・交流チーム随時募集中】練習参加や合同練習を受け入れていただける社会人・クラブチーム様…</p>
+                            <button type="button" class="btn-change-here" data-slot-trigger="vision_2">
+                                📸 【右：チーム募集カード】の写真を変更する
+                            </button>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- =========================================================
-                 TAB 2: 各セクションの写真変更（ABOUT / STATEMENT / VISION）
+                 ⑤ 5番目：GALLERY（日々の練習 & オフショット // ポラロイド風）
                  ========================================================= -->
-            <section class="admin-tab-panel" id="tab-panel-slots">
-                <div class="admin-card">
-                    <div class="panel-header">
-                        <div>
-                            <h2 class="panel-title">
-                                <span class="panel-icon">🖼️</span>
-                                <span>各セクションのメイン・背景写真の差し替え</span>
-                            </h2>
-                            <p class="panel-desc">
-                                トップ画面のポートレート写真や、STATEMENT（3つの柱）、VISIONの写真をワンクリックで別の写真に差し替えられます。
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="slots-admin-grid" id="admin-slots-grid">
-                        <!-- JSで6つのスロットカードを描画 -->
+            <section class="vmap-section" id="vsec-gallery">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">場所 ⑤：メインページの一番下（GALLERY）</span>
+                    <h2 class="vmap-section-title">「日々の練習 &amp; オフショット」ポラロイド写真（常時4枚 ＋ もっと見る展開枠）</h2>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" class="admin-btn-primary" id="btn-add-gallery-photo">
+                            <span>＋ オフショット写真を新しく追加する</span>
+                        </button>
+                        <a href="index.html#gallery" target="_blank" class="vmap-real-link">実際の場所を見る ↗</a>
                     </div>
                 </div>
-            </section>
 
-            <!-- =========================================================
-                 TAB 3: 写真ライブラリ（一括アップロード・自動軽量化・一覧）
-                 ========================================================= -->
-            <section class="admin-tab-panel" id="tab-panel-library">
-                <div class="admin-card">
-                    <div class="panel-header">
-                        <div>
-                            <h2 class="panel-title">
-                                <span class="panel-icon">🗂️</span>
-                                <span>写真ライブラリ &amp; 自動高画質軽量化アップローダー</span>
-                            </h2>
-                            <p class="panel-desc">
-                                スマホやPCから写真をドラッグ＆ドロップすると、<strong>Retina高画質を保ったまま自動で軽量化</strong>して <code>images/</code> フォルダに保存します。
-                            </p>
-                        </div>
-                        <span class="items-count-badge" id="library-count-badge">0 枚</span>
-                    </div>
-
-                    <!-- 一括ドラッグ＆ドロップアップローダー -->
-                    <div class="library-upload-box" id="library-dropzone" tabindex="0" role="button">
-                        <input type="file" id="library-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" multiple style="display: none;">
-                        <span class="dropzone-icon">📤</span>
-                        <p class="dropzone-text">
-                            <strong>ここをクリックして写真を選択</strong> または <strong>複数枚の写真をドラッグ＆ドロップ</strong>
+                <!-- 実際のGALLERYセクションと同じダークボックス構造で再現 -->
+                <div class="vmap-gallery-replica">
+                    <div class="vmap-gallery-left-info">
+                        <span class="collage-badge">OFF-COURT LIFE</span>
+                        <h3>日々の練習 <span class="accent-amp">&amp;</span> オフショット</h3>
+                        <p class="vmap-gallery-explain">
+                            実際のサイトと同じ配置です！<br><br>
+                            🟢 <strong>上段の4枚</strong>：最初から画面に並んでいる写真です。<br>
+                            🟠 <strong>下段の写真</strong>：「＋オフショット写真をもっと見る」を押したときに<strong>下へスライドして出てくる写真</strong>です。<br><br>
+                            「←」「→」ボタンで順番を入れ替えると、上段と下段の写真も自由に入れ替わります！
                         </p>
-                        <span class="dropzone-note">大きな写真（5MBなど）もアップロード時に自動で高画質軽量化（約150〜250KB）されます</span>
-                        <div class="upload-progress" id="library-upload-status" style="display: none; margin-top: 12px;">
-                            <span class="spinner"></span> <span id="library-upload-status-text">写真を軽量化＆保存中...</span>
-                        </div>
                     </div>
 
-                    <!-- 登録済み全画像グリッド -->
-                    <div class="library-media-grid" id="library-media-grid">
-                        <!-- JSで描画 -->
+                    <div class="vmap-gallery-right-photos">
+                        <!-- 上段：最初から見える4枚 -->
+                        <div class="gallery-admin-group">
+                            <div class="gallery-group-header">
+                                <span class="group-pill pill-visible">🟢 上段：最初から表示される4枚（左から1〜4枚目）</span>
+                            </div>
+                            <div class="gallery-admin-grid" id="admin-gallery-top-grid">
+                                <!-- JSでポラロイド風カードを描画 -->
+                            </div>
+                        </div>
+
+                        <!-- 実際のサイトと同じ「もっと見る」の位置イメージ -->
+                        <div class="vmap-drawer-divider">
+                            <span>▼ サイトで「＋ オフショット写真をもっと見る」を押すと、すぐ下にこの写真がスライドして出てきます ▼</span>
+                        </div>
+
+                        <!-- 下段：「もっと見る」でスライドして出てくる写真 -->
+                        <div class="gallery-admin-group">
+                            <div class="gallery-group-header">
+                                <span class="group-pill pill-drawer">🟠 下段：「もっと見る」を押すと下に出てくる写真（5枚目以降）</span>
+                            </div>
+                            <div class="gallery-admin-grid" id="admin-gallery-extra-grid">
+                                <!-- JSでポラロイド風カードを描画 -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- =========================================================
-                 TAB 4: NEWS（お知らせ投稿・編集）
+                 🗂 全写真フォルダ（まとめてアップロード・容量チェック・整理）
                  ========================================================= -->
-            <section class="admin-tab-panel" id="tab-panel-news">
-                <div class="admin-grid">
-                    <!-- 左側：入力・編集フォーム -->
-                    <section class="admin-card form-panel">
-                        <div class="panel-header">
-                            <h2 class="panel-title" id="form-heading">
-                                <span class="panel-icon">✍️</span>
-                                <span id="form-mode-title">新しいお知らせを投稿</span>
-                            </h2>
-                            <button type="button" id="btn-cancel-edit" class="btn-text" style="display: none;">編集をキャンセル</button>
-                        </div>
+            <section class="vmap-section" id="vsec-library">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">🗂 写真フォルダ（ストック一覧）</span>
+                    <h2 class="vmap-section-title">入っている全写真の一覧 ＆ まとめアップロード（自動高画質軽量化）</h2>
+                    <span class="items-count-badge" id="library-count-badge">0 枚</span>
+                </div>
+                <p class="vmap-section-sub">
+                    どの写真が<strong>サイトのどこで使われているか（緑のバッジ）</strong>が一目でわかります。新しい写真をここにドロップしてストックしておくこともできます。
+                </p>
 
-                        <form id="news-form" class="news-form" novalidate>
-                            <input type="hidden" id="edit-item-id" value="">
-
-                            <div class="form-row-2">
-                                <div class="form-group">
-                                    <label for="news-date">日付 <span class="req">*</span></label>
-                                    <input type="date" id="news-date" required class="form-input">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="news-category">カテゴリ <span class="req">*</span></label>
-                                    <select id="news-category" required class="form-select">
-                                        <option value="SPECIAL">SPECIAL（特集・注目トピック）</option>
-                                        <option value="PRIVATE">PRIVATE（プライベート・オフショット）</option>
-                                        <option value="TEAM">TEAM（所属チーム・活動）</option>
-                                        <option value="GAME">GAME（試合結果・スタッツ）</option>
-                                        <option value="VISIT">VISIT（遠征・チーム訪問）</option>
-                                        <option value="CREATIVE">CREATIVE（映像・制作実績）</option>
-                                        <option value="INFO">INFO（お知らせ・一般）</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="news-title">タイトル <span class="req">*</span></label>
-                                <input type="text" id="news-title" placeholder="例: 秋季クラブ選手権 第3節 EXCELLENCE勝利" required class="form-input">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="news-image">アイキャッチ画像</label>
-                                <div class="image-input-container">
-                                    <div class="image-select-row" style="display: flex; gap: 10px;">
-                                        <select id="news-image" class="form-select" style="flex: 1;">
-                                            <option value="">（画像一覧を読み込み中...）</option>
-                                        </select>
-                                        <button type="button" class="admin-btn-outline" id="btn-pick-news-photo">一覧から選ぶ</button>
-                                    </div>
-
-                                    <div class="image-upload-divider">
-                                        <span>または 手元の新しい写真を追加</span>
-                                    </div>
-
-                                    <div class="image-dropzone" id="image-dropzone" tabindex="0" role="button">
-                                        <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;">
-                                        <div class="dropzone-content" id="dropzone-prompt">
-                                            <span class="dropzone-icon">📸</span>
-                                            <p class="dropzone-text">
-                                                <strong>クリックして写真を選択</strong> またはドラッグ＆ドロップ
-                                            </p>
-                                            <span class="dropzone-note">自動で高画質軽量化されて保存されます</span>
-                                        </div>
-                                        <div class="dropzone-preview" id="dropzone-preview" style="display: none;">
-                                            <span class="upload-badge">アップロード完了 ✓</span>
-                                            <span class="uploaded-filename" id="uploaded-filename"></span>
-                                        </div>
-                                        <div class="upload-progress" id="upload-progress" style="display: none;">
-                                            <span class="spinner"></span> <span>写真を保存中...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="news-desc">本文・詳細 <span class="req">*</span></label>
-                                <textarea id="news-desc" rows="4" placeholder="お知らせの詳細や結果、メッセージを入力してください。" required class="form-textarea"></textarea>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="submit" id="btn-submit" class="admin-btn-primary">
-                                    <span id="btn-submit-text">お知らせを公開する</span>
-                                </button>
-                                <button type="button" id="btn-reset-form" class="admin-btn-outline">クリア</button>
-                            </div>
-                        </form>
-                    </section>
-
-                    <!-- 右側：リアルタイムプレビュー -->
-                    <section class="admin-card preview-panel">
-                        <div class="panel-header">
-                            <h2 class="panel-title">
-                                <span class="panel-icon">👁</span>
-                                <span>ライブプレビュー</span>
-                            </h2>
-                            <span class="preview-badge">トップページの見た目</span>
-                        </div>
-
-                        <div class="preview-container">
-                            <article class="news-card" id="live-preview-card">
-                                <div class="news-card-img-wrap">
-                                    <img src="images/SuUS89tdQ3m_J9UOu82GOg.jpg" id="prev-img" alt="プレビュー画像">
-                                    <span class="news-badge badge-game" id="prev-badge">GAME</span>
-                                </div>
-                                <div class="news-card-body">
-                                    <time class="news-date" id="prev-date">2026.10.05</time>
-                                    <h3 class="news-title" id="prev-title">タイトルがここに表示されます</h3>
-                                    <p class="news-desc" id="prev-desc">本文のプレビューがここにリアルタイムで表示されます。</p>
-                                </div>
-                            </article>
-                        </div>
-                    </section>
+                <!-- 一括ドラッグ＆ドロップアップローダー -->
+                <div class="library-upload-box" id="library-dropzone" tabindex="0" role="button">
+                    <input type="file" id="library-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" multiple style="display: none;">
+                    <span class="dropzone-icon">📤</span>
+                    <p class="dropzone-text">
+                        <strong>ここをクリックして写真を選択</strong> または <strong>写真をドラッグ＆ドロップ</strong>
+                    </p>
+                    <span class="dropzone-note">大きな写真（5MBなど）もアップロード時に自動でRetina高画質軽量化（約150〜250KB）されます</span>
+                    <div class="upload-progress" id="library-upload-status" style="display: none; margin-top: 12px;">
+                        <span class="spinner"></span> <span id="library-upload-status-text">写真を軽量化＆保存中...</span>
+                    </div>
                 </div>
 
-                <!-- 登録済みお知らせ一覧 -->
-                <section class="admin-card list-panel">
-                    <div class="panel-header">
-                        <div class="panel-title-wrap">
-                            <h2 class="panel-title">
-                                <span class="panel-icon">📋</span>
-                                <span>公開中のお知らせ一覧</span>
-                                <span class="items-count-badge" id="items-count">0 件</span>
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="news-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 80px;">画像</th>
-                                    <th style="width: 120px;">日付</th>
-                                    <th style="width: 110px;">カテゴリ</th>
-                                    <th>タイトル / 本文</th>
-                                    <th style="width: 150px; text-align: center;">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="news-table-body"></tbody>
-                        </table>
-                    </div>
-                </section>
+                <!-- 登録済み全画像グリッド（どこで使われているかラベル付き） -->
+                <div class="library-media-grid" id="library-media-grid">
+                    <!-- JSで描画 -->
+                </div>
             </section>
 
         </div>
     </main>
 
     <!-- =================================================================
-         写真選択・新規アップロード モーダル（どの枠からでも視覚的に選べる）
+         写真選択・新規アップロード モーダル
          ================================================================= -->
     <div class="photo-picker-modal" id="photo-picker-modal" aria-hidden="true">
         <div class="photo-picker-backdrop" id="photo-picker-backdrop"></div>
@@ -357,7 +449,7 @@
             <div class="picker-modal-header">
                 <div>
                     <h3 class="picker-modal-title" id="picker-modal-title">写真を選択 または 新規アップロード</h3>
-                    <p class="picker-modal-sub" id="picker-modal-sub">使いたい写真をクリックするか、手元の新しい写真をドロップしてください</p>
+                    <p class="picker-modal-sub" id="picker-modal-sub">使いたい写真をクリックするか、手元の新しい写真をアップロードしてください</p>
                 </div>
                 <button type="button" class="picker-close-btn" id="picker-close-btn" aria-label="閉じる">✕</button>
             </div>
@@ -366,7 +458,7 @@
             <div class="picker-upload-strip" id="picker-upload-strip">
                 <input type="file" id="picker-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;">
                 <button type="button" class="admin-btn-primary" id="btn-picker-upload-trigger">
-                    <span>📤 パソコン・スマホから新しい写真をアップロードして使う</span>
+                    <span>📤 パソコン・スマホから新しい写真を選んでそのまま反映する</span>
                 </button>
                 <span class="picker-upload-hint" id="picker-upload-hint">自動で高画質軽量化されます</span>
             </div>
