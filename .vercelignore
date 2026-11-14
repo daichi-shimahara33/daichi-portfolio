@@ -6,4 +6,8 @@ js/admin.js
 server.py
 start.command
 index_refactored.html
+images/*.HEIC
+/*.jpg
+/*.png
+
 
