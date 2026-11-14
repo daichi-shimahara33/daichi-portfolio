@@ -254,16 +254,17 @@ function initMobileCollapsible() {
     });
   }
 
-  // 3. GALLERY "オフショット写真をもっと見る（＋4枚）"
+  // 3. GALLERY "オフショット写真をもっと見る（＋4枚）" (Smooth slide-down drawer)
   const galleryMoreBtn = document.getElementById('galleryMoreToggleBtn');
-  const galleryGrid = document.querySelector('.collage-photos-grid');
-  if (galleryMoreBtn && galleryGrid) {
+  const galleryDrawer = document.getElementById('galleryExtraDrawer');
+  if (galleryMoreBtn && galleryDrawer) {
     const iconEl = galleryMoreBtn.querySelector('.more-btn-icon');
     const textEl = galleryMoreBtn.querySelector('.more-btn-text');
     const defaultText = textEl ? textEl.textContent.trim() : 'オフショット写真をもっと見る（＋4枚）';
 
     galleryMoreBtn.addEventListener('click', () => {
-      const isExpanded = galleryGrid.classList.toggle('show-all-photos');
+      const isExpanded = galleryDrawer.classList.toggle('is-open');
+      galleryDrawer.setAttribute('aria-hidden', String(!isExpanded));
       galleryMoreBtn.classList.toggle('is-open', isExpanded);
       galleryMoreBtn.setAttribute('aria-expanded', String(isExpanded));
       if (iconEl) iconEl.textContent = isExpanded ? '－' : '＋';
