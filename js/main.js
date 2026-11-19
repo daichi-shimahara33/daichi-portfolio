@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDynamicPhotos();
   loadDynamicTexts();
   loadDynamicNews();
+  loadDynamicWorks();
   initMobileCollapsible();
   initBackToTop();
   initWnbaTabs();
@@ -256,6 +257,68 @@ async function loadDynamicTexts() {
       el.innerHTML = escapeHtml(String(textData[key])).replace(/\n/g, '<br>');
     }
   });
+}
+
+/**
+ * Loads dynamic works from /api/works, data/works.json, or localStorage
+ */
+async function loadDynamicWorks() {
+  const worksGrid = document.querySelector('.works-grid');
+  if (!worksGrid) return;
+
+  let works = null;
+
+  try {
+    const res = await fetch('/api/works', { cache: 'no-store' });
+    if (res.ok) {
+      works = await res.json();
+    }
+  } catch (e) {
+    try {
+      const jsonRes = await fetch('data/works.json', { cache: 'no-store' });
+      if (jsonRes.ok) {
+        works = await jsonRes.json();
+      }
+    } catch (err) {}
+  }
+
+  if (!works) {
+    const saved = localStorage.getItem('ds_portfolio_works_data');
+    if (saved) {
+      try {
+        works = JSON.parse(saved);
+      } catch (e) {}
+    }
+  }
+
+  if (works && Array.isArray(works) && works.length > 0) {
+    worksGrid.innerHTML = works.map((w) => {
+      const cardTypeClass = w.type === 'video' ? 'work-card-video' : 'work-card-web';
+      const eyebrow = escapeHtml(w.eyebrow || (w.type === 'video' ? 'MEMORIAL & PROMOTION VIDEO' : 'WEB DESIGN & FULL-STACK DEV'));
+      const title = escapeHtml(w.title || '');
+      const badge = escapeHtml(w.badge || '');
+      const meta1 = escapeHtml(w.meta1 || '');
+      const meta2 = escapeHtml(w.meta2 || '');
+      const desc = escapeHtml(w.desc || '').replace(/\n/g, '<br>');
+      const quote = escapeHtml(w.quote || '');
+
+      return `
+        <article class="work-card ${cardTypeClass}">
+          <div class="work-type-eyebrow">${eyebrow}</div>
+          <header class="work-header">
+            <h3 class="work-title">${title}</h3>
+            <span class="work-badge">${badge}</span>
+          </header>
+          <div class="work-meta">
+            <span>${meta1}</span>
+            <span>${meta2}</span>
+          </div>
+          <p class="work-desc">${desc}</p>
+          ${quote ? `<blockquote class="work-quote">${quote}</blockquote>` : ''}
+        </article>
+      `;
+    }).join('');
+  }
 }
 
 /**

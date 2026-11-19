@@ -20,6 +20,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 NEWS_FILE = os.path.join(DATA_DIR, "news.json")
 PHOTOS_FILE = os.path.join(DATA_DIR, "photos.json")
 TEXTS_FILE = os.path.join(DATA_DIR, "site_texts.json")
+WORKS_FILE = os.path.join(DATA_DIR, "works.json")
 IMAGES_DIR = os.path.join(BASE_DIR, "images")
 
 
@@ -107,6 +108,48 @@ def generate_smart_copy(target: str, nuance: str, tone: str) -> list:
                 "badge": "⚡ パターンC：すっきり簡潔スタイル",
                 "title": f"NEXT VISION // {short_core}",
                 "body": f"{core_phrase}をテーマに、コート上のプレーもクリエイティブ制作もさらにアップデートしていきます。ご興味を持っていただけた方はぜひお気軽にお声がけください！"
+            }
+        ]
+
+    if target == "works":
+        is_video_work = any(w in clean for w in ["動画", "映像", "ムービー", "PV", "MV", "YouTube", "卒団", "Filmora", "リール", "ショート"])
+        w_type = "video" if is_video_work else "web"
+        w_eyebrow = "MEMORIAL & PROMOTION VIDEO" if is_video_work else "WEB DESIGN & FULL-STACK DEV"
+        w_meta1 = "⏱ 制作期間: 約2〜4週間（企画・構成〜映像編集）" if is_video_work else "⏱ 制作領域: 企画設計・UI/UXデザイン・レスポンシブ実装"
+        w_meta2 = "🛠 使用ツール: Filmora / 映像演出・サウンド編集" if is_video_work else "🛠 技術構成: HTML5 / CSS3 / JavaScript / SEO構造化設計"
+        return [
+            {
+                "badge": "💼 パターンA：王道プロフェッショナル実績",
+                "type": w_type,
+                "eyebrow": w_eyebrow,
+                "title": f"{short_core}",
+                "work_badge": "企画・構成・制作担当" if is_video_work else "企画・UI設計・フルスクラッチ開発",
+                "meta1": w_meta1,
+                "meta2": w_meta2,
+                "body": f"{core_phrase}。クライアント様の理念やターゲット層の導線を徹底的にヒアリングし、テンプレートに頼らないオリジナル設計で制作。視覚的なインパクトと使いやすさ・伝わりやすさを高次元で両立させたプロジェクトです。",
+                "quote": "「想いと熱量をダイレクトに届け、見る人の心を動かすクリエイティブへ」"
+            },
+            {
+                "badge": "🔥 パターンB：ストーリー＆熱量重視",
+                "type": w_type,
+                "eyebrow": w_eyebrow,
+                "title": f"{short_core} プロジェクト",
+                "work_badge": "ストーリー設計〜制作" if is_video_work else "コンセプト設計〜デザイン実装",
+                "meta1": w_meta1,
+                "meta2": w_meta2,
+                "body": f"{core_phrase}。現場の空気感やそこに込められたストーリーを細部まで汲み取り、見た瞬間に熱量が伝わる構成を追求。公開後も多くの方から高い評価をいただいた実績です。",
+                "quote": "「単なる制作物ではなく、長く愛される一生モノの資産をつくる」"
+            },
+            {
+                "badge": "⚡ パターンC：成果・ビジネス貢献重視",
+                "type": w_type,
+                "eyebrow": w_eyebrow,
+                "title": f"{short_core}",
+                "work_badge": "ワンストップ制作",
+                "meta1": w_meta1,
+                "meta2": w_meta2,
+                "body": f"{core_phrase}。スマホでの見やすさや表示スピード、SEO対策・お問い合わせ導線まで一貫して最適化し、集客・ブランディングに直結する構成を実現しました。",
+                "quote": "「スピード・品質・成果にこだわったワンストップ制作」"
             }
         ]
 
@@ -243,6 +286,10 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_get_json_file(TEXTS_FILE, {})
             return
 
+        if parsed_path.path == "/api/works":
+            self.handle_get_json_file(WORKS_FILE, [])
+            return
+
         if parsed_path.path == "/api/images":
             self.handle_get_images()
             return
@@ -266,6 +313,10 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
 
         if parsed_path.path == "/api/texts":
             self.handle_post_json_file(TEXTS_FILE)
+            return
+
+        if parsed_path.path == "/api/works":
+            self.handle_post_json_file(WORKS_FILE)
             return
 
         if parsed_path.path == "/api/ai-write":

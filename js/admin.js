@@ -8,6 +8,7 @@
   const API_NEWS_URL = '/api/news';
   const API_PHOTOS_URL = '/api/photos';
   const API_TEXTS_URL = '/api/texts';
+  const API_WORKS_URL = '/api/works';
   const API_AI_WRITE_URL = '/api/ai-write';
   const API_IMAGES_META_URL = '/api/images/meta';
   const API_UPLOAD_URL = '/api/upload';
@@ -17,6 +18,7 @@
   const LS_NEWS_KEY = 'ds_portfolio_news_data';
   const LS_PHOTOS_KEY = 'ds_portfolio_photos_data';
   const LS_TEXTS_KEY = 'ds_portfolio_texts_data';
+  const LS_WORKS_KEY = 'ds_portfolio_works_data';
   const SESSION_AUTH_KEY = 'ds_admin_unlocked_v1';
   const ADMIN_PASSCODE = '3333';
 
@@ -215,6 +217,7 @@
   let photosData = JSON.parse(JSON.stringify(DEFAULT_PHOTOS_DATA));
   let textsData = JSON.parse(JSON.stringify(DEFAULT_TEXTS_DATA));
   let newsList = [];
+  let worksList = [];
   let availableImages = [];
   let imagesMetaList = [];
   let isServerOnline = false;
@@ -357,7 +360,8 @@
         await savePhotosData();
         await saveTextsData();
         await saveNewsData();
-        showToast('写真と文章のすべての変更をサイトに保存しました！', 'success');
+        await saveWorksData();
+        showToast('写真・文章・実績のすべての変更をサイトに保存しました！', 'success');
       });
     }
 
@@ -441,6 +445,7 @@
     initLibraryUploader();
     initPickerModal();
     initAiWriterModal();
+    initWorksAdminEvents();
 
     if (form) {
       dateInput.addEventListener('input', updateLivePreview);
@@ -536,10 +541,24 @@
       }
     }
 
+    // Works（制作実績）の読み込み
+    try {
+      const wRes = await fetch(isServerOnline ? API_WORKS_URL : 'data/works.json', { cache: 'no-store' });
+      if (wRes.ok) {
+        worksList = await wRes.json();
+      }
+    } catch (e) {
+      const savedWorks = localStorage.getItem(LS_WORKS_KEY);
+      if (savedWorks) {
+        try { worksList = JSON.parse(savedWorks); } catch (err) {}
+      }
+    }
+
     await loadImagesList();
     renderVisualSlots();
     renderVisualTexts();
     renderVisualNewsCards();
+    renderVisualWorksCards();
     renderGalleryAdmin();
     renderLibraryAdmin();
   }
@@ -698,6 +717,49 @@
           badge: '⚡ パターンC：すっきり簡潔スタイル',
           title: `NEXT VISION // ${shortCore}`,
           body: `${clean}をテーマに、コート上のプレーもクリエイティブ制作もさらにアップデートしていきます。ご興味を持っていただけた方はぜひお気軽にお声がけください！`
+        }
+      ];
+    }
+
+    if (target === 'works') {
+      const isVideoWork = /動画|映像|ムービー|PV|MV|YouTube|卒団|Filmora|リール/.test(clean);
+      const wType = isVideoWork ? 'video' : 'web';
+      const wEyebrow = isVideoWork ? 'MEMORIAL & PROMOTION VIDEO' : 'WEB DESIGN & FULL-STACK DEV';
+      const wMeta1 = isVideoWork ? '⏱ 制作期間: 約2〜4週間（企画・構成〜映像編集）' : '⏱ 制作領域: 企画設計・UI/UXデザイン・レスポンシブ実装';
+      const wMeta2 = isVideoWork ? '🛠 使用ツール: Filmora / 映像演出・サウンド編集' : '🛠 技術構成: HTML5 / CSS3 / JavaScript / SEO構造化設計';
+      return [
+        {
+          badge: '💼 パターンA：王道プロフェッショナル実績',
+          type: wType,
+          eyebrow: wEyebrow,
+          title: shortCore,
+          work_badge: isVideoWork ? '企画・構成・制作担当' : '企画・UI設計・フルスクラッチ開発',
+          meta1: wMeta1,
+          meta2: wMeta2,
+          body: `${clean}。クライアント様の理念やターゲット層の導線を徹底的にヒアリングし、テンプレートに頼らないオリジナル設計で制作。視覚的なインパクトと使いやすさ・伝わりやすさを高次元で両立させたプロジェクトです。`,
+          quote: '「想いと熱量をダイレクトに届け、見る人の心を動かすクリエイティブへ」'
+        },
+        {
+          badge: '🔥 パターンB：ストーリー＆熱量重視',
+          type: wType,
+          eyebrow: wEyebrow,
+          title: `${shortCore} プロジェクト`,
+          work_badge: isVideoWork ? 'ストーリー設計〜制作' : 'コンセプト設計〜デザイン実装',
+          meta1: wMeta1,
+          meta2: wMeta2,
+          body: `${clean}。現場の空気感やそこに込められたストーリーを細部まで汲み取り、見た瞬間に熱量が伝わる構成を追求。公開後も多くの方から高い評価をいただいた実績です。`,
+          quote: '「単なる制作物ではなく、長く愛される一生モノの資産をつくる」'
+        },
+        {
+          badge: '⚡ パターンC：成果・ビジネス貢献重視',
+          type: wType,
+          eyebrow: wEyebrow,
+          title: shortCore,
+          work_badge: 'ワンストップ制作',
+          meta1: wMeta1,
+          meta2: wMeta2,
+          body: `${clean}。スマホでの見やすさや表示スピード、SEO対策・お問い合わせ導線まで一貫して最適化し、集客・ブランディングに直結する構成を実現しました。`,
+          quote: '「スピード・品質・成果にこだわったワンストップ制作」'
         }
       ];
     }
@@ -1316,6 +1378,7 @@
     await savePhotosData();
     await saveTextsData();
     await saveNewsData();
+    await saveWorksData();
 
     if (!isServerOnline) {
       showToast('変更を保存しました！', 'info');
@@ -1497,6 +1560,226 @@
     renderLibraryAdmin();
     updateLivePreview();
     showToast('お知らせを削除しました', 'success');
+  }
+
+  /**
+   * ⑥ WORKS（制作実績ページ）管理＆AI自動作成
+   */
+  function initWorksAdminEvents() {
+    const btnToggleWorks = document.getElementById('btn-toggle-works-form');
+    const worksEditorBox = document.getElementById('vmap-works-editor-box');
+    const btnCancelWorks = document.getElementById('btn-cancel-works-edit');
+    const btnWorksAiGen = document.getElementById('btn-works-ai-generate');
+    const worksAiInput = document.getElementById('works-ai-nuance-input');
+    const worksForm = document.getElementById('works-form');
+
+    if (btnToggleWorks && worksEditorBox) {
+      btnToggleWorks.addEventListener('click', () => {
+        const isHidden = worksEditorBox.style.display === 'none';
+        if (isHidden) {
+          resetWorksForm();
+          worksEditorBox.style.display = 'block';
+          worksEditorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (worksAiInput) worksAiInput.focus();
+        } else {
+          worksEditorBox.style.display = 'none';
+        }
+      });
+    }
+
+    if (btnCancelWorks && worksEditorBox) {
+      btnCancelWorks.addEventListener('click', () => {
+        resetWorksForm();
+        worksEditorBox.style.display = 'none';
+      });
+    }
+
+    if (btnWorksAiGen) {
+      btnWorksAiGen.addEventListener('click', async () => {
+        const nuance = (worksAiInput && worksAiInput.value.trim()) || '新しいWebサイト制作プロジェクト';
+        await runWorksInlineAi(nuance);
+      });
+    }
+
+    document.querySelectorAll('[data-works-chip]').forEach((chip) => {
+      chip.addEventListener('click', async () => {
+        const text = chip.getAttribute('data-works-chip') || '';
+        if (worksAiInput) worksAiInput.value = text;
+        await runWorksInlineAi(text);
+      });
+    });
+
+    if (worksForm) {
+      worksForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const editId = document.getElementById('works-edit-id').value;
+        const type = document.getElementById('works-type').value || 'web';
+        const eyebrow = document.getElementById('works-eyebrow').value.trim() || (type === 'video' ? 'MEMORIAL & PROMOTION VIDEO' : 'WEB DESIGN & FULL-STACK DEV');
+        const badge = document.getElementById('works-badge').value.trim() || '企画・制作担当';
+        const title = document.getElementById('works-title').value.trim();
+        const meta1 = document.getElementById('works-meta1').value.trim() || '⏱ 制作領域: 企画・デザイン・制作';
+        const meta2 = document.getElementById('works-meta2').value.trim() || '🛠 技術構成: フルカスタム制作';
+        const desc = document.getElementById('works-desc').value.trim();
+        const quote = document.getElementById('works-quote').value.trim();
+
+        if (!title || !desc) {
+          showToast('実績タイトルと詳細解説を入力してください（上のAIライターで自動作成もできます！）', 'error');
+          return;
+        }
+
+        const itemObj = {
+          id: editId || ('work-' + Date.now()),
+          type,
+          eyebrow,
+          title,
+          badge,
+          meta1,
+          meta2,
+          desc,
+          quote
+        };
+
+        if (editId) {
+          const idx = worksList.findIndex((w) => w.id === editId);
+          if (idx !== -1) worksList[idx] = itemObj;
+          showToast('制作実績カードを更新しました！', 'success');
+        } else {
+          worksList.push(itemObj);
+          showToast('新しい制作実績カードを追加しました！', 'success');
+        }
+
+        await saveWorksData();
+        renderVisualWorksCards();
+        resetWorksForm();
+        if (worksEditorBox) worksEditorBox.style.display = 'none';
+      });
+    }
+  }
+
+  async function runWorksInlineAi(nuance) {
+    const listEl = document.getElementById('works-ai-proposals-list');
+    if (!listEl) return;
+    listEl.style.display = 'grid';
+    listEl.innerHTML = '<div style="grid-column: 1/-1; color: var(--color-accent); font-weight:700;">🤖 AIが制作実績カードを3パターン作成中...</div>';
+
+    const proposals = await requestAiProposals('works', nuance);
+    listEl.innerHTML = '';
+
+    proposals.forEach((prop) => {
+      const card = document.createElement('div');
+      card.className = 'ai-proposal-card';
+      card.innerHTML = `
+        <span class="ai-prop-badge">${escapeHtml(prop.badge)}</span>
+        <div class="ai-prop-title">${escapeHtml(prop.title || '')}</div>
+        <div class="ai-prop-body">${escapeHtml(prop.body || '')}</div>
+        <button type="button" class="btn-use-proposal">この実績カードを使う ✓</button>
+      `;
+
+      card.querySelector('.btn-use-proposal').addEventListener('click', () => {
+        document.getElementById('works-type').value = prop.type || 'web';
+        document.getElementById('works-eyebrow').value = prop.eyebrow || '';
+        document.getElementById('works-badge').value = prop.work_badge || '';
+        document.getElementById('works-title').value = prop.title || '';
+        document.getElementById('works-meta1').value = prop.meta1 || '';
+        document.getElementById('works-meta2').value = prop.meta2 || '';
+        document.getElementById('works-desc').value = prop.body || '';
+        document.getElementById('works-quote').value = prop.quote || '';
+        showToast('全7項目を自動入力しました！「💾 この制作実績カードを保存する」で追加できます', 'success');
+      });
+
+      listEl.appendChild(card);
+    });
+  }
+
+  function renderVisualWorksCards() {
+    const grid = document.getElementById('vmap-works-cards-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    worksList.forEach((w, idx) => {
+      const card = document.createElement('article');
+      const cardTypeClass = w.type === 'video' ? 'work-card-video' : 'work-card-web';
+      card.className = `work-card ${cardTypeClass}`;
+
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div class="work-type-eyebrow" style="margin-bottom:0;">${escapeHtml(w.eyebrow || '')}</div>
+          <span class="group-pill pill-visible" style="font-size:0.72rem;">WORKS ${idx + 1}枚目</span>
+        </div>
+        <header class="work-header">
+          <h3 class="work-title">${escapeHtml(w.title || '')}</h3>
+          <span class="work-badge">${escapeHtml(w.badge || '')}</span>
+        </header>
+        <div class="work-meta">
+          <span>${escapeHtml(w.meta1 || '')}</span>
+          <span>${escapeHtml(w.meta2 || '')}</span>
+        </div>
+        <p class="work-desc">${escapeHtml(w.desc || '').replace(/\n/g, '<br>')}</p>
+        ${w.quote ? `<blockquote class="work-quote">${escapeHtml(w.quote)}</blockquote>` : ''}
+        <div class="vmap-news-actions-bar" style="margin-top:16px;padding:12px 0 0;">
+          <button type="button" class="btn-action-edit btn-work-edit" style="flex:1;">✨ AIで書き直し・編集する</button>
+          <button type="button" class="btn-action-delete btn-work-del">削除</button>
+        </div>
+      `;
+
+      card.querySelector('.btn-work-edit').addEventListener('click', () => {
+        const worksEditorBox = document.getElementById('vmap-works-editor-box');
+        document.getElementById('works-edit-id').value = w.id;
+        document.getElementById('works-type').value = w.type || 'web';
+        document.getElementById('works-eyebrow').value = w.eyebrow || '';
+        document.getElementById('works-badge').value = w.badge || '';
+        document.getElementById('works-title').value = w.title || '';
+        document.getElementById('works-meta1').value = w.meta1 || '';
+        document.getElementById('works-meta2').value = w.meta2 || '';
+        document.getElementById('works-desc').value = w.desc || '';
+        document.getElementById('works-quote').value = w.quote || '';
+        document.getElementById('works-form-mode-title').textContent = `制作実績「${w.title}」を編集`;
+        document.getElementById('works-submit-text').textContent = '💾 変更を保存する';
+        if (worksEditorBox) {
+          worksEditorBox.style.display = 'block';
+          worksEditorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+
+      card.querySelector('.btn-work-del').addEventListener('click', async () => {
+        if (!window.confirm(`制作実績「${w.title}」を削除しますか？`)) return;
+        worksList = worksList.filter((item) => item.id !== w.id);
+        await saveWorksData();
+        renderVisualWorksCards();
+        showToast('制作実績カードを削除しました', 'success');
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  function resetWorksForm() {
+    const formEl = document.getElementById('works-form');
+    if (formEl) formEl.reset();
+    const idEl = document.getElementById('works-edit-id');
+    if (idEl) idEl.value = '';
+    const titleEl = document.getElementById('works-form-mode-title');
+    if (titleEl) titleEl.textContent = '新しい制作実績カードを作成';
+    const subEl = document.getElementById('works-submit-text');
+    if (subEl) subEl.textContent = '💾 この制作実績カードを保存する';
+    const propList = document.getElementById('works-ai-proposals-list');
+    if (propList) {
+      propList.style.display = 'none';
+      propList.innerHTML = '';
+    }
+  }
+
+  async function saveWorksData() {
+    localStorage.setItem(LS_WORKS_KEY, JSON.stringify(worksList));
+    if (isServerOnline) {
+      try {
+        await fetch(API_WORKS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(worksList)
+        });
+      } catch (e) {}
+    }
   }
 
   function showToast(message, type = 'info') {

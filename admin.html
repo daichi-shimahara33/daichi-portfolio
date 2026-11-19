@@ -78,6 +78,8 @@
             <a href="#vsec-vision" class="jump-pill">④ 今後の展望（VISION）</a>
             <span class="jump-arrow">➔</span>
             <a href="#vsec-gallery" class="jump-pill">⑤ オフショット（GALLERY）</a>
+            <span class="jump-arrow">➔</span>
+            <a href="#vsec-works" class="jump-pill">💼 ⑥ 制作実績（WORKSページ）</a>
             <span class="jump-sep">｜</span>
             <a href="#vsec-library" class="jump-pill jump-pill-lib">🗂 全写真フォルダ</a>
         </div>
@@ -478,6 +480,118 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- =========================================================
+                 ⑥ 別ページ：WORKS（制作実績カードの追加・AI自動作成 // works.html連動）
+                 ========================================================= -->
+            <section class="vmap-section" id="vsec-works">
+                <div class="vmap-section-header">
+                    <span class="vmap-step-badge">場所 ⑥：別ページ（WORKS // 制作実績ページ）</span>
+                    <h2 class="vmap-section-title">「CREATIVE WORKS」制作実績カードの管理 ＆ AI自動作成</h2>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" class="admin-btn-primary" id="btn-toggle-works-form">
+                            <span>＋ AIで新しい制作実績カードを追加する</span>
+                        </button>
+                        <a href="works.html#works" target="_blank" class="vmap-real-link">実際のWORKSページを見る ↗</a>
+                    </div>
+                </div>
+                <p class="vmap-section-sub">
+                    別ページ（<code>works.html</code>）に表示される制作実績カードです。「どんなサイトや動画を作ったか」を一言入れるだけで、<strong>タイトル・担当範囲バッジ・使用技術・詳細解説・コンセプト名言</strong>までAIが一括で作ってくれます！
+                </p>
+
+                <!-- WORKS 新規追加・編集パネル（AI実績ライター内蔵） -->
+                <div class="vmap-works-editor-collapse" id="vmap-works-editor-box" style="display: none;">
+                    <section class="admin-card" style="margin-bottom: 24px;">
+                        <div class="panel-header">
+                            <h3 class="panel-title">
+                                <span class="panel-icon">💼</span>
+                                <span id="works-form-mode-title">新しい制作実績カードを作成</span>
+                            </h3>
+                            <button type="button" id="btn-cancel-works-edit" class="btn-text">閉じる</button>
+                        </div>
+
+                        <!-- ★ WORKS専用 AIおまかせ実績ライター ★ -->
+                        <div class="news-ai-composer-box">
+                            <div class="ai-composer-header">
+                                <span class="ai-sparkle-badge">🤖 AIおまかせ実績カードライター</span>
+                                <span class="ai-composer-sub">作った作品・案件を簡単に伝えるだけで、プロ仕様の実績カード項目（全7項目）を3パターン自動生成します！</span>
+                            </div>
+                            <div class="ai-composer-input-row">
+                                <input type="text" id="works-ai-nuance-input" class="form-input" placeholder="例: 都内パーソナルジムの公式ホームページを制作。予約導線とスマホ表示にこだわった">
+                                <button type="button" class="btn-ai-generate-inline" id="btn-works-ai-generate">
+                                    ✨ AIで実績カードを3パターン作る
+                                </button>
+                            </div>
+                            <div class="ai-quick-chips">
+                                <span class="chip-label">ワンタップ例：</span>
+                                <button type="button" class="ai-chip" data-works-chip="店舗・企業の公式Webサイト（HP/LP）を新規制作。スマホ対応とSEO、お問い合わせ導線を最適化">💻 企業・店舗Webサイト制作</button>
+                                <button type="button" class="ai-chip" data-works-chip="社会人バスケチームのメンバー募集＆公式プロモーション動画（PV）を企画・編集">🎬 バスケチームPV動画制作</button>
+                                <button type="button" class="ai-chip" data-works-chip="木場レッドシャークス 卒団記念ムービー新年度版を制作。試合映像と音楽で感動のストーリーを構成">🏀 卒団記念ムービー制作</button>
+                            </div>
+                            <div class="ai-proposals-list" id="works-ai-proposals-list" style="display: none;"></div>
+                        </div>
+
+                        <form id="works-form" class="news-form" novalidate>
+                            <input type="hidden" id="works-edit-id" value="">
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label for="works-type">実績ジャンル</label>
+                                    <select id="works-type" class="form-select">
+                                        <option value="web">Webサイト・LP・システム開発</option>
+                                        <option value="video">プロモーション動画・記念ムービー</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="works-eyebrow">英語サブ見出し</label>
+                                    <input type="text" id="works-eyebrow" class="form-input" placeholder="例: WEB DESIGN & FULL-STACK DEV">
+                                </div>
+                                <div class="form-group">
+                                    <label for="works-badge">担当バッジ（右上）</label>
+                                    <input type="text" id="works-badge" class="form-input" placeholder="例: 企画・UI設計・フルスクラッチ開発">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="works-title">実績タイトル（案件名・作品名） <span class="req">*</span></label>
+                                <input type="text" id="works-title" class="form-input" placeholder="上のAIボックスで作るか、直接入力してください" required>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="works-meta1">制作期間 / 制作領域</label>
+                                    <input type="text" id="works-meta1" class="form-input" placeholder="例: ⏱ 制作領域: 企画設計・UI/UXデザイン・実装">
+                                </div>
+                                <div class="form-group">
+                                    <label for="works-meta2">使用ツール / 技術構成</label>
+                                    <input type="text" id="works-meta2" class="form-input" placeholder="例: 🛠 技術構成: HTML5 / CSS3 / JavaScript">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="works-desc">実績の詳細解説 <span class="req">*</span></label>
+                                <textarea id="works-desc" rows="3" class="form-textarea" placeholder="上のAIボックスで作るか、直接入力してください" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="works-quote">下部のハイライト一言（コンセプト・こだわり）</label>
+                                <input type="text" id="works-quote" class="form-input" placeholder="例: 「想いと熱量をダイレクトに届けるWeb体験へ」">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="admin-btn-primary">
+                                    <span id="works-submit-text">💾 この制作実績カードを保存する</span>
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <!-- 実際のWORKSページと全く同じ見た目で並ぶ実績カード一覧 -->
+                <div class="works-grid" id="vmap-works-cards-grid">
+                    <!-- JSで描画 -->
                 </div>
             </section>
 
