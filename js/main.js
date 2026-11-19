@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initActiveNavObserver();
   loadDynamicPhotos();
+  loadDynamicTexts();
   loadDynamicNews();
   initMobileCollapsible();
   initBackToTop();
@@ -213,6 +214,48 @@ async function loadDynamicPhotos() {
       }
     }
   }
+}
+
+/**
+ * Loads dynamic site texts from /api/texts, data/site_texts.json, or localStorage
+ */
+async function loadDynamicTexts() {
+  const textSlots = document.querySelectorAll('[data-text-slot]');
+  if (!textSlots.length) return;
+
+  let textData = null;
+
+  try {
+    const res = await fetch('/api/texts', { cache: 'no-store' });
+    if (res.ok) {
+      textData = await res.json();
+    }
+  } catch (e) {
+    try {
+      const jsonRes = await fetch('data/site_texts.json', { cache: 'no-store' });
+      if (jsonRes.ok) {
+        textData = await jsonRes.json();
+      }
+    } catch (err) {}
+  }
+
+  if (!textData) {
+    const saved = localStorage.getItem('ds_portfolio_texts_data');
+    if (saved) {
+      try {
+        textData = JSON.parse(saved);
+      } catch (e) {}
+    }
+  }
+
+  if (!textData || typeof textData !== 'object') return;
+
+  textSlots.forEach((el) => {
+    const key = el.getAttribute('data-text-slot');
+    if (key && textData[key] != null && String(textData[key]).trim() !== '') {
+      el.innerHTML = escapeHtml(String(textData[key])).replace(/\n/g, '<br>');
+    }
+  });
 }
 
 /**

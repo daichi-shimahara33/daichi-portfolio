@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>見た目そのまま写真管理 // 島原大智 #33 関係者専用コンソール</title>
+    <title>見た目そのまま写真＆AI文章管理 // 島原大智 #33 関係者専用コンソール</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
         <div class="auth-gate-card">
             <span class="auth-badge">CREATOR &amp; STAFF ONLY</span>
             <h1 class="auth-title">DAICHI SHIMAHARA <span>#33</span></h1>
-            <p class="auth-subtitle">見た目そのまま写真・記事かんたん管理ページ</p>
+            <p class="auth-subtitle">見た目そのまま写真 ＆ AIおまかせ文章管理ページ</p>
             <form id="auth-gate-form" class="auth-form">
                 <label for="auth-passcode" class="auth-label">関係者パスコードを入力してください</label>
                 <input type="password" id="auth-passcode" class="auth-input" placeholder="パスコード（初期値: 3333）" autocomplete="current-password" required>
@@ -40,7 +40,7 @@
          ================================================================= -->
     <header class="admin-header">
         <div class="admin-header-left">
-            <span class="admin-badge">VISUAL ADMIN</span>
+            <span class="admin-badge">VISUAL &amp; AI ADMIN</span>
             <h1 class="admin-logo">サイト見た目そのまま管理 <span>#33</span></h1>
             <span class="server-status" id="server-status" title="サーバー接続ステータス">
                 <span class="status-dot"></span>
@@ -94,32 +94,36 @@
 
             <!-- 使い方ガイドバナー -->
             <div class="visual-guide-banner">
-                <div class="guide-banner-icon">💡</div>
+                <div class="guide-banner-icon">🤖</div>
                 <div class="guide-banner-text">
-                    <strong>どの写真がどこに出るか迷わない「サイトそのまま表示」です！</strong><br>
-                    実際のホームページの<strong>上から順番（①トップ ➔ ②STATEMENT ➔ ③NEWS ➔ ④VISION ➔ ⑤GALLERY）</strong>に並んでいます。変えたい写真の<strong>「📸 ここの写真を変更する」</strong>ボタンを押すだけで、すぐに差し替わります！
+                    <strong>【進化版】見た目そのまま「📸 写真変更」＋「✨ AIおまかせ文章作成」に対応！</strong><br>
+                    実際のホームページの上から順番に並んでいます。写真は<strong>「📸 ここの写真を変更する」</strong>、文章は<strong>「✨ AIで文章を作成・編集」</strong>を押して簡単なニュアンス（例：「昨日試合で勝った」「愛媛遠征楽しかった」など）を入れるだけで、AIが自動でカッコいい文章を3パターン提案してくれます！
                 </div>
             </div>
 
             <!-- =========================================================
-                 ① 一番上：ABOUT（トップ画面のメイン写真）
+                 ① 一番上：ABOUT（トップ画面のメイン写真 ＆ 紹介文）
                  ========================================================= -->
             <section class="vmap-section" id="vsec-hero">
                 <div class="vmap-section-header">
                     <span class="vmap-step-badge">場所 ①：サイトの一番上（ABOUT）</span>
-                    <h2 class="vmap-section-title">トップ画面のメインポートレート写真</h2>
+                    <h2 class="vmap-section-title">トップ画面のメイン写真 ＆ 自己紹介テキスト</h2>
                     <a href="index.html#about" target="_blank" class="vmap-real-link">実際のページのこの場所を見る ↗</a>
                 </div>
 
                 <!-- 実際のトップ画面と同じ左右レイアウト -->
                 <div class="vmap-hero-replica">
                     <div class="vmap-hero-left">
-                        <span class="vmap-mock-eyebrow">TOKYO / EXCELLENCE #33</span>
-                        <h3 class="vmap-mock-h1">コートの上でも、人生でも、<br><span>熱狂の中心に。</span></h3>
-                        <p class="vmap-mock-Name">DAICHI SHIMAHARA <span>#33</span></p>
-                        <p class="vmap-mock-desc">
-                            ← サイトを開いた瞬間に<strong>一番最初に目に入る右側のメイン写真</strong>です。
+                        <span class="vmap-mock-eyebrow" id="vmap-txt-hero_tag">EXCELLENCE // #33</span>
+                        <h3 class="vmap-mock-h1">DAICHI <span>SHIMAHARA</span></h3>
+                        <p class="vmap-mock-desc" id="vmap-txt-hero_desc">
+                            インサイド・アウトサイドともに対応できるオールラウンドプレイヤー。高い運動量とフィジカルを活かしたトランジション、ゴール下でのリバウンドでチームの勝利に貢献する。
                         </p>
+                        <div style="margin-top: 16px;">
+                            <button type="button" class="btn-ai-write-here" data-ai-text-trigger="hero">
+                                ✨ AIでトップ画面の紹介文を作成・変更する
+                            </button>
+                        </div>
                     </div>
                     <div class="vmap-hero-right">
                         <div class="vmap-photo-frame hero-frame-preview">
@@ -134,16 +138,16 @@
             </section>
 
             <!-- =========================================================
-                 ② 2番目：STATEMENT（BEYOND THE COURT // 3つの柱の背景写真）
+                 ② 2番目：STATEMENT（BEYOND THE COURT // 3つの柱の背景写真＆文章）
                  ========================================================= -->
             <section class="vmap-section" id="vsec-statement">
                 <div class="vmap-section-header">
                     <span class="vmap-step-badge">場所 ②：上から2番目（STATEMENT）</span>
-                    <h2 class="vmap-section-title">「BEYOND THE COURT」3つの柱カードの背景写真</h2>
+                    <h2 class="vmap-section-title">「BEYOND THE COURT」3つの柱カード（背景写真 ＆ 文章）</h2>
                     <a href="index.html#statement" target="_blank" class="vmap-real-link">実際のページのこの場所を見る ↗</a>
                 </div>
                 <p class="vmap-section-sub">
-                    サイトの「STATEMENT」セクションに横並びで表示される<strong>3枚のカードの背景にうっすら敷かれている写真</strong>です。実際のカードと同じ文字を重ねて表示しています。
+                    サイトの「STATEMENT」に横並びで表示される3枚のカードです。それぞれの<strong>「📸 背景写真を変更」</strong>と<strong>「✨ AIで文章を作成・編集」</strong>が個別にできます。
                 </p>
 
                 <div class="vmap-statement-grid">
@@ -153,13 +157,18 @@
                             <img src="images/nCodfH6uTi-zfORtPWL2Kw.jpg" id="vmap-img-statement_1" alt="">
                             <div class="vmap-story-overlay">
                                 <span class="vmap-story-num">左のカード // PILLAR 01 (ON THE COURT)</span>
-                                <h4 class="vmap-story-h">192cmの肉体を張り、<br>大人になっても本気で勝利に飢える。</h4>
-                                <p class="vmap-story-p">久我山高校でIH3年連続出場、大学、そして社会人クラブ『EXCELLENCE』へ…</p>
+                                <h4 class="vmap-story-h" id="vmap-txt-statement_1_title">192cmの肉体を張り、<br>大人になっても本気で勝利に飢える。</h4>
+                                <p class="vmap-story-p" id="vmap-txt-statement_1_text">久我山高校でIH3年連続出場、大学、そして社会人クラブ『EXCELLENCE』へ。大人になってもバスケは趣味で終わらない。192cmのサイズでゴール下を死守し、泥臭くルーズボールへ飛び込む瞬間に情熱を燃やしています。</p>
                             </div>
                         </div>
-                        <button type="button" class="btn-change-here" data-slot-trigger="statement_1">
-                            📸 【左カード】の背景写真を変更する
-                        </button>
+                        <div class="vmap-dual-btn-stack">
+                            <button type="button" class="btn-change-here" data-slot-trigger="statement_1">
+                                📸 【左カード】の背景写真を変更する
+                            </button>
+                            <button type="button" class="btn-ai-write-here" data-ai-text-trigger="statement_1">
+                                ✨ AIで【左カード】の文章を作成・編集
+                            </button>
+                        </div>
                     </div>
 
                     <!-- 中央カード: PILLAR 02 -->
@@ -168,13 +177,18 @@
                             <img src="images/ehime_team_salute.jpg" id="vmap-img-statement_2" alt="">
                             <div class="vmap-story-overlay">
                                 <span class="vmap-story-num">真ん中のカード // PILLAR 02 (BEYOND BORDERS)</span>
-                                <h4 class="vmap-story-h">東京から愛媛、全国へ。<br>1つのボールが世代の壁を溶かす。</h4>
-                                <p class="vmap-story-p">所属や肩書き、地域の枠なんて関係ない。愛媛をはじめ全国各地の体育館へ赴き…</p>
+                                <h4 class="vmap-story-h" id="vmap-txt-statement_2_title">東京から愛媛、全国へ。<br>1つのボールが世代の壁を溶かす。</h4>
+                                <p class="vmap-story-p" id="vmap-txt-statement_2_text">所属や肩書き、地域の枠なんて関係ない。愛媛をはじめ全国各地の体育館へ赴き、初対面の仲間とも全力のパス1本で本音で繋がる。バスケが持つ“人と人を爆発的に結びつける引力”を、自らの足で広げています。</p>
                             </div>
                         </div>
-                        <button type="button" class="btn-change-here" data-slot-trigger="statement_2">
-                            📸 【真ん中カード】の背景写真を変更する
-                        </button>
+                        <div class="vmap-dual-btn-stack">
+                            <button type="button" class="btn-change-here" data-slot-trigger="statement_2">
+                                📸 【真ん中カード】の背景写真を変更する
+                            </button>
+                            <button type="button" class="btn-ai-write-here" data-ai-text-trigger="statement_2">
+                                ✨ AIで【真ん中カード】の文章を作成・編集
+                            </button>
+                        </div>
                     </div>
 
                     <!-- 右カード: PILLAR 03 -->
@@ -183,36 +197,41 @@
                             <img src="images/IwPsWPFURlSngd9m60T98w.jpg" id="vmap-img-statement_3" alt="">
                             <div class="vmap-story-overlay">
                                 <span class="vmap-story-num">右のカード // PILLAR 03 (CREATIVE &amp; WEB)</span>
-                                <h4 class="vmap-story-h">コードと映像で、<br>仲間の輝きを一生モノの財産にする。</h4>
-                                <p class="vmap-story-p">木場レッドシャークスの卒団ムービー制作やWebサイト構築…</p>
+                                <h4 class="vmap-story-h" id="vmap-txt-statement_3_title">スポーツから企業案件まで、<br>想いが伝わるWebと映像を創る。</h4>
+                                <p class="vmap-story-p" id="vmap-txt-statement_3_text">スポーツ領域にとどまらず、企業のコーポレートサイト、ブランドLP、プロモーション動画まであらゆる分野に対応。机上のテンプレに頼らず、理念や熱量を深く汲み取り、企画からデザイン・実装までワンストップで形にします。</p>
                             </div>
                         </div>
-                        <button type="button" class="btn-change-here" data-slot-trigger="statement_3">
-                            📸 【右カード】の背景写真を変更する
-                        </button>
+                        <div class="vmap-dual-btn-stack">
+                            <button type="button" class="btn-change-here" data-slot-trigger="statement_3">
+                                📸 【右カード】の背景写真を変更する
+                            </button>
+                            <button type="button" class="btn-ai-write-here" data-ai-text-trigger="statement_3">
+                                ✨ AIで【右カード】の文章を作成・編集
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- =========================================================
-                 ③ 3番目：NEWS（最新のお知らせ＆活動報告）
+                 ③ 3番目：NEWS（最新のお知らせ＆活動報告 // AI自動記事作成付き！）
                  ========================================================= -->
             <section class="vmap-section" id="vsec-news">
                 <div class="vmap-section-header">
                     <span class="vmap-step-badge">場所 ③：上から3番目（NEWS）</span>
-                    <h2 class="vmap-section-title">「NEWS」最新のお知らせカード（写真・タイトル・本文）</h2>
+                    <h2 class="vmap-section-title">「NEWS」最新のお知らせカード（写真・AI文章作成・編集）</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <button type="button" class="admin-btn-primary" id="btn-toggle-news-form">
-                            <span>＋ 新しいニュース記事を追加・編集する</span>
+                            <span>＋ AIで新しいニュース記事を作成・投稿する</span>
                         </button>
                         <a href="index.html#news" target="_blank" class="vmap-real-link">実際の場所を見る ↗</a>
                     </div>
                 </div>
                 <p class="vmap-section-sub">
-                    サイトの「NEWS」に並んでいるカードです。各カードの<strong>「📸 写真だけ変更」</strong>で写真だけすぐ変えられるほか、<strong>「✏️ 文章を編集」</strong>でタイトルや本文も直せます。
+                    サイトの「NEWS」に並んでいるカードです。<strong>「📸 写真だけ変更」</strong>で写真をすぐ変えられるほか、<strong>「✨ AI文章編集」</strong>で簡単なメモからタイトル・本文を自動生成できます。
                 </p>
 
-                <!-- ニュース新規投稿・編集パネル（ボタンを押すと開く） -->
+                <!-- ニュース新規投稿・編集パネル（AIライティングボックス内蔵！） -->
                 <div class="vmap-news-editor-collapse" id="vmap-news-editor-box" style="display: none;">
                     <div class="admin-grid" style="margin-bottom: 24px;">
                         <section class="admin-card form-panel">
@@ -222,6 +241,29 @@
                                     <span id="form-mode-title">新しいお知らせを投稿</span>
                                 </h3>
                                 <button type="button" id="btn-cancel-edit" class="btn-text">閉じる</button>
+                            </div>
+
+                            <!-- ★ NEWS専用 AI自動ライティングボックス ★ -->
+                            <div class="news-ai-composer-box">
+                                <div class="ai-composer-header">
+                                    <span class="ai-sparkle-badge">🤖 AIおまかせ記事ライター</span>
+                                    <span class="ai-composer-sub">簡単な出来事や単語を入れるだけで、タイトルと本文を3パターン自動作成します！</span>
+                                </div>
+                                <div class="ai-composer-input-row">
+                                    <input type="text" id="news-ai-nuance-input" class="form-input" placeholder="例: 日曜の大会でEXCELLENCEが勝利！リバウンドとゴール下で貢献した">
+                                    <button type="button" class="btn-ai-generate-inline" id="btn-news-ai-generate">
+                                        ✨ AIで文章を3パターン作る
+                                    </button>
+                                </div>
+                                <div class="ai-quick-chips">
+                                    <span class="chip-label">ワンタップ例：</span>
+                                    <button type="button" class="ai-chip" data-news-chip="週末の公式戦でEXCELLENCEが勝利！192cmのインサイドとリバウンドで貢献">🏀 試合に勝った</button>
+                                    <button type="button" class="ai-chip" data-news-chip="愛媛県のクラブチームへ遠征参加！熱いマッチアップと美味しいグルメで最高に楽しかった">✈️ 遠征・練習訪問</button>
+                                    <button type="button" class="ai-chip" data-news-chip="新しいWebサイトとプロモーション動画の制作プロジェクトが公開！相談も随時受付中">💻 制作実績・仕事報告</button>
+                                    <button type="button" class="ai-chip" data-news-chip="休日のオフショット。バスケ仲間とカフェ＆街歩きでリフレッシュ">☕ 休日オフショット</button>
+                                </div>
+                                <!-- AIの3パターン提案結果がここに出る -->
+                                <div class="ai-proposals-list" id="news-ai-proposals-list" style="display: none;"></div>
                             </div>
 
                             <form id="news-form" class="news-form" novalidate>
@@ -248,7 +290,7 @@
 
                                 <div class="form-group">
                                     <label for="news-title">タイトル <span class="req">*</span></label>
-                                    <input type="text" id="news-title" placeholder="例: 秋季クラブ選手権 第3節 EXCELLENCE勝利" required class="form-input">
+                                    <input type="text" id="news-title" placeholder="上のAIボックスで作るか、直接入力してください" required class="form-input">
                                 </div>
 
                                 <div class="form-group">
@@ -261,7 +303,7 @@
 
                                 <div class="form-group">
                                     <label for="news-desc">本文・詳細 <span class="req">*</span></label>
-                                    <textarea id="news-desc" rows="3" required class="form-textarea"></textarea>
+                                    <textarea id="news-desc" rows="3" placeholder="上のAIボックスで作るか、直接入力してください" required class="form-textarea"></textarea>
                                 </div>
 
                                 <div class="form-actions">
@@ -301,16 +343,16 @@
             </section>
 
             <!-- =========================================================
-                 ④ 4番目：VISION（今後の展望・2枚の大きな写真付きカード）
+                 ④ 4番目：VISION（今後の展望・2枚の大きな写真付きカード＆文章）
                  ========================================================= -->
             <section class="vmap-section" id="vsec-vision">
                 <div class="vmap-section-header">
                     <span class="vmap-step-badge">場所 ④：上から5番目（VISION // PROFILEの下）</span>
-                    <h2 class="vmap-section-title">「VISION」左右2枚のカード写真</h2>
+                    <h2 class="vmap-section-title">「VISION」左右2枚のカード（写真 ＆ 文章）</h2>
                     <a href="index.html#vision" target="_blank" class="vmap-real-link">実際のページのこの場所を見る ↗</a>
                 </div>
                 <p class="vmap-section-sub">
-                    PROFILEの下にある「VISION（今後の展望）」セクションの左右2枚の写真です。
+                    PROFILEの下にある「VISION（今後の展望）」セクションの左右2枚の写真と文章です。
                 </p>
 
                 <div class="vmap-vision-grid">
@@ -322,11 +364,16 @@
                         </div>
                         <div class="vmap-vision-body">
                             <div class="vmap-vision-sub">全国のコートを巡る熱意</div>
-                            <h4 class="vmap-vision-h">地方遠征 &amp; チーム訪問活動</h4>
-                            <p class="vmap-vision-p">現在は東京のチーム（EXCELLENCE）に所属しながら、愛媛県など地方のチームや練習現場にも積極的に足を運んでいます…</p>
-                            <button type="button" class="btn-change-here" data-slot-trigger="vision_1">
-                                📸 【左：地方遠征カード】の写真を変更する
-                            </button>
+                            <h4 class="vmap-vision-h" id="vmap-txt-vision_1_title">地方遠征 &amp; チーム訪問活動</h4>
+                            <p class="vmap-vision-p" id="vmap-txt-vision_1_text">現在は東京のチーム（EXCELLENCE）に所属しながら、都内だけでなく地方のチームや練習現場にも積極的に足を運んでいます。特に愛媛県にはよくお邪魔させていただいており、バスケをしていなければ出会えなかった素晴らしい仲間や指導者の方々と貴重な縁を築いています。</p>
+                            <div class="vmap-dual-btn-stack" style="margin-top: auto;">
+                                <button type="button" class="btn-change-here" data-slot-trigger="vision_1">
+                                    📸 【左：地方遠征カード】の写真を変更する
+                                </button>
+                                <button type="button" class="btn-ai-write-here" data-ai-text-trigger="vision_1">
+                                    ✨ AIで【左：地方遠征カード】の文章を作成・編集
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -338,23 +385,28 @@
                         </div>
                         <div class="vmap-vision-body">
                             <div class="vmap-vision-sub">つながりで広がるバスケの輪</div>
-                            <h4 class="vmap-vision-h">チーム関係者の皆様へ &amp; 今後の夢</h4>
-                            <p class="vmap-vision-p">【練習参加・交流チーム随時募集中】練習参加や合同練習を受け入れていただける社会人・クラブチーム様…</p>
-                            <button type="button" class="btn-change-here" data-slot-trigger="vision_2">
-                                📸 【右：チーム募集カード】の写真を変更する
-                            </button>
+                            <h4 class="vmap-vision-h" id="vmap-txt-vision_2_title">チーム関係者の皆様へ &amp; 今後の夢</h4>
+                            <p class="vmap-vision-p" id="vmap-txt-vision_2_text">【練習参加・交流チーム随時募集中】練習参加や合同練習を受け入れていただける社会人・クラブチーム様がございましたら、ぜひお気軽にご連絡ください！【FUTURE VISION】将来的には自身のYouTubeチャンネルを開設し、「全国の社会人バスケチーム訪問旅」プロジェクトを始動予定。</p>
+                            <div class="vmap-dual-btn-stack" style="margin-top: auto;">
+                                <button type="button" class="btn-change-here" data-slot-trigger="vision_2">
+                                    📸 【右：チーム募集カード】の写真を変更する
+                                </button>
+                                <button type="button" class="btn-ai-write-here" data-ai-text-trigger="vision_2">
+                                    ✨ AIで【右：チーム募集カード】の文章を作成・編集
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- =========================================================
-                 ⑤ 5番目：GALLERY（日々の練習 & オフショット // ポラロイド風）
+                 ⑤ 5番目：GALLERY（日々の練習 & オフショット // ポラロイド風＆紹介文）
                  ========================================================= -->
             <section class="vmap-section" id="vsec-gallery">
                 <div class="vmap-section-header">
                     <span class="vmap-step-badge">場所 ⑤：メインページの一番下（GALLERY）</span>
-                    <h2 class="vmap-section-title">「日々の練習 &amp; オフショット」ポラロイド写真（常時4枚 ＋ もっと見る展開枠）</h2>
+                    <h2 class="vmap-section-title">「日々の練習 &amp; オフショット」紹介文 ＆ ポラロイド写真（常時4枚＋もっと見る枠）</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <button type="button" class="admin-btn-primary" id="btn-add-gallery-photo">
                             <span>＋ オフショット写真を新しく追加する</span>
@@ -368,12 +420,36 @@
                     <div class="vmap-gallery-left-info">
                         <span class="collage-badge">OFF-COURT LIFE</span>
                         <h3>日々の練習 <span class="accent-amp">&amp;</span> オフショット</h3>
-                        <p class="vmap-gallery-explain">
-                            実際のサイトと同じ配置です！<br><br>
-                            🟢 <strong>上段の4枚</strong>：最初から画面に並んでいる写真です。<br>
-                            🟠 <strong>下段の写真</strong>：「＋オフショット写真をもっと見る」を押したときに<strong>下へスライドして出てくる写真</strong>です。<br><br>
-                            「←」「→」ボタンで順番を入れ替えると、上段と下段の写真も自由に入れ替わります！
+                        <p class="vmap-gallery-explain" id="vmap-txt-gallery_lead">
+                            コート上の真剣勝負から、遠征先でのリラックスした一コマまで。<br>
+                            バスケを通じて生まれる、かけがえのない思い出と仲間との絆を大切にしています。
                         </p>
+                        <ul class="collage-info-list" style="margin: 14px 0;">
+                            <li class="collage-info-item" style="padding: 8px 12px;">
+                                <span class="collage-info-icon">📍</span>
+                                <div class="collage-info-content">
+                                    <span class="info-label">場所</span>
+                                    <span class="info-val" id="vmap-txt-gallery_place">都内・愛媛県・各遠征先体育館</span>
+                                </div>
+                            </li>
+                            <li class="collage-info-item" style="padding: 8px 12px;">
+                                <span class="collage-info-icon">🏀</span>
+                                <div class="collage-info-content">
+                                    <span class="info-label">活動</span>
+                                    <span class="info-val" id="vmap-txt-gallery_activity">練習試合・地方遠征・グルメ食べ歩き</span>
+                                </div>
+                            </li>
+                            <li class="collage-info-item" style="padding: 8px 12px;">
+                                <span class="collage-info-icon">🤝</span>
+                                <div class="collage-info-content">
+                                    <span class="info-label">交流</span>
+                                    <span class="info-val" id="vmap-txt-gallery_contact">合同練習・見学・体験 随時受付中</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <button type="button" class="btn-ai-write-here" data-ai-text-trigger="gallery">
+                            ✨ AIでここの紹介文・項目を作成・変更する
+                        </button>
                     </div>
 
                     <div class="vmap-gallery-right-photos">
@@ -466,6 +542,80 @@
             <!-- 画像サムネイル一覧 -->
             <div class="picker-photos-grid" id="picker-photos-grid">
                 <!-- JSで描画 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================
+         🤖 AIおまかせ文章作成 ＆ テキスト編集モーダル
+         ================================================================= -->
+    <div class="photo-picker-modal" id="ai-writer-modal" aria-hidden="true">
+        <div class="photo-picker-backdrop" id="ai-writer-backdrop"></div>
+        <div class="photo-picker-dialog ai-writer-dialog" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+            <div class="picker-modal-header">
+                <div>
+                    <span class="ai-sparkle-badge">🤖 AI WRITING ASSISTANT</span>
+                    <h3 class="picker-modal-title" id="ai-modal-title" style="margin-top: 6px;">AIおまかせ文章作成・編集</h3>
+                    <p class="picker-modal-sub" id="ai-modal-sub">簡単なニュアンスやキーワードを入れるだけで、AIが3パターンの文章を自動で作ります</p>
+                </div>
+                <button type="button" class="picker-close-btn" id="ai-modal-close-btn" aria-label="閉じる">✕</button>
+            </div>
+
+            <div class="ai-modal-body">
+                <!-- STEP 1: ニュアンス入力 -->
+                <div class="ai-step-box">
+                    <label class="ai-step-label" for="ai-modal-nuance">
+                        STEP 1：どんな感じの文章にしたいか、簡単な言葉・メモで教えてください
+                    </label>
+                    <div class="ai-composer-input-row">
+                        <input type="text" id="ai-modal-nuance" class="form-input" placeholder="例: 大人になってもバスケに本気で挑み、仕事でも最高のWebを作る">
+                        <button type="button" class="btn-ai-generate-inline" id="btn-ai-modal-generate">
+                            ✨ AIに3パターン作らせる
+                        </button>
+                    </div>
+                    <div class="ai-quick-chips" id="ai-modal-chips">
+                        <!-- JSでセクションに合わせたワンタップ例を描画 -->
+                    </div>
+                </div>
+
+                <!-- STEP 2: AI提案の3パターン表示エリア -->
+                <div class="ai-proposals-list" id="ai-modal-proposals" style="display: none;">
+                    <!-- JSで3パターン提案カードを描画 -->
+                </div>
+
+                <!-- STEP 3: 反映する文章の確認・微調整フォーム -->
+                <div class="ai-edit-confirm-box">
+                    <div class="ai-step-label">STEP 2：サイトに反映する文章（AIが作った文章をここで微調整もできます）</div>
+                    <div class="form-group" id="ai-modal-title-group">
+                        <label for="ai-modal-edit-title" id="ai-modal-title-label">見出し / タイトル</label>
+                        <input type="text" id="ai-modal-edit-title" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="ai-modal-edit-body" id="ai-modal-body-label">本文 / メッセージ</label>
+                        <textarea id="ai-modal-edit-body" rows="4" class="form-textarea"></textarea>
+                    </div>
+                    <!-- GALLERY専用の3項目（場所・活動・交流） -->
+                    <div class="form-row-3" id="ai-modal-gallery-extra" style="display: none;">
+                        <div class="form-group">
+                            <label for="ai-modal-gal-place">📍 場所</label>
+                            <input type="text" id="ai-modal-gal-place" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="ai-modal-gal-activity">🏀 活動</label>
+                            <input type="text" id="ai-modal-gal-activity" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="ai-modal-gal-contact">🤝 交流</label>
+                            <input type="text" id="ai-modal-gal-contact" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-actions" style="justify-content: flex-end; margin-top: 14px;">
+                        <button type="button" class="admin-btn-outline" id="btn-ai-modal-cancel">キャンセル</button>
+                        <button type="button" class="admin-btn-primary" id="btn-ai-modal-save">
+                            <span>💾 この文章をサイトに反映する</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 /**
- * DAICHI SHIMAHARA #33 - VISUAL SITE-MAP PHOTO & CONTENT ADMIN LOGIC
+ * DAICHI SHIMAHARA #33 - VISUAL SITE-MAP PHOTO & AI COPYWRITING ADMIN LOGIC
  */
 
 (function () {
@@ -7,6 +7,8 @@
 
   const API_NEWS_URL = '/api/news';
   const API_PHOTOS_URL = '/api/photos';
+  const API_TEXTS_URL = '/api/texts';
+  const API_AI_WRITE_URL = '/api/ai-write';
   const API_IMAGES_META_URL = '/api/images/meta';
   const API_UPLOAD_URL = '/api/upload';
   const API_DELETE_IMAGE_URL = '/api/delete-image';
@@ -14,6 +16,7 @@
 
   const LS_NEWS_KEY = 'ds_portfolio_news_data';
   const LS_PHOTOS_KEY = 'ds_portfolio_photos_data';
+  const LS_TEXTS_KEY = 'ds_portfolio_texts_data';
   const SESSION_AUTH_KEY = 'ds_admin_unlocked_v1';
   const ADMIN_PASSCODE = '3333';
 
@@ -91,6 +94,114 @@
     ]
   };
 
+  const DEFAULT_TEXTS_DATA = {
+    hero_tag: 'EXCELLENCE // #33',
+    hero_desc: 'インサイド・アウトサイドともに対応できるオールラウンドプレイヤー。高い運動量とフィジカルを活かしたトランジション、ゴール下でのリバウンドでチームの勝利に貢献する。',
+    statement_sub: 'コートの上で流した汗も、コートの外で創る熱狂も。\nすべては、バスケットボールを通じて人と繋がり、本気で生きる証。',
+    statement_1_title: '192cmの肉体を張り、\n大人になっても本気で勝利に飢える。',
+    statement_1_text: '久我山高校でIH3年連続出場、大学、そして社会人クラブ『EXCELLENCE』へ。大人になってもバスケは趣味で終わらない。192cmのサイズでゴール下を死守し、泥臭くルーズボールへ飛び込む瞬間に情熱を燃やしています。',
+    statement_2_title: '東京から愛媛、全国へ。\n1つのボールが世代の壁を溶かす。',
+    statement_2_text: '所属や肩書き、地域の枠なんて関係ない。愛媛をはじめ全国各地の体育館へ赴き、初対面の仲間とも全力のパス1本で本音で繋がる。バスケが持つ“人と人を爆発的に結びつける引力”を、自らの足で広げています。',
+    statement_3_title: 'スポーツから企業案件まで、\n想いが伝わるWebと映像を創る。',
+    statement_3_text: 'スポーツ領域にとどまらず、企業のコーポレートサイト、ブランドLP、プロモーション動画まであらゆる分野に対応。机上のテンプレに頼らず、理念や熱量を深く汲み取り、企画からデザイン・実装までワンストップで形にします。',
+    vision_1_title: '地方遠征 & チーム訪問活動',
+    vision_1_text: '現在は東京のチーム（EXCELLENCE）に所属しながら、都内だけでなく地方のチームや練習現場にも積極的に足を運んでいます。\n\n特に愛媛県にはよくお邪魔させていただいており、バスケをしていなければ出会えなかった素晴らしい仲間や指導者の方々と貴重な縁を築いています。',
+    vision_2_title: 'チーム関係者の皆様へ & 今後の夢',
+    vision_2_text: '【練習参加・交流チーム随時募集中】\n練習参加や合同練習を受け入れていただける社会人・クラブチーム様がございましたら、ぜひお気軽にご連絡ください！\n\n【FUTURE VISION】\n将来的には自身のYouTubeチャンネルを開設し、「全国の社会人バスケチーム訪問旅」プロジェクトを始動予定。各地のチームの魅力やバスケの楽しさを発信していきます。',
+    gallery_lead: 'コート上の真剣勝負から、遠征先でのリラックスした一コマまで。\nバスケを通じて生まれる、かけがえのない思い出と仲間との絆を大切にしています。',
+    gallery_place: '都内・愛媛県・各遠征先体育館',
+    gallery_activity: '練習試合・地方遠征・グルメ食べ歩き',
+    gallery_contact: '合同練習・見学・体験 随時受付中'
+  };
+
+  // 各セクションのAIモーダル設定（ラベル・ワンタップ例文）
+  const AI_SECTION_CONFIG = {
+    hero: {
+      modalTitle: '① トップ画面（ABOUT）の自己紹介文をAIで作成・変更',
+      titleKey: 'hero_tag',
+      bodyKey: 'hero_desc',
+      titleLabel: '肩書きタグ（英語・背番号など）',
+      bodyLabel: 'メイン自己紹介文',
+      chips: [
+        '192cmのオールラウンダーとしてゴール下とリバウンドで勝利に貢献',
+        '社会人バスケEXCELLENCEで戦いつつ、Web・映像クリエイターとしても活動',
+        'バスケの情熱とクリエイティブの力でコート内外に熱狂を創る'
+      ]
+    },
+    statement_1: {
+      modalTitle: '② STATEMENT【左カード：ON THE COURT】の文章をAIで作成',
+      titleKey: 'statement_1_title',
+      bodyKey: 'statement_1_text',
+      titleLabel: 'カード見出し（改行すると2行になります）',
+      bodyLabel: 'カード本文',
+      chips: [
+        '192cmのフィジカルでゴール下を支配し、大人になっても本気で勝利を目指す',
+        '久我山高校から大学、社会人EXCELLENCEまで一貫して泥臭いリバウンドにこだわる',
+        '週末のコートで流す汗と勝利への執念が人生の原動力'
+      ]
+    },
+    statement_2: {
+      modalTitle: '② STATEMENT【真ん中カード：BEYOND BORDERS】の文章をAIで作成',
+      titleKey: 'statement_2_title',
+      bodyKey: 'statement_2_text',
+      titleLabel: 'カード見出し',
+      bodyLabel: 'カード本文',
+      chips: [
+        '東京から愛媛、全国の体育館へ足を運び、バスケを通じて世代や地域を超えて繋がる',
+        '初対面の仲間ともパス1本で本音で語り合えるバスケの引力を広げる',
+        '全国のクラブチームとの合同練習や交流を通じて一生モノの仲間を作る'
+      ]
+    },
+    statement_3: {
+      modalTitle: '② STATEMENT【右カード：CREATIVE & WEB】の文章をAIで作成',
+      titleKey: 'statement_3_title',
+      bodyKey: 'statement_3_text',
+      titleLabel: 'カード見出し',
+      bodyLabel: 'カード本文',
+      chips: [
+        'スポーツチームから一般企業・店舗まで、想いと熱量が伝わるWebサイトと動画を制作',
+        'テンプレに頼らず企画からデザイン・実装までワンストップで形にする',
+        '卒団記念ムービーやコーポレートサイトなど、心を動かすクリエイティブを提供'
+      ]
+    },
+    vision_1: {
+      modalTitle: '④ VISION【左：地方遠征カード】の文章をAIで作成',
+      titleKey: 'vision_1_title',
+      bodyKey: 'vision_1_text',
+      titleLabel: 'カードタイトル',
+      bodyLabel: 'カード本文',
+      chips: [
+        '東京のEXCELLENCEで活動しながら愛媛など全国各地のチームへ遠征・交流している',
+        '地方遠征での熱いマッチアップと現地の仲間との出会いが最高の財産',
+        'これからも全国各地のコートへ足を運び、バスケの輪を広げていきたい'
+      ]
+    },
+    vision_2: {
+      modalTitle: '④ VISION【右：チーム募集＆今後の夢カード】の文章をAIで作成',
+      titleKey: 'vision_2_title',
+      bodyKey: 'vision_2_text',
+      titleLabel: 'カードタイトル',
+      bodyLabel: 'カード本文',
+      chips: [
+        '合同練習や練習参加を受け入れてくださるチームを随時募集中！将来はYouTubeで全国バスケ旅を発信したい',
+        'バスケの交流もWeb・動画制作のご相談もいつでも大歓迎！一緒に面白いことを創りたい',
+        '全国の社会人バスケチームの魅力を映像とWebで発信するプロジェクトを始動予定'
+      ]
+    },
+    gallery: {
+      modalTitle: '⑤ GALLERY（オフショット）の紹介文・項目をAIで作成',
+      titleKey: null,
+      bodyKey: 'gallery_lead',
+      titleLabel: '',
+      bodyLabel: 'オフショット紹介リード文',
+      chips: [
+        '試合の真剣勝負から遠征先でのグルメや仲間との笑顔まで、バスケがある日常の思い出',
+        '都内や愛媛遠征での練習風景と、コートを離れたリラックスしたオフショット集',
+        'バスケを通じて出会った仲間との絆と、全力で楽しむ日々の記録'
+      ]
+    }
+  };
+
   const CATEGORY_MAP = {
     SPECIAL: { label: 'SPECIAL', badgeClass: 'badge-special' },
     PRIVATE: { label: 'PRIVATE', badgeClass: 'badge-private' },
@@ -102,12 +213,14 @@
   };
 
   let photosData = JSON.parse(JSON.stringify(DEFAULT_PHOTOS_DATA));
+  let textsData = JSON.parse(JSON.stringify(DEFAULT_TEXTS_DATA));
   let newsList = [];
   let availableImages = [];
   let imagesMetaList = [];
   let isServerOnline = false;
   let editingItemId = null;
   let activePickerCallback = null;
+  let activeAiTargetKey = null;
 
   // DOM要素
   const authGate = document.getElementById('admin-auth-gate');
@@ -145,7 +258,31 @@
   const btnPickerUploadTrigger = document.getElementById('btn-picker-upload-trigger');
   const pickerUploadHint = document.getElementById('picker-upload-hint');
 
-  // NEWS Form DOM
+  // AI Writer Modal DOM
+  const aiModal = document.getElementById('ai-writer-modal');
+  const aiBackdrop = document.getElementById('ai-writer-backdrop');
+  const aiCloseBtn = document.getElementById('ai-modal-close-btn');
+  const aiModalTitle = document.getElementById('ai-modal-title');
+  const aiModalNuance = document.getElementById('ai-modal-nuance');
+  const btnAiModalGenerate = document.getElementById('btn-ai-modal-generate');
+  const aiModalChips = document.getElementById('ai-modal-chips');
+  const aiModalProposals = document.getElementById('ai-modal-proposals');
+  const aiModalTitleGroup = document.getElementById('ai-modal-title-group');
+  const aiModalTitleLabel = document.getElementById('ai-modal-title-label');
+  const aiModalEditTitle = document.getElementById('ai-modal-edit-title');
+  const aiModalBodyLabel = document.getElementById('ai-modal-body-label');
+  const aiModalEditBody = document.getElementById('ai-modal-edit-body');
+  const aiModalGalleryExtra = document.getElementById('ai-modal-gallery-extra');
+  const aiModalGalPlace = document.getElementById('ai-modal-gal-place');
+  const aiModalGalActivity = document.getElementById('ai-modal-gal-activity');
+  const aiModalGalContact = document.getElementById('ai-modal-gal-contact');
+  const btnAiModalCancel = document.getElementById('btn-ai-modal-cancel');
+  const btnAiModalSave = document.getElementById('btn-ai-modal-save');
+
+  // NEWS Form & Inline AI DOM
+  const newsAiNuanceInput = document.getElementById('news-ai-nuance-input');
+  const btnNewsAiGenerate = document.getElementById('btn-news-ai-generate');
+  const newsAiProposalsList = document.getElementById('news-ai-proposals-list');
   const form = document.getElementById('news-form');
   const editIdInput = document.getElementById('edit-item-id');
   const dateInput = document.getElementById('news-date');
@@ -218,8 +355,9 @@
     if (btnSaveAll) {
       btnSaveAll.addEventListener('click', async () => {
         await savePhotosData();
+        await saveTextsData();
         await saveNewsData();
-        showToast('すべての変更をサイトに保存しました！', 'success');
+        showToast('写真と文章のすべての変更をサイトに保存しました！', 'success');
       });
     }
 
@@ -227,7 +365,7 @@
       btnPublishLive.addEventListener('click', publishToGitHub);
     }
 
-    // ① ABOUT / ② STATEMENT / ④ VISION の「📸 ここの写真を変更する」ボタン
+    // 📸 写真変更ボタン
     document.querySelectorAll('[data-slot-trigger]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const slotKey = btn.getAttribute('data-slot-trigger');
@@ -239,8 +377,16 @@
           await savePhotosData();
           renderVisualSlots();
           renderLibraryAdmin();
-          showToast(`「${slotObj.label}」を変更しました！`, 'success');
+          showToast(`「${slotObj.label}」の写真を変更しました！`, 'success');
         });
+      });
+    });
+
+    // ✨ AI文章作成・変更ボタン（① ABOUT / ② STATEMENT / ④ VISION / ⑤ GALLERY）
+    document.querySelectorAll('[data-ai-text-trigger]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetKey = btn.getAttribute('data-ai-text-trigger');
+        openAiTextModal(targetKey);
       });
     });
 
@@ -269,14 +415,32 @@
           cancelEdit();
           vmapNewsEditorBox.style.display = 'block';
           vmapNewsEditorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (newsAiNuanceInput) newsAiNuanceInput.focus();
         } else {
           vmapNewsEditorBox.style.display = 'none';
         }
       });
     }
 
+    // ③ NEWS フォーム内のAI記事生成
+    if (btnNewsAiGenerate) {
+      btnNewsAiGenerate.addEventListener('click', async () => {
+        const nuance = (newsAiNuanceInput && newsAiNuanceInput.value.trim()) || '最近のバスケの試合や活動の近況報告';
+        await runNewsInlineAi(nuance);
+      });
+    }
+
+    document.querySelectorAll('[data-news-chip]').forEach((chip) => {
+      chip.addEventListener('click', async () => {
+        const text = chip.getAttribute('data-news-chip') || '';
+        if (newsAiNuanceInput) newsAiNuanceInput.value = text;
+        await runNewsInlineAi(text);
+      });
+    });
+
     initLibraryUploader();
     initPickerModal();
+    initAiWriterModal();
 
     if (form) {
       dateInput.addEventListener('input', updateLivePreview);
@@ -313,6 +477,9 @@
     }
   }
 
+  /**
+   * サーバー＆ローカルデータの読み込み
+   */
   async function checkServerAndLoadData() {
     try {
       const res = await fetch(API_PHOTOS_URL, { cache: 'no-store' });
@@ -322,13 +489,13 @@
           photosData = loadedPhotos;
         }
         isServerOnline = true;
-        setServerStatus(true, 'サーバー接続中（変更すると即サイトに反映されます）');
+        setServerStatus(true, 'AIエンジン＆サーバー接続中（変更すると即サイトに反映）');
       } else {
         throw new Error('API offline');
       }
     } catch (e) {
       isServerOnline = false;
-      setServerStatus(false, 'プレビュー保存モード');
+      setServerStatus(false, 'ブラウザAI＆保存モード');
       const savedPhotos = localStorage.getItem(LS_PHOTOS_KEY);
       if (savedPhotos) {
         try { photosData = JSON.parse(savedPhotos); } catch (err) {}
@@ -340,6 +507,23 @@
       }
     }
 
+    // サイト文章データ（site_texts.json）の読み込み
+    try {
+      const tRes = await fetch(isServerOnline ? API_TEXTS_URL : 'data/site_texts.json', { cache: 'no-store' });
+      if (tRes.ok) {
+        const loadedTexts = await tRes.json();
+        if (loadedTexts && typeof loadedTexts === 'object') {
+          textsData = { ...DEFAULT_TEXTS_DATA, ...loadedTexts };
+        }
+      }
+    } catch (e) {
+      const savedTexts = localStorage.getItem(LS_TEXTS_KEY);
+      if (savedTexts) {
+        try { textsData = { ...DEFAULT_TEXTS_DATA, ...JSON.parse(savedTexts) }; } catch (err) {}
+      }
+    }
+
+    // Newsの読み込み
     try {
       const nRes = await fetch(isServerOnline ? API_NEWS_URL : 'data/news.json', { cache: 'no-store' });
       if (nRes.ok) {
@@ -354,6 +538,7 @@
 
     await loadImagesList();
     renderVisualSlots();
+    renderVisualTexts();
     renderVisualNewsCards();
     renderGalleryAdmin();
     renderLibraryAdmin();
@@ -400,9 +585,6 @@
     }
   }
 
-  /**
-   * ① ABOUT / ② STATEMENT / ④ VISION のサイト見た目プレビュー画像を最新状態に更新
-   */
   function renderVisualSlots() {
     if (!photosData.slots) return;
     Object.entries(photosData.slots).forEach(([slotKey, slotInfo]) => {
@@ -410,6 +592,321 @@
       if (imgEl && slotInfo && slotInfo.src) {
         imgEl.src = slotInfo.src;
       }
+    });
+  }
+
+  /**
+   * 画面上の各セクションテキストプレビュー（#vmap-txt-*）を最新状態に更新
+   */
+  function renderVisualTexts() {
+    Object.entries(textsData).forEach(([key, val]) => {
+      const el = document.getElementById(`vmap-txt-${key}`);
+      if (el && val != null) {
+        el.innerHTML = escapeHtml(String(val)).replace(/\n/g, '<br>');
+      }
+    });
+  }
+
+  /**
+   * 🤖 クライアント・サーバー共通 AIコピーライティング生成関数
+   */
+  async function requestAiProposals(target, nuance) {
+    if (isServerOnline) {
+      try {
+        const res = await fetch(API_AI_WRITE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ target, nuance })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.proposals)) return data.proposals;
+        }
+      } catch (e) {}
+    }
+    return generateLocalAiCopy(target, nuance);
+  }
+
+  function generateLocalAiCopy(target, nuance) {
+    const clean = (nuance || '').trim().replace(/\s+/g, ' ') || 'コートでの挑戦と仲間との繋がり';
+    const shortCore = clean.length > 28 ? clean.slice(0, 28) + '…' : clean;
+
+    const isGame = /試合|勝|負|大会|得点|点|リバウンド|バスケ|EXCELLENCE|トーナメント/.test(clean);
+    const isTrip = /遠征|愛媛|訪問|地方|旅|合宿|練習参加|交流|仲間|体育館/.test(clean);
+    const isWork = /Web|WEB|サイト|動画|映像|ムービー|制作|仕事|依頼|企業|LP|卒団/.test(clean);
+    const isPrivate = /休日|オフ|ご飯|グルメ|みかん|カフェ|散歩|プライベート/.test(clean);
+
+    let inferredCat = 'INFO';
+    if (isGame) inferredCat = 'GAME';
+    else if (isTrip) inferredCat = 'VISIT';
+    else if (isWork) inferredCat = 'CREATIVE';
+    else if (isPrivate) inferredCat = 'PRIVATE';
+
+    if (target === 'hero') {
+      return [
+        {
+          badge: '🔥 パターンA：熱量＆アスリート重視',
+          title: 'EXCELLENCE // #33',
+          body: `${clean}を体現する192cmのオールラウンドプレイヤー。高い運動量とフィジカルを活かしたトランジション、ゴール下での泥臭いリバウンドでチームの勝利に貢献し、コート内外で熱狂を創り出す。`
+        },
+        {
+          badge: '🤝 パターンB：親しみ＆二刀流ストーリー重視',
+          title: 'ATHLETE & CREATOR // #33',
+          body: `社会人バスケ『EXCELLENCE』で汗を流しながら、${clean}を大切に活動中。192cmのインサイドプレーで勝利を掴み、Web・映像クリエイティブの力で人やチームの魅力を形にします。`
+        },
+        {
+          badge: '💼 パターンC：スマート＆プロフェッショナル',
+          title: 'TOKYO / EXCELLENCE #33',
+          body: `競技者としてのストイックな視点と、Web・映像制作の実践力を兼ね備えたハイブリッドプレイヤー。${clean}を軸に、スポーツからビジネス領域まで確かな成果と熱量を届けます。`
+        }
+      ];
+    }
+
+    if (target.startsWith('statement')) {
+      return [
+        {
+          badge: '🔥 パターンA：熱いステートメント風',
+          title: `${shortCore}\n本気で挑み続けるからこそ見える景色がある。`,
+          body: `${clean}。大人になっても情熱は決して色褪せない。192cmの身体を張ってコートで戦い抜き、バスケを通じて出会うすべての人と本気で向き合い、最高の価値を創り続けます。`
+        },
+        {
+          badge: '🤝 パターンB：共感・ストーリー風',
+          title: `バスケが繋ぐ縁と、\n${shortCore}`,
+          body: `${clean}という想いを胸に、東京から全国へと活動の幅を広げています。世代や地域の垣根を越えて1つのボールで繋がり、そこで生まれた絆やストーリーを大切に育てています。`
+        },
+        {
+          badge: '💼 パターンC：クリエイティブ＆信頼感風',
+          title: `想いをカタチにし、\n${shortCore}`,
+          body: `${clean}。テンプレートな表現ではなく、現場の空気感や一人ひとりの情熱を深く汲み取り、見る人の心を動かすWebサイトや映像作品へと昇華させます。`
+        }
+      ];
+    }
+
+    if (target.startsWith('vision')) {
+      return [
+        {
+          badge: '🔥 パターンA：情熱・挑戦スタイル',
+          title: shortCore,
+          body: `${clean}。\n\n東京（EXCELLENCE）での競技活動にとどまらず、全国のコートや新しいフィールドへ自ら足を運び、バスケとクリエイティブが持つ可能性をこれからも全力で広げていきます。`
+        },
+        {
+          badge: '🤝 パターンB：ウェルカム・交流重視スタイル',
+          title: 'バスケの輪を広げる活動 & 今後の展望',
+          body: `${clean}。\n\n練習参加や合同練習、またWeb・動画制作のご相談もいつでも大歓迎です！バスケを通じて出会う皆様と一緒に、ワクワクする新しい企画やご縁を創っていければ嬉しいです。`
+        },
+        {
+          badge: '⚡ パターンC：すっきり簡潔スタイル',
+          title: `NEXT VISION // ${shortCore}`,
+          body: `${clean}をテーマに、コート上のプレーもクリエイティブ制作もさらにアップデートしていきます。ご興味を持っていただけた方はぜひお気軽にお声がけください！`
+        }
+      ];
+    }
+
+    if (target === 'gallery') {
+      return [
+        {
+          badge: '🤝 パターンA：温かみのあるオフショット紹介',
+          title: '日々の練習 & オフショット',
+          body: `${clean}。\n試合中の真剣な表情から、練習後や遠征先で仲間と笑い合うリラックスした瞬間まで、バスケがある日常の風景を切り取っています。`
+        },
+        {
+          badge: '🔥 パターンB：アクティブ・臨場感スタイル',
+          title: 'ON & OFF COURT MEMORIES',
+          body: `${clean}！\n都内の体育館から地方遠征、練習後のグルメ巡りまで、最高の仲間たちと過ごすリアルな日々をお届けします。`
+        },
+        {
+          badge: '⚡ パターンC：ショート＆スタイリッシュ',
+          title: 'コート内外のリアルな日常',
+          body: `${clean}。\n1つのボールから広がる出会いと、かけがえのない時間を大切にしています。`
+        }
+      ];
+    }
+
+    // NEWS用
+    return [
+      {
+        badge: '🔥 パターンA：熱量＆臨場感レポート',
+        category: inferredCat,
+        title: `【最新報告】${shortCore}！`,
+        body: `${clean}！コートの上での全力プレーと仲間との熱い連携で、非常に充実した時間となりました。いつも温かい応援や交流をいただきありがとうございます！`
+      },
+      {
+        badge: '🤝 パターンB：親しみ＆感謝スタイル',
+        category: inferredCat,
+        title: `${shortCore}｜仲間と共に過ごした最高の時間`,
+        body: `${clean}。こうした日々の積み重ねや皆様とのご縁が、競技にもクリエイティブ制作にも大きなエネルギーを与えてくれています。これからも全力で駆け抜けます！`
+      },
+      {
+        badge: '💼 パターンC：スマート＆プロフェッショナル告知',
+        category: inferredCat,
+        title: `TOPICS：${shortCore}`,
+        body: `${clean}。活動の詳細や制作実績・お問い合わせについては各ページからもご覧いただけます。今後ともよろしくお願いいたします！`
+      }
+    ];
+  }
+
+  /**
+   * 🤖 AI文章作成＆編集モーダル（① ABOUT / ② STATEMENT / ④ VISION / ⑤ GALLERY）
+   */
+  function initAiWriterModal() {
+    if (!aiModal) return;
+
+    const closeAiModal = () => {
+      aiModal.classList.remove('is-open');
+      aiModal.setAttribute('aria-hidden', 'true');
+      activeAiTargetKey = null;
+    };
+
+    if (aiBackdrop) aiBackdrop.addEventListener('click', closeAiModal);
+    if (aiCloseBtn) aiCloseBtn.addEventListener('click', closeAiModal);
+    if (btnAiModalCancel) btnAiModalCancel.addEventListener('click', closeAiModal);
+
+    if (btnAiModalGenerate) {
+      btnAiModalGenerate.addEventListener('click', async () => {
+        if (!activeAiTargetKey) return;
+        const nuance = (aiModalNuance && aiModalNuance.value.trim()) || 'バスケへの情熱と仲間との繋がり';
+        await renderModalAiProposals(activeAiTargetKey, nuance);
+      });
+    }
+
+    if (btnAiModalSave) {
+      btnAiModalSave.addEventListener('click', async () => {
+        if (!activeAiTargetKey) return;
+        const cfg = AI_SECTION_CONFIG[activeAiTargetKey];
+        if (!cfg) return;
+
+        if (cfg.titleKey && aiModalEditTitle) {
+          textsData[cfg.titleKey] = aiModalEditTitle.value.trim();
+        }
+        if (cfg.bodyKey && aiModalEditBody) {
+          textsData[cfg.bodyKey] = aiModalEditBody.value.trim();
+        }
+        if (activeAiTargetKey === 'gallery') {
+          if (aiModalGalPlace) textsData.gallery_place = aiModalGalPlace.value.trim();
+          if (aiModalGalActivity) textsData.gallery_activity = aiModalGalActivity.value.trim();
+          if (aiModalGalContact) textsData.gallery_contact = aiModalGalContact.value.trim();
+        }
+
+        await saveTextsData();
+        renderVisualTexts();
+        closeAiModal();
+        showToast('文章をサイトに反映しました！', 'success');
+      });
+    }
+  }
+
+  function openAiTextModal(targetKey) {
+    const cfg = AI_SECTION_CONFIG[targetKey];
+    if (!cfg || !aiModal) return;
+
+    activeAiTargetKey = targetKey;
+    if (aiModalTitle) aiModalTitle.textContent = cfg.modalTitle;
+    if (aiModalNuance) aiModalNuance.value = '';
+    if (aiModalProposals) {
+      aiModalProposals.style.display = 'none';
+      aiModalProposals.innerHTML = '';
+    }
+
+    // ワンタップ例文チップを生成
+    if (aiModalChips) {
+      aiModalChips.innerHTML = '<span class="chip-label">ワンタップ例：</span>';
+      (cfg.chips || []).forEach((chipText) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ai-chip';
+        b.textContent = `💡 ${chipText.slice(0, 22)}…`;
+        b.addEventListener('click', async () => {
+          if (aiModalNuance) aiModalNuance.value = chipText;
+          await renderModalAiProposals(targetKey, chipText);
+        });
+        aiModalChips.appendChild(b);
+      });
+    }
+
+    // 現在の文章をフォームにセット
+    if (cfg.titleKey) {
+      aiModalTitleGroup.style.display = 'flex';
+      aiModalTitleLabel.textContent = cfg.titleLabel;
+      aiModalEditTitle.value = textsData[cfg.titleKey] || '';
+    } else {
+      aiModalTitleGroup.style.display = 'none';
+    }
+
+    aiModalBodyLabel.textContent = cfg.bodyLabel;
+    aiModalEditBody.value = textsData[cfg.bodyKey] || '';
+
+    if (targetKey === 'gallery' && aiModalGalleryExtra) {
+      aiModalGalleryExtra.style.display = 'grid';
+      aiModalGalPlace.value = textsData.gallery_place || '';
+      aiModalGalActivity.value = textsData.gallery_activity || '';
+      aiModalGalContact.value = textsData.gallery_contact || '';
+    } else if (aiModalGalleryExtra) {
+      aiModalGalleryExtra.style.display = 'none';
+    }
+
+    aiModal.classList.add('is-open');
+    aiModal.setAttribute('aria-hidden', 'false');
+    if (aiModalNuance) aiModalNuance.focus();
+  }
+
+  async function renderModalAiProposals(targetKey, nuance) {
+    if (!aiModalProposals) return;
+    aiModalProposals.style.display = 'grid';
+    aiModalProposals.innerHTML = '<div style="grid-column: 1/-1; color: var(--color-accent); font-weight:700;">🤖 AIが3パターンの文章を作成中...</div>';
+
+    const proposals = await requestAiProposals(targetKey, nuance);
+    aiModalProposals.innerHTML = '';
+
+    proposals.forEach((prop) => {
+      const card = document.createElement('div');
+      card.className = 'ai-proposal-card';
+      card.innerHTML = `
+        <span class="ai-prop-badge">${escapeHtml(prop.badge)}</span>
+        <div class="ai-prop-title">${escapeHtml(prop.title || '').replace(/\n/g, '<br>')}</div>
+        <div class="ai-prop-body">${escapeHtml(prop.body || '').replace(/\n/g, '<br>')}</div>
+        <button type="button" class="btn-use-proposal">この文章をセットする ✓</button>
+      `;
+
+      card.querySelector('.btn-use-proposal').addEventListener('click', () => {
+        if (aiModalEditTitle && prop.title) aiModalEditTitle.value = prop.title;
+        if (aiModalEditBody && prop.body) aiModalEditBody.value = prop.body;
+        showToast('下の確認欄にセットしました！「💾 この文章をサイトに反映する」で保存できます', 'success');
+      });
+
+      aiModalProposals.appendChild(card);
+    });
+  }
+
+  /**
+   * ③ NEWS フォーム内インラインAIライター
+   */
+  async function runNewsInlineAi(nuance) {
+    if (!newsAiProposalsList) return;
+    newsAiProposalsList.style.display = 'grid';
+    newsAiProposalsList.innerHTML = '<div style="grid-column: 1/-1; color: var(--color-accent); font-weight:700;">🤖 AIがニュース記事を3パターン作成中...</div>';
+
+    const proposals = await requestAiProposals('news', nuance);
+    newsAiProposalsList.innerHTML = '';
+
+    proposals.forEach((prop) => {
+      const card = document.createElement('div');
+      card.className = 'ai-proposal-card';
+      card.innerHTML = `
+        <span class="ai-prop-badge">${escapeHtml(prop.badge)}</span>
+        <div class="ai-prop-title">${escapeHtml(prop.title || '')}</div>
+        <div class="ai-prop-body">${escapeHtml(prop.body || '')}</div>
+        <button type="button" class="btn-use-proposal">この記事を使う ✓</button>
+      `;
+
+      card.querySelector('.btn-use-proposal').addEventListener('click', () => {
+        if (titleInput) titleInput.value = prop.title || '';
+        if (descTextarea) descTextarea.value = prop.body || '';
+        if (categorySelect && prop.category) categorySelect.value = prop.category;
+        updateLivePreview();
+        showToast('タイトルと本文を自動入力しました！', 'success');
+      });
+
+      newsAiProposalsList.appendChild(card);
     });
   }
 
@@ -443,13 +940,12 @@
           <p class="news-desc" style="font-size: 0.82rem; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(item.desc)}</p>
         </div>
         <div class="vmap-news-actions-bar">
-          <button type="button" class="btn-swap-photo btn-news-photo-only" style="flex: 1.3;">📸 写真だけ変更</button>
-          <button type="button" class="btn-action-edit btn-news-edit">✏️ 文章編集</button>
+          <button type="button" class="btn-swap-photo btn-news-photo-only">📸 写真変更</button>
+          <button type="button" class="btn-action-edit btn-news-edit" style="flex:1;">✨ AI文章・編集</button>
           <button type="button" class="btn-action-delete btn-news-del">削除</button>
         </div>
       `;
 
-      // 写真だけワンクリック変更
       card.querySelector('.btn-news-photo-only').addEventListener('click', () => {
         openPhotoPicker(`③ NEWS ${idx + 1}枚目「${item.title}」の写真を変更`, item.image, async (newUrl) => {
           item.image = newUrl;
@@ -460,12 +956,10 @@
         });
       });
 
-      // 文章・日付を編集
       card.querySelector('.btn-news-edit').addEventListener('click', () => {
         startEdit(item.id);
       });
 
-      // 削除
       card.querySelector('.btn-news-del').addEventListener('click', () => {
         deleteItem(item.id);
       });
@@ -559,13 +1053,12 @@
   }
 
   /**
-   * 🗂 全写真フォルダ描画（どの写真がサイトのどこで使われているか日本語で明記！）
+   * 🗂 全写真フォルダ描画
    */
   function renderLibraryAdmin() {
     if (!libraryMediaGrid) return;
     libraryMediaGrid.innerHTML = '';
 
-    // 画像URLごとに「サイトのどの場所で使われているか」をマッピング
     const usageMap = {};
     const addUsage = (url, placeName) => {
       if (!url) return;
@@ -806,12 +1299,26 @@
     }
   }
 
+  async function saveTextsData() {
+    localStorage.setItem(LS_TEXTS_KEY, JSON.stringify(textsData));
+    if (isServerOnline) {
+      try {
+        await fetch(API_TEXTS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(textsData)
+        });
+      } catch (e) {}
+    }
+  }
+
   async function publishToGitHub() {
     await savePhotosData();
+    await saveTextsData();
     await saveNewsData();
 
     if (!isServerOnline) {
-      showToast('保存しました！', 'info');
+      showToast('変更を保存しました！', 'info');
       return;
     }
 
@@ -890,7 +1397,7 @@
     const img = imageSelect.value;
 
     if (!title || !desc || !rawDate) {
-      showToast('日付、タイトル、本文を入力してください', 'error');
+      showToast('日付、タイトル、本文を入力してください（上のAIボックスで自動作成もできます！）', 'error');
       return;
     }
 
@@ -959,7 +1466,7 @@
     descTextarea.value = item.desc;
     if (item.image) imageSelect.value = item.image;
 
-    formModeTitle.textContent = 'お知らせを編集';
+    formModeTitle.textContent = 'お知らせを編集（上のAIライターで書き直しもOK）';
     btnSubmitText.textContent = '変更を保存する';
     if (vmapNewsEditorBox) {
       vmapNewsEditorBox.style.display = 'block';
@@ -973,6 +1480,10 @@
     if (editIdInput) editIdInput.value = '';
     if (formModeTitle) formModeTitle.textContent = '新しいお知らせを投稿';
     if (btnSubmitText) btnSubmitText.textContent = 'この内容で保存する';
+    if (newsAiProposalsList) {
+      newsAiProposalsList.style.display = 'none';
+      newsAiProposalsList.innerHTML = '';
+    }
   }
 
   async function deleteItem(id) {
