@@ -9,6 +9,7 @@
   const API_PHOTOS_URL = '/api/photos';
   const API_TEXTS_URL = '/api/texts';
   const API_WORKS_URL = '/api/works';
+  const API_MEDIA_CATALOG_URL = '/api/media-catalog';
   const API_AI_WRITE_URL = '/api/ai-write';
   const API_IMAGES_META_URL = '/api/images/meta';
   const API_UPLOAD_URL = '/api/upload';
@@ -19,6 +20,8 @@
   const LS_PHOTOS_KEY = 'ds_portfolio_photos_data';
   const LS_TEXTS_KEY = 'ds_portfolio_texts_data';
   const LS_WORKS_KEY = 'ds_portfolio_works_data';
+  const LS_MEDIA_CATALOG_KEY = 'ds_portfolio_media_catalog';
+  const LS_CLOUDINARY_KEY = 'ds_cloudinary_config';
   const SESSION_AUTH_KEY = 'ds_admin_unlocked_v1';
   const ADMIN_PASSCODE = '3333';
 
@@ -218,12 +221,21 @@
   let textsData = JSON.parse(JSON.stringify(DEFAULT_TEXTS_DATA));
   let newsList = [];
   let worksList = [];
+  let mediaCatalog = [];
   let availableImages = [];
   let imagesMetaList = [];
   let isServerOnline = false;
   let editingItemId = null;
   let activePickerCallback = null;
   let activeAiTargetKey = null;
+
+  // 3,000枚対応：アルバム絞り込み・検索・ページネーション状態
+  let currentLibraryAlbum = 'all';
+  let currentLibrarySearch = '';
+  let libraryVisibleLimit = 24;
+  let currentPickerAlbum = 'all';
+  let currentPickerSearch = '';
+  let currentPickerSelectedUrl = '';
 
   // DOM要素
   const authGate = document.getElementById('admin-auth-gate');
@@ -446,6 +458,7 @@
     initPickerModal();
     initAiWriterModal();
     initWorksAdminEvents();
+    initCloudAndAlbumFilters();
 
     if (form) {
       dateInput.addEventListener('input', updateLivePreview);
@@ -554,6 +567,20 @@
       }
     }
 
+    // Media Catalog（3,000枚対応アルバム分類・メモ・外部クラウドURL）の読み込み
+    try {
+      const cRes = await fetch(isServerOnline ? API_MEDIA_CATALOG_URL : 'data/media_catalog.json', { cache: 'no-store' });
+      if (cRes.ok) {
+        const catData = await cRes.json();
+        if (Array.isArray(catData)) mediaCatalog = catData;
+      }
+    } catch (e) {
+      const savedCat = localStorage.getItem(LS_MEDIA_CATALOG_KEY);
+      if (savedCat) {
+        try { mediaCatalog = JSON.parse(savedCat); } catch (err) {}
+      }
+    }
+
     await loadImagesList();
     renderVisualSlots();
     renderVisualTexts();
@@ -586,6 +613,40 @@
         size_kb: null
       }));
     }
+
+    // mediaCatalog のアルバム分類・メモ・外部クラウド写真をマージ
+    const catMap = {};
+    mediaCatalog.forEach((entry) => {
+      if (entry && entry.url) catMap[entry.url] = entry;
+    });
+
+    // Cloudinary などの外部URLが imagesMetaList にまだ無ければ先頭に追加
+    mediaCatalog.forEach((entry) => {
+      if (entry && entry.url && !imagesMetaList.some((m) => m.url === entry.url)) {
+        imagesMetaList.unshift({
+          filename: entry.filename || entry.url.split('/').pop(),
+          url: entry.url,
+          size_kb: entry.size_kb || null,
+          category: entry.category || 'offshot',
+          memo: entry.memo || '',
+          source: entry.source || (entry.url.startsWith('http') ? 'cloudinary' : 'local')
+        });
+      }
+    });
+
+    imagesMetaList.forEach((meta) => {
+      const c = catMap[meta.url];
+      if (c) {
+        meta.category = c.category || meta.category || 'offshot';
+        meta.memo = c.memo != null ? c.memo : (meta.memo || '');
+        meta.source = c.source || meta.source || 'local';
+      } else {
+        meta.category = meta.category || 'offshot';
+        meta.memo = meta.memo || '';
+        meta.source = meta.source || 'local';
+      }
+    });
+    availableImages = imagesMetaList.map((m) => m.url);
 
     if (imageSelect) {
       const currentVal = imageSelect.value;
@@ -1115,12 +1176,9 @@
   }
 
   /**
-   * 🗂 全写真フォルダ描画
+   * 🗂 全写真フォルダ描画（3,000枚対応：アルバム分類・検索・ページネーション・Cloudinary対応）
    */
-  function renderLibraryAdmin() {
-    if (!libraryMediaGrid) return;
-    libraryMediaGrid.innerHTML = '';
-
+  function buildUsageMap() {
     const usageMap = {};
     const addUsage = (url, placeName) => {
       if (!url) return;
@@ -1151,32 +1209,94 @@
         addUsage(n.image, `📍 ③ NEWS ${idx + 1}枚目`);
       });
     }
+    return usageMap;
+  }
+
+  function renderLibraryAdmin() {
+    if (!libraryMediaGrid) return;
+    libraryMediaGrid.innerHTML = '';
+
+    const usageMap = buildUsageMap();
 
     if (libraryCountBadge) {
-      libraryCountBadge.textContent = `${imagesMetaList.length} 枚`;
+      libraryCountBadge.textContent = `全 ${imagesMetaList.length} 枚`;
     }
 
-    imagesMetaList.forEach((meta) => {
+    const q = (currentLibrarySearch || '').toLowerCase();
+    const filtered = imagesMetaList.filter((meta) => {
+      const places = usageMap[meta.url] || [];
+      const isUsed = places.length > 0;
+      if (currentLibraryAlbum === 'used' && !isUsed) return false;
+      if (currentLibraryAlbum !== 'all' && currentLibraryAlbum !== 'used') {
+        if ((meta.category || 'offshot') !== currentLibraryAlbum) return false;
+      }
+      if (q) {
+        const hay = `${meta.filename || ''} ${meta.memo || ''} ${places.join(' ')} ${meta.category || ''}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    const visibleItems = filtered.slice(0, libraryVisibleLimit);
+    const loadMoreWrap = document.getElementById('library-load-more-wrap');
+    const loadMoreBtn = document.getElementById('btn-library-load-more');
+    if (loadMoreWrap && loadMoreBtn) {
+      if (filtered.length > libraryVisibleLimit) {
+        loadMoreWrap.style.display = 'block';
+        loadMoreBtn.innerHTML = `<span>▼ さらに写真を表示する（残り ${filtered.length - libraryVisibleLimit} 枚）</span>`;
+      } else {
+        loadMoreWrap.style.display = 'none';
+      }
+    }
+
+    visibleItems.forEach((meta) => {
       const places = usageMap[meta.url] || [];
       const isUsed = places.length > 0;
       const card = document.createElement('div');
       card.className = 'library-media-card';
 
-      const sizeText = meta.size_kb != null ? `${meta.size_kb} KB` : '軽量化済';
+      const isCloud = meta.source === 'cloudinary' || (meta.url && meta.url.startsWith('http'));
+      const sizeText = isCloud ? '☁️ クラウド保管' : (meta.size_kb != null ? `${meta.size_kb} KB` : '軽量化済');
       const usageTagsHtml = isUsed
         ? places.map((p) => `<span class="media-usage-tag">${escapeHtml(p)}</span>`).join('')
-        : '<span class="media-unused-tag">現在サイト未使用（いつでも使えます）</span>';
+        : '<span class="media-unused-tag">ストック中（いつでも使えます）</span>';
+
+      const curCat = meta.category || 'offshot';
 
       card.innerHTML = `
         <div class="library-media-thumb">
-          <img src="${escapeHtml(meta.url)}" alt="${escapeHtml(meta.filename)}" loading="lazy">
+          <img src="${escapeHtml(meta.url)}" alt="${escapeHtml(meta.memo || meta.filename)}" loading="lazy">
         </div>
         <div class="media-usage-tags">${usageTagsHtml}</div>
-        <div class="library-media-meta" style="margin-top: auto; padding-top: 6px;">
-          <span>容量: <strong>${sizeText}</strong></span>
-          ${!isUsed && isServerOnline ? '<button type="button" class="btn-action-delete btn-del-lib" style="padding: 2px 8px; font-size: 0.72rem;">削除</button>' : ''}
+        <select class="media-album-select-mini" title="アルバム分類を変更">
+          <option value="game" ${curCat === 'game' ? 'selected' : ''}>🏀 試合・プレー</option>
+          <option value="trip" ${curCat === 'trip' ? 'selected' : ''}>✈️ 遠征・交流</option>
+          <option value="team" ${curCat === 'team' ? 'selected' : ''}>👥 チーム・集合</option>
+          <option value="offshot" ${curCat === 'offshot' ? 'selected' : ''}>☕ オフショット</option>
+          <option value="creative" ${curCat === 'creative' ? 'selected' : ''}>💻 制作実績</option>
+        </select>
+        <input type="text" class="media-memo-input-mini" value="${escapeHtml(meta.memo || '')}" placeholder="検索メモを入力...">
+        <div class="library-media-meta" style="margin-top: auto; padding-top: 4px;">
+          <span><strong>${sizeText}</strong></span>
+          ${!isUsed && isServerOnline && !isCloud ? '<button type="button" class="btn-action-delete btn-del-lib" style="padding: 2px 8px; font-size: 0.72rem;">削除</button>' : ''}
         </div>
       `;
+
+      // アルバム分類変更
+      const catSel = card.querySelector('.media-album-select-mini');
+      catSel.addEventListener('change', async () => {
+        meta.category = catSel.value;
+        await upsertCatalogEntry(meta);
+        showToast('写真のアルバム分類を更新しました', 'success');
+      });
+
+      // メモ変更
+      const memoIn = card.querySelector('.media-memo-input-mini');
+      memoIn.addEventListener('change', async () => {
+        meta.memo = memoIn.value.trim();
+        await upsertCatalogEntry(meta);
+        showToast('写真の検索メモを保存しました', 'success');
+      });
 
       const delBtn = card.querySelector('.btn-del-lib');
       if (delBtn) {
@@ -1189,6 +1309,8 @@
               body: JSON.stringify({ url: meta.url })
             });
             if (res.ok) {
+              mediaCatalog = mediaCatalog.filter((c) => c.url !== meta.url);
+              await saveMediaCatalog();
               await loadImagesList();
               renderLibraryAdmin();
               showToast(`「${meta.filename}」を削除しました`, 'success');
@@ -1201,6 +1323,160 @@
 
       libraryMediaGrid.appendChild(card);
     });
+  }
+
+  async function upsertCatalogEntry(meta) {
+    const existing = mediaCatalog.find((c) => c.url === meta.url);
+    if (existing) {
+      existing.category = meta.category || 'offshot';
+      existing.memo = meta.memo || '';
+      existing.source = meta.source || 'local';
+    } else {
+      mediaCatalog.unshift({
+        url: meta.url,
+        filename: meta.filename || meta.url.split('/').pop(),
+        category: meta.category || 'offshot',
+        memo: meta.memo || '',
+        source: meta.source || 'local'
+      });
+    }
+    await saveMediaCatalog();
+  }
+
+  async function saveMediaCatalog() {
+    localStorage.setItem(LS_MEDIA_CATALOG_KEY, JSON.stringify(mediaCatalog));
+    if (isServerOnline) {
+      try {
+        await fetch(API_MEDIA_CATALOG_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(mediaCatalog)
+        });
+      } catch (e) {}
+    }
+  }
+
+  function getCloudinaryConfig() {
+    try {
+      const raw = localStorage.getItem(LS_CLOUDINARY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.cloudName && parsed.uploadPreset) return parsed;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function updateCloudStatusBadge() {
+    const cfg = getCloudinaryConfig();
+    const badge = document.getElementById('cloud-mode-badge');
+    const subnote = document.getElementById('library-dropzone-subnote');
+    if (badge) {
+      if (cfg) {
+        badge.textContent = `☁️ 現在：Cloudinary クラウド直結中 (${cfg.cloudName})`;
+        badge.classList.add('is-cloud-active');
+      } else {
+        badge.textContent = '💻 現在：ローカル＆GitHub保管';
+        badge.classList.remove('is-cloud-active');
+      }
+    }
+    if (subnote && cfg) {
+      subnote.textContent = `☁️ Cloudinary (${cfg.cloudName}) に直接アップロードされ、30,000枚以上無料で自動高画質配信されます`;
+    }
+  }
+
+  function initCloudAndAlbumFilters() {
+    updateCloudStatusBadge();
+
+    const btnToggleCloud = document.getElementById('btn-toggle-cloud-settings');
+    const cloudBox = document.getElementById('cloud-settings-box');
+    const cloudNameInput = document.getElementById('cloudinary-cloud-name');
+    const presetInput = document.getElementById('cloudinary-upload-preset');
+    const btnSaveCloud = document.getElementById('btn-save-cloudinary');
+    const btnClearCloud = document.getElementById('btn-clear-cloudinary');
+
+    const savedCfg = getCloudinaryConfig();
+    if (savedCfg && cloudNameInput && presetInput) {
+      cloudNameInput.value = savedCfg.cloudName;
+      presetInput.value = savedCfg.uploadPreset;
+    }
+
+    if (btnToggleCloud && cloudBox) {
+      btnToggleCloud.addEventListener('click', () => {
+        cloudBox.style.display = cloudBox.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+
+    if (btnSaveCloud) {
+      btnSaveCloud.addEventListener('click', () => {
+        const cn = (cloudNameInput && cloudNameInput.value.trim()) || '';
+        const up = (presetInput && presetInput.value.trim()) || '';
+        if (!cn || !up) {
+          showToast('Cloud Name と Upload Preset Name を両方入力してください', 'error');
+          return;
+        }
+        localStorage.setItem(LS_CLOUDINARY_KEY, JSON.stringify({ cloudName: cn, uploadPreset: up }));
+        updateCloudStatusBadge();
+        if (cloudBox) cloudBox.style.display = 'none';
+        showToast('☁️ Cloudinary 外部クラウド連携を有効化しました！（30,000枚以上無料保管モード）', 'success');
+      });
+    }
+
+    if (btnClearCloud) {
+      btnClearCloud.addEventListener('click', () => {
+        localStorage.removeItem(LS_CLOUDINARY_KEY);
+        if (cloudNameInput) cloudNameInput.value = '';
+        if (presetInput) presetInput.value = '';
+        updateCloudStatusBadge();
+        showToast('ローカル＆GitHub保管モードに戻しました', 'info');
+      });
+    }
+
+    // ライブラリのアルバム絞り込みタブ
+    document.querySelectorAll('[data-album-filter]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        currentLibraryAlbum = tab.getAttribute('data-album-filter') || 'all';
+        libraryVisibleLimit = 24;
+        document.querySelectorAll('[data-album-filter]').forEach((t) => t.classList.toggle('is-active', t === tab));
+        renderLibraryAdmin();
+      });
+    });
+
+    // ライブラリのキーワード検索
+    const libSearch = document.getElementById('library-search-input');
+    if (libSearch) {
+      libSearch.addEventListener('input', () => {
+        currentLibrarySearch = libSearch.value.trim();
+        libraryVisibleLimit = 24;
+        renderLibraryAdmin();
+      });
+    }
+
+    // さらに表示ボタン
+    const btnLoadMore = document.getElementById('btn-library-load-more');
+    if (btnLoadMore) {
+      btnLoadMore.addEventListener('click', () => {
+        libraryVisibleLimit += 24;
+        renderLibraryAdmin();
+      });
+    }
+
+    // ピッカーモーダル内のアルバム絞り込み＆検索
+    document.querySelectorAll('[data-picker-album]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        currentPickerAlbum = tab.getAttribute('data-picker-album') || 'all';
+        document.querySelectorAll('[data-picker-album]').forEach((t) => t.classList.toggle('is-active', t === tab));
+        renderPickerGridItems();
+      });
+    });
+
+    const pickerSearch = document.getElementById('picker-search-input');
+    if (pickerSearch) {
+      pickerSearch.addEventListener('input', () => {
+        currentPickerSearch = pickerSearch.value.trim();
+        renderPickerGridItems();
+      });
+    }
   }
 
   function initLibraryUploader() {
@@ -1266,6 +1542,39 @@
       showToast('JPG, PNG, WebP 形式の画像を選択してください', 'error');
       return null;
     }
+
+    const albumSel = document.getElementById('upload-album-select');
+    const memoIn = document.getElementById('upload-memo-input');
+    const chosenCat = (albumSel && albumSel.value) || 'offshot';
+    const chosenMemo = (memoIn && memoIn.value.trim()) || file.name.replace(/\.[^.]+$/, '');
+
+    // 1. Cloudinary 連携が有効な場合は直接 Cloudinary 無料クラウドへアップロード
+    const cloudCfg = getCloudinaryConfig();
+    if (cloudCfg) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', cloudCfg.uploadPreset);
+
+      const cRes = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudCfg.cloudName)}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!cRes.ok) throw new Error('Cloudinary upload failed');
+      const cData = await cRes.json();
+      // Cloudinary自動高画質・自動WebP/AVIF変換URLに変換
+      const optimizedCloudUrl = cData.secure_url.replace('/upload/', '/upload/f_auto,q_auto,w_1280/');
+      const entry = {
+        url: optimizedCloudUrl,
+        filename: file.name,
+        category: chosenCat,
+        memo: chosenMemo,
+        source: 'cloudinary'
+      };
+      await upsertCatalogEntry(entry);
+      return { filename: file.name, url: optimizedCloudUrl };
+    }
+
+    // 2. ローカルサーバー経由で高画質軽量化＆保存
     const base64Data = await readFileAsDataURL(file);
     if (isServerOnline) {
       const res = await fetch(API_UPLOAD_URL, {
@@ -1274,7 +1583,15 @@
         body: JSON.stringify({ filename: file.name, data: base64Data })
       });
       if (!res.ok) throw new Error('Upload failed');
-      return await res.json();
+      const uploaded = await res.json();
+      await upsertCatalogEntry({
+        url: uploaded.url,
+        filename: uploaded.filename,
+        category: chosenCat,
+        memo: chosenMemo,
+        source: 'local'
+      });
+      return uploaded;
     } else {
       addImageOption(base64Data, true, file.name);
       return { filename: file.name, url: base64Data };
@@ -1321,18 +1638,40 @@
   function openPhotoPicker(titleText, currentUrl, onSelectCallback) {
     if (!pickerModal || !pickerGrid) return;
     activePickerCallback = onSelectCallback;
+    currentPickerSelectedUrl = currentUrl || '';
     if (pickerTitle) pickerTitle.textContent = titleText || '写真を選択';
     if (pickerUploadHint) pickerUploadHint.textContent = '自動で高画質軽量化されます';
 
+    renderPickerGridItems();
+
+    pickerModal.classList.add('is-open');
+    pickerModal.setAttribute('aria-hidden', 'false');
+  }
+
+  function renderPickerGridItems() {
+    if (!pickerGrid) return;
     pickerGrid.innerHTML = '';
-    imagesMetaList.forEach((meta) => {
+
+    const q = (currentPickerSearch || '').toLowerCase();
+    const filtered = imagesMetaList.filter((meta) => {
+      if (currentPickerAlbum !== 'all' && (meta.category || 'offshot') !== currentPickerAlbum) {
+        return false;
+      }
+      if (q) {
+        const hay = `${meta.filename || ''} ${meta.memo || ''} ${meta.category || ''}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    filtered.slice(0, 60).forEach((meta) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'picker-photo-option' + (meta.url === currentUrl ? ' is-selected' : '');
-      const kbLabel = meta.size_kb ? ` (${meta.size_kb}KB)` : '';
+      btn.className = 'picker-photo-option' + (meta.url === currentPickerSelectedUrl ? ' is-selected' : '');
+      const labelText = meta.memo || meta.filename;
       btn.innerHTML = `
-        <img src="${escapeHtml(meta.url)}" alt="${escapeHtml(meta.filename)}" loading="lazy">
-        <span class="picker-photo-name">${escapeHtml(meta.filename)}${kbLabel}</span>
+        <img src="${escapeHtml(meta.url)}" alt="${escapeHtml(labelText)}" loading="lazy">
+        <span class="picker-photo-name" title="${escapeHtml(labelText)}">${escapeHtml(labelText)}</span>
       `;
       btn.addEventListener('click', () => {
         const cb = activePickerCallback;
@@ -1343,9 +1682,6 @@
       });
       pickerGrid.appendChild(btn);
     });
-
-    pickerModal.classList.add('is-open');
-    pickerModal.setAttribute('aria-hidden', 'false');
   }
 
   async function savePhotosData() {

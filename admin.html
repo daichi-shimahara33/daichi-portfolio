@@ -596,34 +596,110 @@
             </section>
 
             <!-- =========================================================
-                 🗂 全写真フォルダ（まとめてアップロード・容量チェック・整理）
+                 🗂 全写真フォルダ（3,000枚以上対応：アルバム分類・検索・Cloudinary無料連携）
                  ========================================================= -->
             <section class="vmap-section" id="vsec-library">
                 <div class="vmap-section-header">
-                    <span class="vmap-step-badge">🗂 写真フォルダ（ストック一覧）</span>
-                    <h2 class="vmap-section-title">入っている全写真の一覧 ＆ まとめアップロード（自動高画質軽量化）</h2>
-                    <span class="items-count-badge" id="library-count-badge">0 枚</span>
+                    <span class="vmap-step-badge">🗂 写真フォルダ（3,000枚以上対応ストック）</span>
+                    <h2 class="vmap-section-title">全写真ライブラリ（アルバム分類・2秒検索・外部クラウド無料連携）</h2>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="cloud-mode-badge" id="cloud-mode-badge">💻 現在：ローカル＆GitHub保管</span>
+                        <button type="button" class="admin-btn-outline" id="btn-toggle-cloud-settings">
+                            ☁️ 3,000枚以上用クラウド連携設定
+                        </button>
+                        <span class="items-count-badge" id="library-count-badge">0 枚</span>
+                    </div>
                 </div>
                 <p class="vmap-section-sub">
-                    どの写真が<strong>サイトのどこで使われているか（緑のバッジ）</strong>が一目でわかります。新しい写真をここにドロップしてストックしておくこともできます。
+                    写真が何千枚に増えても<strong>「アルバム分類タブ」</strong>と<strong>「キーワード検索」</strong>で2秒で見つかります。また、無料画像クラウド<strong>Cloudinary</strong>と繋げば30,000枚以上まで0円で保管できます。
                 </p>
 
-                <!-- 一括ドラッグ＆ドロップアップローダー -->
-                <div class="library-upload-box" id="library-dropzone" tabindex="0" role="button">
-                    <input type="file" id="library-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" multiple style="display: none;">
-                    <span class="dropzone-icon">📤</span>
-                    <p class="dropzone-text">
-                        <strong>ここをクリックして写真を選択</strong> または <strong>写真をドラッグ＆ドロップ</strong>
-                    </p>
-                    <span class="dropzone-note">大きな写真（5MBなど）もアップロード時に自動でRetina高画質軽量化（約150〜250KB）されます</span>
-                    <div class="upload-progress" id="library-upload-status" style="display: none; margin-top: 12px;">
-                        <span class="spinner"></span> <span id="library-upload-status-text">写真を軽量化＆保存中...</span>
+                <!-- ☁️ Cloudinary 無料クラウド連携設定ボックス（ボタンで開閉） -->
+                <div class="cloud-settings-box" id="cloud-settings-box" style="display: none;">
+                    <div class="cloud-settings-header">
+                        <div>
+                            <span class="ai-sparkle-badge">☁️ CLOUDINARY FREE CLOUD STORAGE (¥0 / 30,000枚以上対応)</span>
+                            <h3 style="margin: 6px 0 4px; font-size: 1.05rem;">外部クラウド（Cloudinary）無料連携設定</h3>
+                            <p style="margin: 0; font-size: 0.82rem; color: var(--color-text-muted); line-height: 1.6;">
+                                設定すると、この管理画面からアップロードした写真が自動的にCloudinary（無料枠25GB）に高画質軽量化保管され、GitHubの容量を一切使わずに何千枚でも管理できるようになります。<br>
+                                <strong>【1分設定手順】</strong> ① <a href="https://cloudinary.com/" target="_blank" style="color:var(--color-accent);text-decoration:underline;">cloudinary.com</a> で無料登録 ➔ ② ダッシュボードの「<strong>Cloud Name</strong>」をコピー ➔ ③ Settings &gt; Upload &gt; Upload Presets で Signing Mode を「<strong>Unsigned</strong>」にして作成した「<strong>Preset Name</strong>」を入力して保存！
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-row-3" style="margin-top: 14px; align-items: end;">
+                        <div class="form-group">
+                            <label for="cloudinary-cloud-name">Cloudinary Cloud Name</label>
+                            <input type="text" id="cloudinary-cloud-name" class="form-input" placeholder="例: daichi-portfolio-33">
+                        </div>
+                        <div class="form-group">
+                            <label for="cloudinary-upload-preset">Upload Preset Name（Unsigned）</label>
+                            <input type="text" id="cloudinary-upload-preset" class="form-input" placeholder="例: portfolio_unsigned">
+                        </div>
+                        <div class="form-actions" style="margin-top: 0;">
+                            <button type="button" class="admin-btn-primary" id="btn-save-cloudinary">💾 クラウド連携を有効化</button>
+                            <button type="button" class="admin-btn-outline" id="btn-clear-cloudinary">解除</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 登録済み全画像グリッド（どこで使われているかラベル付き） -->
+                <!-- アップロード時のアルバム分類＆メモ指定バー ＋ 一括ドロップゾーン -->
+                <div class="library-upload-wrapper">
+                    <div class="upload-meta-bar">
+                        <div class="upload-meta-field">
+                            <label for="upload-album-select">📁 アップロード先アルバム：</label>
+                            <select id="upload-album-select" class="form-select" style="padding: 7px 12px; font-size: 0.85rem;">
+                                <option value="game">🏀 試合・プレー</option>
+                                <option value="trip">✈️ 遠征・交流（愛媛など）</option>
+                                <option value="team">👥 チーム・集合写真</option>
+                                <option value="offshot" selected>☕ オフショット・日常</option>
+                                <option value="creative">💻 制作・クリエイティブ</option>
+                            </select>
+                        </div>
+                        <div class="upload-meta-field" style="flex: 1;">
+                            <label for="upload-memo-input">📝 写真の一言メモ（検索用・任意）：</label>
+                            <input type="text" id="upload-memo-input" class="form-input" style="padding: 7px 12px; font-size: 0.85rem;" placeholder="例: 2026秋季大会 vs日本医専 / 愛媛遠征みかんジュース など">
+                        </div>
+                    </div>
+
+                    <div class="library-upload-box" id="library-dropzone" tabindex="0" role="button" style="margin-bottom: 0;">
+                        <input type="file" id="library-file-input" accept="image/jpeg,image/png,image/webp,image/jpg" multiple style="display: none;">
+                        <span class="dropzone-icon">📤</span>
+                        <p class="dropzone-text">
+                            <strong>ここをクリックして写真を選択</strong> または <strong>複数枚の写真をまとめてドラッグ＆ドロップ</strong>
+                        </p>
+                        <span class="dropzone-note" id="library-dropzone-subnote">大きな写真（5MBなど）もアップロード時に自動でRetina高画質軽量化（約150〜250KB）されます</span>
+                        <div class="upload-progress" id="library-upload-status" style="display: none; margin-top: 12px;">
+                            <span class="spinner"></span> <span id="library-upload-status-text">写真を軽量化＆保存中...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📁 アルバム絞り込みタブ ＆ 🔍 2秒キーワード検索バー -->
+                <div class="library-filter-toolbar">
+                    <div class="library-album-tabs" id="library-album-tabs">
+                        <button type="button" class="album-tab is-active" data-album-filter="all">すべて</button>
+                        <button type="button" class="album-tab" data-album-filter="used">🟢 サイト使用中</button>
+                        <button type="button" class="album-tab" data-album-filter="game">🏀 試合・プレー</button>
+                        <button type="button" class="album-tab" data-album-filter="trip">✈️ 遠征・交流</button>
+                        <button type="button" class="album-tab" data-album-filter="team">👥 チーム・集合</button>
+                        <button type="button" class="album-tab" data-album-filter="offshot">☕ オフショット</button>
+                        <button type="button" class="album-tab" data-album-filter="creative">💻 制作実績</button>
+                    </div>
+                    <div class="library-search-box">
+                        <input type="search" id="library-search-input" class="form-input" placeholder="🔍 メモ・場所・ファイル名で検索（例: 愛媛、トップ、試合）">
+                    </div>
+                </div>
+
+                <!-- 登録済み全画像グリッド（高速ページネーション対応） -->
                 <div class="library-media-grid" id="library-media-grid">
                     <!-- JSで描画 -->
+                </div>
+
+                <!-- 3,000枚対応：さらに表示ボタン -->
+                <div style="text-align: center; margin-top: 20px;" id="library-load-more-wrap" style="display: none;">
+                    <button type="button" class="admin-btn-outline" id="btn-library-load-more">
+                        <span>▼ さらに写真を表示する</span>
+                    </button>
                 </div>
             </section>
 
@@ -631,7 +707,7 @@
     </main>
 
     <!-- =================================================================
-         写真選択・新規アップロード モーダル
+         写真選択・新規アップロード モーダル（アルバム絞り込み＆検索付き）
          ================================================================= -->
     <div class="photo-picker-modal" id="photo-picker-modal" aria-hidden="true">
         <div class="photo-picker-backdrop" id="photo-picker-backdrop"></div>
@@ -639,7 +715,7 @@
             <div class="picker-modal-header">
                 <div>
                     <h3 class="picker-modal-title" id="picker-modal-title">写真を選択 または 新規アップロード</h3>
-                    <p class="picker-modal-sub" id="picker-modal-sub">使いたい写真をクリックするか、手元の新しい写真をアップロードしてください</p>
+                    <p class="picker-modal-sub" id="picker-modal-sub">アルバム絞り込み・キーワード検索で3,000枚からでもすぐ探せます</p>
                 </div>
                 <button type="button" class="picker-close-btn" id="picker-close-btn" aria-label="閉じる">✕</button>
             </div>
@@ -651,6 +727,19 @@
                     <span>📤 パソコン・スマホから新しい写真を選んでそのまま反映する</span>
                 </button>
                 <span class="picker-upload-hint" id="picker-upload-hint">自動で高画質軽量化されます</span>
+            </div>
+
+            <!-- モーダル内 アルバム絞り込み ＆ キーワード検索 -->
+            <div class="picker-filter-bar">
+                <div class="library-album-tabs" id="picker-album-tabs">
+                    <button type="button" class="album-tab is-active" data-picker-album="all">すべて</button>
+                    <button type="button" class="album-tab" data-picker-album="game">🏀 試合</button>
+                    <button type="button" class="album-tab" data-picker-album="trip">✈️ 遠征</button>
+                    <button type="button" class="album-tab" data-picker-album="team">👥 チーム</button>
+                    <button type="button" class="album-tab" data-picker-album="offshot">☕ オフショット</button>
+                    <button type="button" class="album-tab" data-picker-album="creative">💻 制作</button>
+                </div>
+                <input type="search" id="picker-search-input" class="form-input" style="padding: 6px 12px; font-size: 0.82rem; max-width: 240px;" placeholder="🔍 写真を検索...">
             </div>
 
             <!-- 画像サムネイル一覧 -->

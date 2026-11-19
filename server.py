@@ -21,6 +21,7 @@ NEWS_FILE = os.path.join(DATA_DIR, "news.json")
 PHOTOS_FILE = os.path.join(DATA_DIR, "photos.json")
 TEXTS_FILE = os.path.join(DATA_DIR, "site_texts.json")
 WORKS_FILE = os.path.join(DATA_DIR, "works.json")
+CATALOG_FILE = os.path.join(DATA_DIR, "media_catalog.json")
 IMAGES_DIR = os.path.join(BASE_DIR, "images")
 
 
@@ -290,6 +291,10 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_get_json_file(WORKS_FILE, [])
             return
 
+        if parsed_path.path == "/api/media-catalog":
+            self.handle_get_json_file(CATALOG_FILE, [])
+            return
+
         if parsed_path.path == "/api/images":
             self.handle_get_images()
             return
@@ -317,6 +322,10 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
 
         if parsed_path.path == "/api/works":
             self.handle_post_json_file(WORKS_FILE)
+            return
+
+        if parsed_path.path == "/api/media-catalog":
+            self.handle_post_json_file(CATALOG_FILE)
             return
 
         if parsed_path.path == "/api/ai-write":
@@ -394,22 +403,51 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
         self.send_json(images)
 
     def handle_get_images_meta(self):
-        items = []
+        catalog_map = {}
+        cloud_items = []
+        if os.path.exists(CATALOG_FILE):
+            try:
+                with open(CATALOG_FILE, "r", encoding="utf-8") as f:
+                    cat_list = json.load(f)
+                    if isinstance(cat_list, list):
+                        for entry in cat_list:
+                            u = entry.get("url", "")
+                            if u:
+                                catalog_map[u] = entry
+                                if u.startswith("http://") or u.startswith("https://"):
+                                    cloud_items.append({
+                                        "filename": entry.get("filename") or os.path.basename(u),
+                                        "url": u,
+                                        "size_kb": entry.get("size_kb"),
+                                        "mtime": entry.get("mtime", 9999999999),
+                                        "category": entry.get("category", "offshot"),
+                                        "memo": entry.get("memo", ""),
+                                        "source": "cloudinary"
+                                    })
+            except Exception:
+                pass
+
+        items = list(cloud_items)
         if os.path.exists(IMAGES_DIR):
             for fname in sorted(os.listdir(IMAGES_DIR)):
                 if fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")) and not fname.endswith("_thumb.jpg"):
                     fpath = os.path.join(IMAGES_DIR, fname)
+                    url = f"images/{fname}"
                     try:
                         sz_kb = round(os.path.getsize(fpath) / 1024, 1)
                         mtime = os.path.getmtime(fpath)
                     except OSError:
                         sz_kb = 0
                         mtime = 0
+                    cat_info = catalog_map.get(url, {})
                     items.append({
                         "filename": fname,
-                        "url": f"images/{fname}",
+                        "url": url,
                         "size_kb": sz_kb,
-                        "mtime": mtime
+                        "mtime": mtime,
+                        "category": cat_info.get("category", "offshot"),
+                        "memo": cat_info.get("memo", ""),
+                        "source": "local"
                     })
         items.sort(key=lambda x: -x["mtime"])
         self.send_json(items)
