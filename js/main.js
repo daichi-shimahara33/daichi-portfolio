@@ -122,37 +122,36 @@ function initActiveNavObserver() {
 }
 
 /**
+ * Shared Data Loader Helper (API -> Static JSON -> LocalStorage fallback)
+ */
+async function fetchDataWithFallback(apiPath, jsonPath, storageKey) {
+  try {
+    const res = await fetch(apiPath, { cache: 'no-store' });
+    if (res.ok) return await res.json();
+  } catch (e) {}
+
+  try {
+    const jsonRes = await fetch(jsonPath, { cache: 'no-store' });
+    if (jsonRes.ok) return await jsonRes.json();
+  } catch (e) {}
+
+  if (storageKey) {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+  }
+  return null;
+}
+
+/**
  * Loads dynamic photos configuration from /api/photos, data/photos.json, or localStorage
  */
 async function loadDynamicPhotos() {
   const hasSlotOrGallery = document.querySelector('[data-photo-slot]') || document.getElementById('galleryMainGrid');
   if (!hasSlotOrGallery) return;
 
-  let photoData = null;
-
-  try {
-    const res = await fetch('/api/photos', { cache: 'no-store' });
-    if (res.ok) {
-      photoData = await res.json();
-    }
-  } catch (e) {
-    try {
-      const jsonRes = await fetch('data/photos.json', { cache: 'no-store' });
-      if (jsonRes.ok) {
-        photoData = await jsonRes.json();
-      }
-    } catch (err) {}
-  }
-
-  if (!photoData) {
-    const saved = localStorage.getItem('ds_portfolio_photos_data');
-    if (saved) {
-      try {
-        photoData = JSON.parse(saved);
-      } catch (e) {}
-    }
-  }
-
+  const photoData = await fetchDataWithFallback('/api/photos', 'data/photos.json', 'ds_portfolio_photos_data');
   if (!photoData) return;
 
   // 1. Update Fixed Section Photo Slots (ABOUT, STATEMENT, VISION)
@@ -178,26 +177,19 @@ async function loadDynamicPhotos() {
       const topPhotos = photoData.gallery.slice(0, 4);
       const extraPhotos = photoData.gallery.slice(4);
 
-      mainGrid.innerHTML = topPhotos.map((p) => {
+      const renderPhotoItem = (p, extraClass = '') => {
         const src = escapeHtml(p.src || '');
         const alt = escapeHtml(p.alt || '島原大智 オフショット写真');
         return `
-          <div class="collage-photo-item" tabindex="0" role="img" aria-label="${alt}">
+          <div class="collage-photo-item${extraClass}" tabindex="0" role="img" aria-label="${alt}">
             <img src="${src}" alt="${alt}" loading="lazy" decoding="async">
           </div>
         `;
-      }).join('');
+      };
 
+      mainGrid.innerHTML = topPhotos.map((p) => renderPhotoItem(p)).join('');
       if (extraGrid) {
-        extraGrid.innerHTML = extraPhotos.map((p) => {
-          const src = escapeHtml(p.src || '');
-          const alt = escapeHtml(p.alt || '島原大智 オフショット写真');
-          return `
-            <div class="collage-photo-item gallery-photo-extra" tabindex="0" role="img" aria-label="${alt}">
-              <img src="${src}" alt="${alt}" loading="lazy" decoding="async">
-            </div>
-          `;
-        }).join('');
+        extraGrid.innerHTML = extraPhotos.map((p) => renderPhotoItem(p, ' gallery-photo-extra')).join('');
       }
 
       if (moreWrap && moreBtn) {
@@ -224,31 +216,7 @@ async function loadDynamicTexts() {
   const textSlots = document.querySelectorAll('[data-text-slot]');
   if (!textSlots.length) return;
 
-  let textData = null;
-
-  try {
-    const res = await fetch('/api/texts', { cache: 'no-store' });
-    if (res.ok) {
-      textData = await res.json();
-    }
-  } catch (e) {
-    try {
-      const jsonRes = await fetch('data/site_texts.json', { cache: 'no-store' });
-      if (jsonRes.ok) {
-        textData = await jsonRes.json();
-      }
-    } catch (err) {}
-  }
-
-  if (!textData) {
-    const saved = localStorage.getItem('ds_portfolio_texts_data');
-    if (saved) {
-      try {
-        textData = JSON.parse(saved);
-      } catch (e) {}
-    }
-  }
-
+  const textData = await fetchDataWithFallback('/api/texts', 'data/site_texts.json', 'ds_portfolio_texts_data');
   if (!textData || typeof textData !== 'object') return;
 
   textSlots.forEach((el) => {
@@ -266,31 +234,7 @@ async function loadDynamicWorks() {
   const worksGrid = document.querySelector('.works-grid');
   if (!worksGrid) return;
 
-  let works = null;
-
-  try {
-    const res = await fetch('/api/works', { cache: 'no-store' });
-    if (res.ok) {
-      works = await res.json();
-    }
-  } catch (e) {
-    try {
-      const jsonRes = await fetch('data/works.json', { cache: 'no-store' });
-      if (jsonRes.ok) {
-        works = await jsonRes.json();
-      }
-    } catch (err) {}
-  }
-
-  if (!works) {
-    const saved = localStorage.getItem('ds_portfolio_works_data');
-    if (saved) {
-      try {
-        works = JSON.parse(saved);
-      } catch (e) {}
-    }
-  }
-
+  const works = await fetchDataWithFallback('/api/works', 'data/works.json', 'ds_portfolio_works_data');
   if (works && Array.isArray(works) && works.length > 0) {
     worksGrid.innerHTML = works.map((w) => {
       const cardTypeClass = w.type === 'video' ? 'work-card-video' : 'work-card-web';
@@ -328,34 +272,7 @@ async function loadDynamicNews() {
   const newsGrid = document.querySelector('.news-grid');
   if (!newsGrid) return;
 
-  let items = null;
-
-  // 1. Try fetching from /api/news or data/news.json
-  try {
-    const res = await fetch('/api/news', { cache: 'no-store' });
-    if (res.ok) {
-      items = await res.json();
-    }
-  } catch (e) {
-    try {
-      const jsonRes = await fetch('data/news.json', { cache: 'no-store' });
-      if (jsonRes.ok) {
-        items = await jsonRes.json();
-      }
-    } catch (err) {}
-  }
-
-  // 2. Fallback to localStorage if available
-  if (!items) {
-    const saved = localStorage.getItem('ds_portfolio_news_data');
-    if (saved) {
-      try {
-        items = JSON.parse(saved);
-      } catch (e) {}
-    }
-  }
-
-  // If we have items and it is a non-empty array, render them
+  const items = await fetchDataWithFallback('/api/news', 'data/news.json', 'ds_portfolio_news_data');
   if (items && Array.isArray(items) && items.length > 0) {
     renderNewsCards(newsGrid, items);
   }

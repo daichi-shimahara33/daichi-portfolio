@@ -30,26 +30,26 @@
   const ADMIN_PASSCODE = '3333';
 
   const FALLBACK_IMAGES = [
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093977/iqrowpa9htxwktfcaxar.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093984/pjru7l6lymhjlces2ocj.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093992/qn6zcfruofjaf3mjxgfn.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093979/ec7ihvvbhikopxdasq3y.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094013/ulpkaykbvpdnp5butsdf.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094016/mr9nmb5remzronek0mpe.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093948/aizf7h9kfycdquseaij7.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093972/v8rzrdl7k6ycrten7nsx.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093990/ddfqw4qhrmtgrzg36zjv.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093982/b35jw5dvrhhkbicshf6y.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093970/f9mdcjgxjvj8wmbufqqb.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093950/hictt18ticspdyty6nlb.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093987/wfkeoywnaxmdi9fmw2bu.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094004/iee2qri1ztsvft2lcqrx.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093941/naemoaqxl5xoikh8dpzv.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093946/xyz8gxknxetuytqlplrj.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093943/wrhlvtvoj29ce4qml7wc.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093994/qtondcgk1pqobxuxmfie.jpg',
-    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093996/rnmyfsggkllbzmfnih0j.jpg'
+    'images/IMG_8532.jpg',
+    'images/eLr9eA4LT82MnBISvnik9A.jpg',
+    'images/h4aNTqaAQzqDKAj3AHMgBw.jpg',
+    'images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg',
+    'images/ehime_mikan_juice.jpg',
+    'images/wwCRiC-ORKeJXwpUnWNovw.jpg',
+    'images/zbICtdpkRRSUus1xPqoVEQ.jpg',
+    'images/5hWodn-VTF6pPPU5mBzwjA.jpg',
+    'images/SuUS89tdQ3m_J9UOu82GOg.jpg',
+    'images/nCodfH6uTi-zfORtPWL2Kw.jpg',
+    'images/ehime_team_salute.jpg',
+    'images/IwPsWPFURlSngd9m60T98w.jpg',
+    'images/5wmlkUItSNWx0Gh7hiKayw.jpg',
+    'images/mRke21uCSjeQj7z8Q57I-Q.jpg',
+    'images/wnba_action.jpg',
+    'images/42CEC728-1355-4EE4-BE7F-14211B1E352D_1791466461.jpg',
+    'images/5Vo3Q0riS66ICKpqVD2ebA.jpg',
+    'images/4NU0R9pwTzyqtoKNnRF7aw.jpg',
+    'images/team.jpg',
+    'images/tokyo_autumn_tournament.jpg'
   ];
 
   const DEFAULT_PHOTOS_DATA = {
@@ -57,49 +57,49 @@
       hero: {
         label: '① トップ画面（ABOUT）右側のメイン写真',
         section: '① ABOUT（トップ画面）',
-        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg',
+        src: 'images/IMG_8532.jpg',
         alt: '島原大智 ポートレート写真'
       },
       statement_1: {
         label: '② STATEMENT【左カード】背景写真',
         section: '② STATEMENT（3つの柱）',
-        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093990/ddfqw4qhrmtgrzg36zjv.jpg',
+        src: 'images/nCodfH6uTi-zfORtPWL2Kw.jpg',
         alt: 'EXCELLENCEでの試合・チーム風景'
       },
       statement_2: {
         label: '② STATEMENT【真ん中カード】背景写真',
         section: '② STATEMENT（3つの柱）',
-        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093982/b35jw5dvrhhkbicshf6y.jpg',
+        src: 'images/ehime_team_salute.jpg',
         alt: '愛媛県クラブチームとの練習・交流風景'
       },
       statement_3: {
         label: '② STATEMENT【右カード】背景写真',
         section: '② STATEMENT（3つの柱）',
-        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093970/f9mdcjgxjvj8wmbufqqb.jpg',
+        src: 'images/IwPsWPFURlSngd9m60T98w.jpg',
         alt: 'チームの熱量とストーリーを表現する一枚'
       },
       vision_1: {
         label: '④ VISION【左：地方遠征カード】写真',
         section: '④ VISION（今後の展望）',
-        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093950/hictt18ticspdyty6nlb.jpg',
+        src: 'images/5wmlkUItSNWx0Gh7hiKayw.jpg',
         alt: '地方遠征 & 海辺での一枚'
       },
       vision_2: {
         label: '④ VISION【右：チーム募集カード】写真',
         section: '④ VISION（今後の展望）',
-        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093987/wfkeoywnaxmdi9fmw2bu.jpg',
+        src: 'images/mRke21uCSjeQj7z8Q57I-Q.jpg',
         alt: '黒ユニフォーム チーム集合写真'
       }
     },
     gallery: [
-      { id: 'gal-1', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093977/iqrowpa9htxwktfcaxar.jpg', alt: '島原大智 オフショット写真 1（練習・遠征風景）' },
-      { id: 'gal-2', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093984/pjru7l6lymhjlces2ocj.jpg', alt: '島原大智 オフショット写真 2（チームメイトとの交流）' },
-      { id: 'gal-3', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093992/qn6zcfruofjaf3mjxgfn.jpg', alt: '島原大智 オフショット写真 3（体育館でのワンシーン）' },
-      { id: 'gal-4', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093979/ec7ihvvbhikopxdasq3y.jpg', alt: '島原大智 愛媛遠征オフショット（蛇口みかんジュース）' },
-      { id: 'gal-5', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094013/ulpkaykbvpdnp5butsdf.jpg', alt: '島原大智 オフショット写真 5（遠征先でのスナップ）' },
-      { id: 'gal-6', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094016/mr9nmb5remzronek0mpe.jpg', alt: '島原大智 オフショット写真 6（バスケ仲間との記念撮影）' },
-      { id: 'gal-7', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093948/aizf7h9kfycdquseaij7.jpg', alt: '島原大智 オフショット写真 7（コートサイド風景）' },
-      { id: 'gal-8', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093972/v8rzrdl7k6ycrten7nsx.jpg', alt: '島原大智 オフショット写真 8（試合後のオフショット）' }
+      { id: 'gal-1', src: 'images/eLr9eA4LT82MnBISvnik9A.jpg', alt: '島原大智 オフショット写真 1（練習・遠征風景）' },
+      { id: 'gal-2', src: 'images/h4aNTqaAQzqDKAj3AHMgBw.jpg', alt: '島原大智 オフショット写真 2（チームメイトとの交流）' },
+      { id: 'gal-3', src: 'images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg', alt: '島原大智 オフショット写真 3（体育館でのワンシーン）' },
+      { id: 'gal-4', src: 'images/ehime_mikan_juice.jpg', alt: '島原大智 愛媛遠征オフショット（蛇口みかんジュース）' },
+      { id: 'gal-5', src: 'images/wwCRiC-ORKeJXwpUnWNovw.jpg', alt: '島原大智 オフショット写真 5（遠征先でのスナップ）' },
+      { id: 'gal-6', src: 'images/zbICtdpkRRSUus1xPqoVEQ.jpg', alt: '島原大智 オフショット写真 6（バスケ仲間との記念撮影）' },
+      { id: 'gal-7', src: 'images/5hWodn-VTF6pPPU5mBzwjA.jpg', alt: '島原大智 オフショット写真 7（コートサイド風景）' },
+      { id: 'gal-8', src: 'images/SuUS89tdQ3m_J9UOu82GOg.jpg', alt: '島原大智 オフショット写真 8（試合後のオフショット）' }
     ]
   };
 
@@ -500,6 +500,38 @@
   }
 
   /**
+   * 共通データ読み込み・保存ヘルパー（DRYリファクタリング済）
+   */
+  async function loadResourceWithFallback(apiUrl, staticPath, lsKey) {
+    try {
+      const res = await fetch(isServerOnline ? apiUrl : staticPath, { cache: 'no-store' });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+    const saved = localStorage.getItem(lsKey);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (err) {}
+    }
+    try {
+      const sRes = await fetch(staticPath, { cache: 'no-store' });
+      if (sRes.ok) return await sRes.json();
+    } catch (err) {}
+    return null;
+  }
+
+  async function persistResource(apiUrl, lsKey, dataObj) {
+    localStorage.setItem(lsKey, JSON.stringify(dataObj));
+    if (isServerOnline) {
+      try {
+        await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataObj)
+        });
+      } catch (e) {}
+    }
+  }
+
+  /**
    * サーバー＆ローカルデータの読み込み
    */
   async function checkServerAndLoadData() {
@@ -518,72 +550,25 @@
     } catch (e) {
       isServerOnline = false;
       setServerStatus(false, 'ブラウザAI＆保存モード');
-      const savedPhotos = localStorage.getItem(LS_PHOTOS_KEY);
-      if (savedPhotos) {
-        try { photosData = JSON.parse(savedPhotos); } catch (err) {}
-      } else {
-        try {
-          const jsonRes = await fetch('data/photos.json', { cache: 'no-store' });
-          if (jsonRes.ok) photosData = await jsonRes.json();
-        } catch (err) {}
+      const fallbackPhotos = await loadResourceWithFallback(API_PHOTOS_URL, 'data/photos.json', LS_PHOTOS_KEY);
+      if (fallbackPhotos && fallbackPhotos.slots && Array.isArray(fallbackPhotos.gallery)) {
+        photosData = fallbackPhotos;
       }
     }
 
-    // サイト文章データ（site_texts.json）の読み込み
-    try {
-      const tRes = await fetch(isServerOnline ? API_TEXTS_URL : 'data/site_texts.json', { cache: 'no-store' });
-      if (tRes.ok) {
-        const loadedTexts = await tRes.json();
-        if (loadedTexts && typeof loadedTexts === 'object') {
-          textsData = { ...DEFAULT_TEXTS_DATA, ...loadedTexts };
-        }
-      }
-    } catch (e) {
-      const savedTexts = localStorage.getItem(LS_TEXTS_KEY);
-      if (savedTexts) {
-        try { textsData = { ...DEFAULT_TEXTS_DATA, ...JSON.parse(savedTexts) }; } catch (err) {}
-      }
+    const loadedTexts = await loadResourceWithFallback(API_TEXTS_URL, 'data/site_texts.json', LS_TEXTS_KEY);
+    if (loadedTexts && typeof loadedTexts === 'object') {
+      textsData = { ...DEFAULT_TEXTS_DATA, ...loadedTexts };
     }
 
-    // Newsの読み込み
-    try {
-      const nRes = await fetch(isServerOnline ? API_NEWS_URL : 'data/news.json', { cache: 'no-store' });
-      if (nRes.ok) {
-        newsList = await nRes.json();
-      }
-    } catch (e) {
-      const savedNews = localStorage.getItem(LS_NEWS_KEY);
-      if (savedNews) {
-        try { newsList = JSON.parse(savedNews); } catch (err) {}
-      }
-    }
+    const loadedNews = await loadResourceWithFallback(API_NEWS_URL, 'data/news.json', LS_NEWS_KEY);
+    if (Array.isArray(loadedNews)) newsList = loadedNews;
 
-    // Works（制作実績）の読み込み
-    try {
-      const wRes = await fetch(isServerOnline ? API_WORKS_URL : 'data/works.json', { cache: 'no-store' });
-      if (wRes.ok) {
-        worksList = await wRes.json();
-      }
-    } catch (e) {
-      const savedWorks = localStorage.getItem(LS_WORKS_KEY);
-      if (savedWorks) {
-        try { worksList = JSON.parse(savedWorks); } catch (err) {}
-      }
-    }
+    const loadedWorks = await loadResourceWithFallback(API_WORKS_URL, 'data/works.json', LS_WORKS_KEY);
+    if (Array.isArray(loadedWorks)) worksList = loadedWorks;
 
-    // Media Catalog（3,000枚対応アルバム分類・メモ・外部クラウドURL）の読み込み
-    try {
-      const cRes = await fetch(isServerOnline ? API_MEDIA_CATALOG_URL : 'data/media_catalog.json', { cache: 'no-store' });
-      if (cRes.ok) {
-        const catData = await cRes.json();
-        if (Array.isArray(catData)) mediaCatalog = catData;
-      }
-    } catch (e) {
-      const savedCat = localStorage.getItem(LS_MEDIA_CATALOG_KEY);
-      if (savedCat) {
-        try { mediaCatalog = JSON.parse(savedCat); } catch (err) {}
-      }
-    }
+    const loadedCat = await loadResourceWithFallback(API_MEDIA_CATALOG_URL, 'data/media_catalog.json', LS_MEDIA_CATALOG_KEY);
+    if (Array.isArray(loadedCat)) mediaCatalog = loadedCat;
 
     await loadImagesList();
     renderVisualSlots();
@@ -607,7 +592,7 @@
             availableImages = imagesMetaList.map((m) => m.url);
           }
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (imagesMetaList.length === 0) {
@@ -706,7 +691,7 @@
           const data = await res.json();
           if (data && Array.isArray(data.proposals)) return data.proposals;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
     return generateLocalAiCopy(target, nuance);
   }
@@ -1348,16 +1333,7 @@
   }
 
   async function saveMediaCatalog() {
-    localStorage.setItem(LS_MEDIA_CATALOG_KEY, JSON.stringify(mediaCatalog));
-    if (isServerOnline) {
-      try {
-        await fetch(API_MEDIA_CATALOG_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(mediaCatalog)
-        });
-      } catch (e) {}
-    }
+    await persistResource(API_MEDIA_CATALOG_URL, LS_MEDIA_CATALOG_KEY, mediaCatalog);
   }
 
   function getCloudinaryConfig() {
@@ -1367,7 +1343,7 @@
         const parsed = JSON.parse(raw);
         if (parsed && parsed.cloudName && parsed.uploadPreset) return parsed;
       }
-    } catch (e) {}
+    } catch (e) { }
     return DEFAULT_CLOUDINARY_CONFIG;
   }
 
@@ -1822,29 +1798,11 @@
   }
 
   async function savePhotosData() {
-    localStorage.setItem(LS_PHOTOS_KEY, JSON.stringify(photosData));
-    if (isServerOnline) {
-      try {
-        await fetch(API_PHOTOS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(photosData)
-        });
-      } catch (e) {}
-    }
+    await persistResource(API_PHOTOS_URL, LS_PHOTOS_KEY, photosData);
   }
 
   async function saveTextsData() {
-    localStorage.setItem(LS_TEXTS_KEY, JSON.stringify(textsData));
-    if (isServerOnline) {
-      try {
-        await fetch(API_TEXTS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(textsData)
-        });
-      } catch (e) {}
-    }
+    await persistResource(API_TEXTS_URL, LS_TEXTS_KEY, textsData);
   }
 
   async function publishToGitHub() {
@@ -1911,7 +1869,7 @@
     const cat = categorySelect.value || 'GAME';
     const title = titleInput.value.trim() || 'タイトルがここに表示されます';
     const desc = descTextarea.value.trim() || '本文のプレビューがここにリアルタイムで表示されます。';
-    const img = imageSelect.value || (availableImages[0] || 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg');
+    const img = imageSelect.value || (availableImages[0] || 'images/IMG_8532.jpg');
 
     const catMeta = CATEGORY_MAP[cat] || { label: cat, badgeClass: 'badge-game' };
 
@@ -1978,16 +1936,7 @@
   }
 
   async function saveNewsData() {
-    localStorage.setItem(LS_NEWS_KEY, JSON.stringify(newsList));
-    if (isServerOnline) {
-      try {
-        await fetch(API_NEWS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newsList)
-        });
-      } catch (e) {}
-    }
+    await persistResource(API_NEWS_URL, LS_NEWS_KEY, newsList);
   }
 
   function startEdit(id) {
@@ -2243,16 +2192,7 @@
   }
 
   async function saveWorksData() {
-    localStorage.setItem(LS_WORKS_KEY, JSON.stringify(worksList));
-    if (isServerOnline) {
-      try {
-        await fetch(API_WORKS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(worksList)
-        });
-      } catch (e) {}
-    }
+    await persistResource(API_WORKS_URL, LS_WORKS_KEY, worksList);
   }
 
   function showToast(message, type = 'info') {
