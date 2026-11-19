@@ -372,7 +372,7 @@ function renderNewsCards(container, items) {
     const rawTitle = item.title || '';
     const title = escapeHtml(rawTitle).replace(/\n/g, '<br>');
     const desc = escapeHtml(item.desc || '');
-    const image = escapeHtml(item.image || 'images/IMG_8532.jpg');
+    const image = escapeHtml(item.image || 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg');
     const isoDate = date.replace(/\./g, '-');
     const extraClass = idx >= 3 ? ' news-card-extra' : '';
 
@@ -583,7 +583,7 @@ function initWnbaTeamSpotlight() {
       conf: 'WESTERN CONFERENCE // 2026 CHAMPIONS',
       teamEn: 'GOLDEN STATE VALKYRIES',
       teamJp: 'ゴールデンステイト・ヴァルキリーズ',
-      logo: 'images/valkyries_logo.png',
+      logo: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093999/ojig6g9il5fkcxleu9rm.png',
       playerJp: 'ギャビー・ウィリアムズ #1',
       playerEn: 'Gabby Williams (#1)',
       pos: 'F / 180cm',
@@ -594,7 +594,7 @@ function initWnbaTeamSpotlight() {
       conf: 'EASTERN CONFERENCE // 2026 FINALIST',
       teamEn: 'ATLANTA DREAM',
       teamJp: 'アトランタ・ドリーム',
-      logo: 'images/dream_logo.png',
+      logo: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093976/wyml2o7ja3md23jbmmld.png',
       playerJp: 'ライアン・ハワード #10',
       playerEn: 'Rhyne Howard (#10)',
       pos: 'G-F / 188cm',

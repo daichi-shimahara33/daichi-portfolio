@@ -22,30 +22,34 @@
   const LS_WORKS_KEY = 'ds_portfolio_works_data';
   const LS_MEDIA_CATALOG_KEY = 'ds_portfolio_media_catalog';
   const LS_CLOUDINARY_KEY = 'ds_cloudinary_config';
+  const DEFAULT_CLOUDINARY_CONFIG = {
+    cloudName: 'gsdhsesj',
+    uploadPreset: 'daichi_upload'
+  };
   const SESSION_AUTH_KEY = 'ds_admin_unlocked_v1';
   const ADMIN_PASSCODE = '3333';
 
   const FALLBACK_IMAGES = [
-    'images/IMG_8532.jpg',
-    'images/eLr9eA4LT82MnBISvnik9A.jpg',
-    'images/h4aNTqaAQzqDKAj3AHMgBw.jpg',
-    'images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg',
-    'images/ehime_mikan_juice.jpg',
-    'images/wwCRiC-ORKeJXwpUnWNovw.jpg',
-    'images/zbICtdpkRRSUus1xPqoVEQ.jpg',
-    'images/5hWodn-VTF6pPPU5mBzwjA.jpg',
-    'images/SuUS89tdQ3m_J9UOu82GOg.jpg',
-    'images/nCodfH6uTi-zfORtPWL2Kw.jpg',
-    'images/ehime_team_salute.jpg',
-    'images/IwPsWPFURlSngd9m60T98w.jpg',
-    'images/5wmlkUItSNWx0Gh7hiKayw.jpg',
-    'images/mRke21uCSjeQj7z8Q57I-Q.jpg',
-    'images/wnba_action.jpg',
-    'images/42CEC728-1355-4EE4-BE7F-14211B1E352D_1791466461.jpg',
-    'images/5Vo3Q0riS66ICKpqVD2ebA.jpg',
-    'images/4NU0R9pwTzyqtoKNnRF7aw.jpg',
-    'images/team.jpg',
-    'images/tokyo_autumn_tournament.jpg'
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093977/iqrowpa9htxwktfcaxar.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093984/pjru7l6lymhjlces2ocj.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093992/qn6zcfruofjaf3mjxgfn.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093979/ec7ihvvbhikopxdasq3y.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094013/ulpkaykbvpdnp5butsdf.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094016/mr9nmb5remzronek0mpe.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093948/aizf7h9kfycdquseaij7.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093972/v8rzrdl7k6ycrten7nsx.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093990/ddfqw4qhrmtgrzg36zjv.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093982/b35jw5dvrhhkbicshf6y.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093970/f9mdcjgxjvj8wmbufqqb.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093950/hictt18ticspdyty6nlb.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093987/wfkeoywnaxmdi9fmw2bu.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094004/iee2qri1ztsvft2lcqrx.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093941/naemoaqxl5xoikh8dpzv.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093946/xyz8gxknxetuytqlplrj.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093943/wrhlvtvoj29ce4qml7wc.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093994/qtondcgk1pqobxuxmfie.jpg',
+    'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093996/rnmyfsggkllbzmfnih0j.jpg'
   ];
 
   const DEFAULT_PHOTOS_DATA = {
@@ -53,49 +57,49 @@
       hero: {
         label: '① トップ画面（ABOUT）右側のメイン写真',
         section: '① ABOUT（トップ画面）',
-        src: 'images/IMG_8532.jpg',
+        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg',
         alt: '島原大智 ポートレート写真'
       },
       statement_1: {
         label: '② STATEMENT【左カード】背景写真',
         section: '② STATEMENT（3つの柱）',
-        src: 'images/nCodfH6uTi-zfORtPWL2Kw.jpg',
+        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093990/ddfqw4qhrmtgrzg36zjv.jpg',
         alt: 'EXCELLENCEでの試合・チーム風景'
       },
       statement_2: {
         label: '② STATEMENT【真ん中カード】背景写真',
         section: '② STATEMENT（3つの柱）',
-        src: 'images/ehime_team_salute.jpg',
+        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093982/b35jw5dvrhhkbicshf6y.jpg',
         alt: '愛媛県クラブチームとの練習・交流風景'
       },
       statement_3: {
         label: '② STATEMENT【右カード】背景写真',
         section: '② STATEMENT（3つの柱）',
-        src: 'images/IwPsWPFURlSngd9m60T98w.jpg',
+        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093970/f9mdcjgxjvj8wmbufqqb.jpg',
         alt: 'チームの熱量とストーリーを表現する一枚'
       },
       vision_1: {
         label: '④ VISION【左：地方遠征カード】写真',
         section: '④ VISION（今後の展望）',
-        src: 'images/5wmlkUItSNWx0Gh7hiKayw.jpg',
+        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093950/hictt18ticspdyty6nlb.jpg',
         alt: '地方遠征 & 海辺での一枚'
       },
       vision_2: {
         label: '④ VISION【右：チーム募集カード】写真',
         section: '④ VISION（今後の展望）',
-        src: 'images/mRke21uCSjeQj7z8Q57I-Q.jpg',
+        src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093987/wfkeoywnaxmdi9fmw2bu.jpg',
         alt: '黒ユニフォーム チーム集合写真'
       }
     },
     gallery: [
-      { id: 'gal-1', src: 'images/eLr9eA4LT82MnBISvnik9A.jpg', alt: '島原大智 オフショット写真 1（練習・遠征風景）' },
-      { id: 'gal-2', src: 'images/h4aNTqaAQzqDKAj3AHMgBw.jpg', alt: '島原大智 オフショット写真 2（チームメイトとの交流）' },
-      { id: 'gal-3', src: 'images/oIQj8Fq1Q5iU708Wj7-1Lw.jpg', alt: '島原大智 オフショット写真 3（体育館でのワンシーン）' },
-      { id: 'gal-4', src: 'images/ehime_mikan_juice.jpg', alt: '島原大智 愛媛遠征オフショット（蛇口みかんジュース）' },
-      { id: 'gal-5', src: 'images/wwCRiC-ORKeJXwpUnWNovw.jpg', alt: '島原大智 オフショット写真 5（遠征先でのスナップ）' },
-      { id: 'gal-6', src: 'images/zbICtdpkRRSUus1xPqoVEQ.jpg', alt: '島原大智 オフショット写真 6（バスケ仲間との記念撮影）' },
-      { id: 'gal-7', src: 'images/5hWodn-VTF6pPPU5mBzwjA.jpg', alt: '島原大智 オフショット写真 7（コートサイド風景）' },
-      { id: 'gal-8', src: 'images/SuUS89tdQ3m_J9UOu82GOg.jpg', alt: '島原大智 オフショット写真 8（試合後のオフショット）' }
+      { id: 'gal-1', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093977/iqrowpa9htxwktfcaxar.jpg', alt: '島原大智 オフショット写真 1（練習・遠征風景）' },
+      { id: 'gal-2', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093984/pjru7l6lymhjlces2ocj.jpg', alt: '島原大智 オフショット写真 2（チームメイトとの交流）' },
+      { id: 'gal-3', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093992/qn6zcfruofjaf3mjxgfn.jpg', alt: '島原大智 オフショット写真 3（体育館でのワンシーン）' },
+      { id: 'gal-4', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093979/ec7ihvvbhikopxdasq3y.jpg', alt: '島原大智 愛媛遠征オフショット（蛇口みかんジュース）' },
+      { id: 'gal-5', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094013/ulpkaykbvpdnp5butsdf.jpg', alt: '島原大智 オフショット写真 5（遠征先でのスナップ）' },
+      { id: 'gal-6', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795094016/mr9nmb5remzronek0mpe.jpg', alt: '島原大智 オフショット写真 6（バスケ仲間との記念撮影）' },
+      { id: 'gal-7', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093948/aizf7h9kfycdquseaij7.jpg', alt: '島原大智 オフショット写真 7（コートサイド風景）' },
+      { id: 'gal-8', src: 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093972/v8rzrdl7k6ycrten7nsx.jpg', alt: '島原大智 オフショット写真 8（試合後のオフショット）' }
     ]
   };
 
@@ -1364,7 +1368,7 @@
         if (parsed && parsed.cloudName && parsed.uploadPreset) return parsed;
       }
     } catch (e) {}
-    return null;
+    return DEFAULT_CLOUDINARY_CONFIG;
   }
 
   function updateCloudStatusBadge() {
@@ -1907,7 +1911,7 @@
     const cat = categorySelect.value || 'GAME';
     const title = titleInput.value.trim() || 'タイトルがここに表示されます';
     const desc = descTextarea.value.trim() || '本文のプレビューがここにリアルタイムで表示されます。';
-    const img = imageSelect.value || (availableImages[0] || 'images/IMG_8532.jpg');
+    const img = imageSelect.value || (availableImages[0] || 'https://res.cloudinary.com/gsdhsesj/image/upload/f_auto,q_auto,w_1280/v1795093955/avfuiwgqjdvtjwek0hhc.jpg');
 
     const catMeta = CATEGORY_MAP[cat] || { label: cat, badgeClass: 'badge-game' };
 

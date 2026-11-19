@@ -428,8 +428,11 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
                 pass
 
         items = list(cloud_items)
+        cloud_filenames = {c.get("filename") for c in cloud_items if c.get("filename")}
         if os.path.exists(IMAGES_DIR):
             for fname in sorted(os.listdir(IMAGES_DIR)):
+                if fname in cloud_filenames or fname == "ogp_banner.jpg":
+                    continue
                 if fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")) and not fname.endswith("_thumb.jpg"):
                     fpath = os.path.join(IMAGES_DIR, fname)
                     url = f"images/{fname}"
