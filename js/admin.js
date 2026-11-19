@@ -1432,6 +1432,22 @@
       });
     }
 
+    const btnMigrateAll = document.getElementById('btn-migrate-all-to-cloud');
+    if (btnMigrateAll) {
+      btnMigrateAll.addEventListener('click', async () => {
+        const cn = (cloudNameInput && cloudNameInput.value.trim()) || (getCloudinaryConfig() && getCloudinaryConfig().cloudName) || '';
+        const up = (presetInput && presetInput.value.trim()) || (getCloudinaryConfig() && getCloudinaryConfig().uploadPreset) || '';
+        if (!cn || !up) {
+          showToast('先に上の「① Cloud Name」と「② Upload Preset Name」を入力してください！', 'error');
+          if (cloudNameInput) cloudNameInput.focus();
+          return;
+        }
+        localStorage.setItem(LS_CLOUDINARY_KEY, JSON.stringify({ cloudName: cn, uploadPreset: up }));
+        updateCloudStatusBadge();
+        await migrateAllLocalImagesToCloudinary(cn, up);
+      });
+    }
+
     // ライブラリのアルバム絞り込みタブ
     document.querySelectorAll('[data-album-filter]').forEach((tab) => {
       tab.addEventListener('click', () => {
@@ -1477,6 +1493,123 @@
         renderPickerGridItems();
       });
     }
+  }
+
+  /**
+   * 🚀 images/ フォルダ内の全ローカル写真を Cloudinary へ一括自動移行し、サイト内の全参照URLをクラウドURLに置換
+   */
+  async function migrateAllLocalImagesToCloudinary(cloudName, uploadPreset) {
+    const localItems = imagesMetaList.filter((m) => m.url && !m.url.startsWith('http'));
+    if (localItems.length === 0) {
+      showToast('すべての写真はすでにCloudinaryクラウドへ移行済みです！', 'success');
+      return;
+    }
+
+    const btnMigrate = document.getElementById('btn-migrate-all-to-cloud');
+    const progBox = document.getElementById('cloud-migrate-progress-box');
+    const progSpinner = document.getElementById('cloud-migrate-spinner');
+    const progText = document.getElementById('cloud-migrate-status-text');
+
+    if (btnMigrate) btnMigrate.disabled = true;
+    if (progBox) progBox.style.display = 'block';
+    if (progSpinner) progSpinner.style.display = 'inline-block';
+
+    const urlMapping = {};
+    let successCount = 0;
+
+    for (let i = 0; i < localItems.length; i++) {
+      const item = localItems[i];
+      if (progText) {
+        progText.textContent = `☁️ Cloudinaryへ移行中 (${i + 1} / ${localItems.length} 枚目): ${item.filename} ...`;
+      }
+
+      try {
+        const imgRes = await fetch(item.url);
+        if (!imgRes.ok) continue;
+        const blob = await imgRes.blob();
+
+        const formData = new FormData();
+        formData.append('file', blob, item.filename);
+        formData.append('upload_preset', uploadPreset);
+
+        const cRes = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!cRes.ok) {
+          const errJson = await cRes.json().catch(() => ({}));
+          const errMsg = (errJson.error && errJson.error.message) || 'Upload Preset が Unsigned になっているか確認してください';
+          throw new Error(errMsg);
+        }
+
+        const cData = await cRes.json();
+        const cloudUrl = cData.secure_url.replace('/upload/', '/upload/f_auto,q_auto,w_1280/');
+        urlMapping[item.url] = cloudUrl;
+        successCount++;
+
+        // mediaCatalog 内のエントリをクラウドURLに更新
+        const catEntry = mediaCatalog.find((c) => c.url === item.url);
+        if (catEntry) {
+          catEntry.url = cloudUrl;
+          catEntry.source = 'cloudinary';
+        } else {
+          mediaCatalog.push({
+            url: cloudUrl,
+            filename: item.filename,
+            category: item.category || 'offshot',
+            memo: item.memo || item.filename,
+            source: 'cloudinary'
+          });
+        }
+      } catch (err) {
+        if (progSpinner) progSpinner.style.display = 'none';
+        if (progText) progText.textContent = `⚠️ エラー: ${err.message}`;
+        if (btnMigrate) btnMigrate.disabled = false;
+        showToast(`移行エラー: ${err.message}`, 'error');
+        return;
+      }
+    }
+
+    // サイト内の全参照（① ABOUT / ② STATEMENT / ③ NEWS / ④ VISION / ⑤ GALLERY）を新しいCloudinary URLに一括更新
+    if (photosData.slots) {
+      Object.values(photosData.slots).forEach((s) => {
+        if (s && s.src && urlMapping[s.src]) {
+          s.src = urlMapping[s.src];
+        }
+      });
+    }
+    if (Array.isArray(photosData.gallery)) {
+      photosData.gallery.forEach((g) => {
+        if (g && g.src && urlMapping[g.src]) {
+          g.src = urlMapping[g.src];
+        }
+      });
+    }
+    if (Array.isArray(newsList)) {
+      newsList.forEach((n) => {
+        if (n && n.image && urlMapping[n.image]) {
+          n.image = urlMapping[n.image];
+        }
+      });
+    }
+
+    await saveMediaCatalog();
+    await savePhotosData();
+    await saveNewsData();
+    await loadImagesList();
+
+    renderVisualSlots();
+    renderVisualNewsCards();
+    renderGalleryAdmin();
+    renderLibraryAdmin();
+
+    if (progSpinner) progSpinner.style.display = 'none';
+    if (progText) {
+      progText.textContent = `✅ 全 ${successCount} 枚の写真を Cloudinary へ移行＆サイト全体のURL切り替えが完了しました！`;
+    }
+    if (btnMigrate) btnMigrate.disabled = false;
+    showToast(`全 ${successCount} 枚の写真をCloudinaryへ一括移行しました！`, 'success');
   }
 
   function initLibraryUploader() {
